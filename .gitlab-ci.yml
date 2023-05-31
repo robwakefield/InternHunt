@@ -25,6 +25,8 @@ unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   script:
     - echo "Running unit tests..."
+  tags:
+    - prod-runner  # Use the runner with correct tag to run this pipeline
 
 deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *all* jobs in the test stage complete successfully.
@@ -37,4 +39,6 @@ deploy-job:      # This job runs in the deploy stage.
   artifacts:
     paths:
       - next.log  # Keep output from deploy as artifact
+  tags:
+    - prod-runner  # Use the runner with correct tag to run this pipeline
   
