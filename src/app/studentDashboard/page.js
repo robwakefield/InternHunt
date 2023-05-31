@@ -17,7 +17,7 @@ function studentDashboard() {
       <h4>Your Application </h4>
       </Nav.Item>
       <Nav.Item>
-        <Nav.Link eventKey="link-2">Uplaod CV</Nav.Link>
+        <Nav.Link eventKey="link-2">Upload CV</Nav.Link>
       </Nav.Item>
       </Nav>
       
