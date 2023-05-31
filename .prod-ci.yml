@@ -12,6 +12,8 @@ stages:          # List of stages for jobs, and their order of execution
 build-job:       # This job runs in the build stage, which runs first.
   stage: build
   script:
+    - export PORT=80
+    - sudo fuser -k $PORT/tcp || true  # Kill any process running on $PORT
     - npm ci
     - npm run build
     - chmod u+x node_modules
