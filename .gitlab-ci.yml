@@ -1,0 +1,40 @@
+cache:           # Cache persists between pipelines
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+    - .next/
+
+stages:          # List of stages for jobs, and their order of execution
+  - build
+  - test
+  - deploy
+
+build-job:       # This job runs in the build stage, which runs first.
+  stage: build
+  script:
+    - npm ci
+    - npm run build
+    - chmod u+x node_modules
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "production"'  # Only run pipeline on production or when manually requested
+    - when: manual
+  tags:
+    - prod-runner  # Use the runner with correct tag to run this pipeline
+
+unit-test-job:   # This job runs in the test stage.
+  stage: test    # It only starts when the job in the build stage completes successfully.
+  script:
+    - echo "Running unit tests..."
+
+deploy-job:      # This job runs in the deploy stage.
+  stage: deploy  # It only runs when *all* jobs in the test stage complete successfully.
+  environment: production
+  script:
+    - export PORT=80
+    - touch ./next.log
+    - sudo fuser -k $PORT/tcp || true  # Kill any process running on $PORT
+    - sudo npm run start $PORT > ./next.log 2>&1 &  # Run the web app
+  artifacts:
+    paths:
+      - next.log  # Keep output from deploy as artifact
+  
