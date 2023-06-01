@@ -1,8 +1,5 @@
-cache:           # Cache persists between pipelines
-  key: ${CI_COMMIT_REF_SLUG}
-  paths:
-    - node_modules/
-    - .next/
+variables:
+  CYPRESS_RECORD_KEY: $CYPRESS_RECORD_KEY
 
 stages:          # List of stages for jobs, and their order of execution
   - build
@@ -20,12 +17,24 @@ build-job:       # This job runs in the build stage, which runs first.
   tags:
     - build-runner  # Use the runner with correct tag to run this pipeline
 
-unit-test-job:   # This job runs in the test stage.
-  stage: test    # It only starts when the job in the build stage completes successfully.
+unit-test-job:
+  image: cypress/browsers:node16.16.0-chrome107-ff107-edge
+  stage: test
   script:
-    - echo "Running unit tests..."
-  tags:
-    - test-runner  # Use the runner with correct tag to run this pipeline
+    - npm ci
+    - npm run test-component
+  artifacts:
+    when: always
+    paths:
+      - cypress/videos/**/*.mp4
+      - cypress/screenshots/**/*.png
+
+      #e2e-test-job:   # This job runs in the test stage.
+      #stage: test    # It only starts when the job in the build stage completes successfully.
+      #script:
+      #- npm run test-e2e
+      # tags:
+      #- test-runner  # Use the runner with correct tag to run this pipeline
 
 deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *all* jobs in the test stage complete successfully.
