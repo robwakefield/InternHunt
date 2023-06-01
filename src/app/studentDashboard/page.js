@@ -4,20 +4,18 @@ import Accordion from 'react-bootstrap/Accordion';
 import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Button from 'react-bootstrap/Button';
+import { useEffect, useState } from 'react';
 
-export async function getStaticProps() {
-  const prisma = new PrismaClient()
-  const c = await prisma.student.count({})
+function studentDashboard() {
+  const [student, setStudent] = useState([]);
+  useEffect(() => {
+    fetch('/api/student')
+      .then((response) => response.json())
+      .then((data) => {setStudent(data)} );
+  }, []);
 
-  return {
-    props : { c }
-  }
-}
-
-function studentDashboard({c}) {
   return (
     <main className="studentDashboard">
-      <h1>{c}</h1>
       <Nav fill className="justify-content-center" activeKey="/home">
         <Nav.Item>
           <h6>3 Requirements Matched </h6>
@@ -36,7 +34,7 @@ function studentDashboard({c}) {
             <Accordion.Header>Language Skill</Accordion.Header>
             <Accordion.Body>
             <Form.Group className="mb-3" controlId="formGroupSkill1">
-              <Form.Control as="textarea" rows={3} placeholder="Enter your evidence of the skill"/>
+              <Form.Control as="textarea" rows={3} placeholder="Enter your evidence of the skill" defaultValue={student.language}/>
             </Form.Group>
             </Accordion.Body>
           </Accordion.Item>
@@ -45,14 +43,14 @@ function studentDashboard({c}) {
             <Accordion.Body>
               <Form.Group className="mb-3" controlId="formGroupSkill2">
                 <Form.Label>Password</Form.Label>
-                <Form.Control as="textarea" rows={3} placeholder="Enter your evidence of the skill"/>
+                <Form.Control as="textarea" rows={3} placeholder="Enter your evidence of the skill" defaultValue={student.maths}/>
               </Form.Group>
             </Accordion.Body>
           </Accordion.Item>
         </Accordion>
       </Form>
 
-      <Button variant="primary" type="submit" onClick={() => handleSubmit()}>
+      <Button variant="primary" type="submit">
         Submit
       </Button>
     </main>
