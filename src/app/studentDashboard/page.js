@@ -6,7 +6,7 @@ import Nav from 'react-bootstrap/Nav';
 import Button from 'react-bootstrap/Button';
 import { useEffect, useState } from 'react';
 
-function studentDashboard() {
+function StudentDashboard() {
   const [student, setStudent] = useState([]);
   useEffect(() => {
     fetch('/api/student')
@@ -42,7 +42,6 @@ function studentDashboard() {
             <Accordion.Header>Profient in Maths</Accordion.Header>
             <Accordion.Body>
               <Form.Group className="mb-3" controlId="formGroupSkill2">
-                <Form.Label>Password</Form.Label>
                 <Form.Control as="textarea" rows={3} placeholder="Enter your evidence of the skill" defaultValue={student.maths}/>
               </Form.Group>
             </Accordion.Body>
@@ -57,4 +56,4 @@ function studentDashboard() {
   );
 }
 
-export default studentDashboard;
+export default StudentDashboard;
