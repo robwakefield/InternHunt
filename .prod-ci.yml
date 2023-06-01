@@ -18,26 +18,26 @@ build-job:       # This job runs in the build stage, which runs first.
     - npm run build
     - chmod u+x node_modules
   tags:
-    - prod-runner  # Use the runner with correct tag to run this pipeline
+    - build-runner  # Use the runner with correct tag to run this pipeline
 
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   script:
     - echo "Running unit tests..."
   tags:
-    - prod-runner  # Use the runner with correct tag to run this pipeline
+    - test-runner  # Use the runner with correct tag to run this pipeline
 
 deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *all* jobs in the test stage complete successfully.
   environment: production
   script:
-    - export PORT=80
     - touch ./next.log
+    - export PORT=80
     - sudo fuser -k $PORT/tcp || true  # Kill any process running on $PORT
     - sudo npm run start $PORT > ./next.log 2>&1 &  # Run the web app
   artifacts:
     paths:
       - next.log  # Keep output from deploy as artifact
   tags:
-    - prod-runner  # Use the runner with correct tag to run this pipeline
+    - deploy-runner  # Use the runner with correct tag to run this pipeline
   
