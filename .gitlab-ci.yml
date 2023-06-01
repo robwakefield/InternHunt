@@ -1,3 +1,10 @@
+cache:           # Cache persists between pipelines
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+    - .next/
+    - .npm/
+
 include:
   - local: .prod-ci.yml
     rules:
