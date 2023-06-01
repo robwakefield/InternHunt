@@ -11,7 +11,7 @@ function studentDashboard() {
     <main className="studentDashboard">
       <Nav fill className="justify-content-center" activeKey="/home">
       <Nav.Item>
-        <h6>3 Requirement Matched </h6>
+        <h6>3 Requirements Matched </h6>
       </Nav.Item>
       <Nav.Item>
       <h4>Your Application </h4>
