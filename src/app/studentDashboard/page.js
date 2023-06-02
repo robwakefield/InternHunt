@@ -48,7 +48,7 @@ function StudentDashboard() {
       <Form onSubmit={handleSubmit}>
         <Accordion defaultActiveKey={['0']} alwaysOpen>
           <Accordion.Item eventKey="0">
-            <Accordion.Header>Language Skill</Accordion.Header>
+            <Accordion.Header>Language Skills changed</Accordion.Header>
             <Accordion.Body>
             <Form.Group className="mb-3" controlId="formGroupSkill1">
               <Form.Control as="textarea" rows={3} placeholder="Enter your evidence of the skill" defaultValue={student.language} ref={langRef}/>
