@@ -56,7 +56,7 @@ function StudentDashboard() {
             </Accordion.Body>
           </Accordion.Item>
           <Accordion.Item eventKey="1">
-            <Accordion.Header>Profient in Maths</Accordion.Header>
+            <Accordion.Header>Proficient in Maths</Accordion.Header>
             <Accordion.Body>
               <Form.Group className="mb-3" controlId="formGroupSkill2">
                 <Form.Control as="textarea" rows={3} placeholder="Enter your evidence of the skill" defaultValue={student.maths} ref={mathRef}/>
