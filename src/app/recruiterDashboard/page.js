@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import Nav from 'react-bootstrap/Nav';
 import Button from 'react-bootstrap/Button';
 import ListGroup from "react-bootstrap/ListGroup";
-import { Container, Navbar } from "react-bootstrap";
+import { Container, Navbar, Card } from "react-bootstrap";
 
 function recruiterDashboard() {
 const handleClick = () => {
@@ -13,6 +13,7 @@ const handleClick = () => {
 
   return (
     <main className="recruiterDashboard">
+      {/* Navigation Title Bar */}
       <Navbar bg="light" expand="lg">
         <Container className="d-flex justify-content-center">
           <Container className="flex-fill d-flex justify-content-start">
@@ -28,19 +29,18 @@ const handleClick = () => {
         </Container>
       </Navbar>
       
+      {/* Job Listings List */}
       <Container>
-        <ListGroup>
-          <ListGroup.Item>
-            <Nav justify onClick={handleClick} >
-              <Nav.Item>Open</Nav.Item>
-              <Nav.Item>IT Intern</Nav.Item>
-              <Nav.Item>3/50 Remaining</Nav.Item>
-            </Nav>
-        </ListGroup.Item>
-        </ListGroup>
+        <Card>
+          <Card.Header className="d-flex justify-content-between">
+            <Button>Sort</Button>
+            <h4>My Listings</h4>
+            <Button>New Post</Button>
+          </Card.Header>
+        </Card>
       </Container>
     </main>
-    
+
     
   );
 }
