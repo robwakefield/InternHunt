@@ -1,7 +1,7 @@
 'use client'
 import "bootstrap/dist/css/bootstrap.min.css"
 import Button from "react-bootstrap/Button";
-import { ListGroup, ListGroupItem } from "react-bootstrap";
+import { ListGroup, ListGroupItem, Nav } from "react-bootstrap";
 import { Component } from "react";
 import Card from 'react-bootstrap/Card';
 
@@ -14,8 +14,10 @@ function RecruiterInternship() {
       <Card>
         <Card.Header>{internshipName}</Card.Header>
         <Card.Body>
-          <ApplicantList />
-          <SkillList />
+          <Nav fill className="justify-content-center">
+            <ApplicantList />
+            <SkillList />
+          </Nav>
         </Card.Body>
       </Card>
     </main>
