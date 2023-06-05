@@ -16,3 +16,8 @@ model Student {
   language String
   maths    String
 }
+
+model Post {
+  id   Int @id @default(autoincrement())
+  name String
+}
