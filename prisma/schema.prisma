@@ -12,12 +12,23 @@ datasource db {
 }
 
 model Student {
-  id       Int     @id @default(autoincrement())
-  language String
-  maths    String
+  id           Int @id @default(autoincrement())
+  name         String
+  language     String
+  maths        String
+  applications Application[]
 }
 
 model Post {
-  id   Int @id @default(autoincrement())
-  name String
+  id           Int @id @default(autoincrement())
+  name         String
+  applications Application[]
+}
+
+model Application {
+  id        Int @id @default(autoincrement())
+  post      Post @relation(fields: [postID], references: [id])
+  postID    Int
+  student   Student @relation(fields: [studentID], references: [id])
+  studentID Int
 }
