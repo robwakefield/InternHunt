@@ -26,9 +26,10 @@ model Post {
 }
 
 model Application {
-  id        Int @id @default(autoincrement())
   post      Post @relation(fields: [postID], references: [id])
   postID    Int
   student   Student @relation(fields: [studentID], references: [id])
   studentID Int
+
+  @@id([postID, studentID])
 }

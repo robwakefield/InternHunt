@@ -6,11 +6,12 @@ import { Component, useEffect, useState } from "react";
 import Card from 'react-bootstrap/Card';
 
 function RecruiterInternship() {
-  const [post, setPost] = useState([]);
+  const [post, setPost] = useState({name: "", applications: []});
+
   useEffect(() => {
     fetch('/api/post')
       .then((response) => response.json())
-      .then((data) => {setPost(data)});
+      .then((data) => setPost(data));
   }, []);
 
   return (
@@ -20,7 +21,7 @@ function RecruiterInternship() {
         <Card.Header>{post.name}</Card.Header>
         <Card.Body>
           <Nav fill className="justify-content-center">
-            <ApplicantList />
+            <ApplicantList post={post}/>
             <SkillList />
           </Nav>
         </Card.Body>
@@ -32,14 +33,20 @@ function RecruiterInternship() {
 export default RecruiterInternship;
 
 class ApplicantList extends Component {
-  applicants = [
-    {name: "applicant1"},
-    {name: "applicant2"},
-    {name: "applicant3"}
-  ];
+  constructor(props) {
+    super(props);
+    this.state = {
+      applications: props.post.applications
+    };
+  }
+  componentDidUpdate(prevProps) {
+    if (prevProps.post !== this.props.post) {
+      this.setState({ applications: this.props.post.applications });
+    }
+  }
   render() {
     return (
-      <ListGroup componentClass="ul">{this.applicants.map((applicant) => (<ListGroupItem key={applicant.name}>{applicant.name}</ListGroupItem>))}</ListGroup>
+      <ListGroup>{this.state.applications.map((application) => (<ListGroupItem key={application.student.name}>{application.student.name}</ListGroupItem>))}</ListGroup>
     )
   }
 }
@@ -52,7 +59,7 @@ class SkillList extends Component {
   ];
   render() {
     return (
-      <ListGroup componentClass="ul">{this.skills.map((skill) => (<ListGroupItem key={skill.name}>{skill.name}</ListGroupItem>))}</ListGroup>
+      <ListGroup>{this.skills.map((skill) => (<ListGroupItem key={skill.name}>{skill.name}</ListGroupItem>))}</ListGroup>
     )
   }
 }
