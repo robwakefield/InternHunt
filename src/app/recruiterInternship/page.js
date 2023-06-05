@@ -13,7 +13,7 @@ function RecruiterInternship() {
   return (
     <main className="recruiterInternship">
       <Button href="./recruiterDashboard">Return to Dashboard</Button>
-      <ListGroup componentClass="ul">{applicants.map((applicant) => (<ListGroupItem>{applicant.name}</ListGroupItem>))}</ListGroup>
+      <ListGroup componentClass="ul">{applicants.map((applicant) => (<ListGroupItem key={applicant.name}>{applicant.name}</ListGroupItem>))}</ListGroup>
     </main>
   );
 }
