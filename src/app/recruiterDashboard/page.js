@@ -20,7 +20,6 @@ const handleClick = () => {
             <Navbar.Brand>My Company</Navbar.Brand>
             <Nav>
               <Nav.Link href="/">Home</Nav.Link>
-              <Nav.Link href="./recruiterInternship">Rate Candidates</Nav.Link>
             </Nav>
           </Container>
           <Button>Search</Button>
