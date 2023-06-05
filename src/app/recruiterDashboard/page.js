@@ -15,17 +15,15 @@ const handleClick = () => {
     <main className="recruiterDashboard">
       {/* Navigation Title Bar */}
       <Navbar bg="light" expand="lg">
-        <Container className="d-flex justify-content-center">
-          <Container className="flex-fill d-flex justify-content-start">
+        <Container>
+          <Container className="d-flex justify-content-start">
+            <Navbar.Brand>My Company</Navbar.Brand>
             <Nav>
               <Nav.Link href="/">Home</Nav.Link>
               <Nav.Link href="./recruiterInternship">Rate Candidates</Nav.Link>
             </Nav>
           </Container>
-          <Navbar.Brand className="text-center">My Listings</Navbar.Brand>
-          <Container className="flex-fill d-flex justify-content-end">
-            <Button>New Listing</Button>
-          </Container>
+          <Button>Search</Button>
         </Container>
       </Navbar>
       
