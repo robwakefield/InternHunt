@@ -19,6 +19,7 @@ const handleClick = () => {
       <Nav.Item>
       <h1>Job Listings</h1>
       </Nav.Item>
+      <Nav.Item><Nav.Link href="./recruiterInternship">Rate Candidates</Nav.Link></Nav.Item>
       <Nav.Item><Button>New Listing</Button></Nav.Item>
       </Nav>
       
