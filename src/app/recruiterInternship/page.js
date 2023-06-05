@@ -2,17 +2,22 @@
 import "bootstrap/dist/css/bootstrap.min.css"
 import Button from "react-bootstrap/Button";
 import { ListGroup, ListGroupItem, Nav } from "react-bootstrap";
-import { Component } from "react";
+import { Component, useEffect, useState } from "react";
 import Card from 'react-bootstrap/Card';
 
 function RecruiterInternship() {
-  const internshipName = "internshipName";
+  const [post, setPost] = useState([]);
+  useEffect(() => {
+    fetch('/api/post')
+      .then((response) => response.json())
+      .then((data) => {setPost(data)});
+  }, []);
 
   return (
     <main className="recruiterInternship">
       <Button href="./recruiterDashboard">Return to Dashboard</Button>
       <Card>
-        <Card.Header>{internshipName}</Card.Header>
+        <Card.Header>{post.name}</Card.Header>
         <Card.Body>
           <Nav fill className="justify-content-center">
             <ApplicantList />
