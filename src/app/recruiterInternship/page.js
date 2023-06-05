@@ -34,7 +34,7 @@ class ApplicantList extends Component {
   ];
   render() {
     return (
-      <ListGroup componentClass="ul">{this.applicants.map((applicant) => (<ListGroupItem>{applicant.name}</ListGroupItem>))}</ListGroup>
+      <ListGroup componentClass="ul">{this.applicants.map((applicant) => (<ListGroupItem key={applicant.name}>{applicant.name}</ListGroupItem>))}</ListGroup>
     )
   }
 }
@@ -47,7 +47,7 @@ class SkillList extends Component {
   ];
   render() {
     return (
-      <ListGroup componentClass="ul">{this.skills.map((skill) => (<ListGroupItem>{skill.name}</ListGroupItem>))}</ListGroup>
+      <ListGroup componentClass="ul">{this.skills.map((skill) => (<ListGroupItem key={skill.name}>{skill.name}</ListGroupItem>))}</ListGroup>
     )
   }
 }
