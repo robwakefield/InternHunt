@@ -38,7 +38,7 @@ const handleClick = () => {
           <ListGroup>
 
             <ListGroupItem>
-              <Container className="d-flex justify-content-between" onClick={handleClick}>
+              <Container className="d-flex justify-content-between" style={{cursor: "pointer"}} onClick={handleClick}>
                 <p className="text-danger">Applications Closed</p>
                 <p className="text-center">IT Intern</p>
                 <p className="text-success">3/50 Applications</p>
@@ -46,7 +46,7 @@ const handleClick = () => {
             </ListGroupItem>
 
             <ListGroupItem>
-              <Container className="d-flex justify-content-between" onClick={handleClick}>
+              <Container className="d-flex justify-content-between" style={{cursor: "pointer"}} onClick={handleClick}>
                 <p className="text-success">Applications Open</p>
                 <p className="text-center">Softare Engineer Intern</p>
                 <p className="text-warning">30/35 Applications</p>
@@ -54,7 +54,7 @@ const handleClick = () => {
             </ListGroupItem>
 
             <ListGroupItem>
-              <Container className="d-flex justify-content-between" onClick={handleClick}>
+              <Container className="d-flex justify-content-between" style={{cursor: "pointer"}} onClick={handleClick}>
                 <p className="text-muted">Draft</p>
                 <p className="text-center">Management Intern</p>
                 <p></p>
