@@ -27,8 +27,8 @@ const handleClick = () => {
       </Navbar>
       
       {/* Job Listings List */}
-      <Container  style={{height: "100px"}}>
-        <Card className="h-100">
+      <Container  style={{height: "80vh"}}>
+        <Card className="mt-4 h-100">
           <Card.Header className="d-flex justify-content-between">
             <Button>Sort</Button>
             <h4>My Listings</h4>
