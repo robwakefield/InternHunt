@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import { Nav, Button, ListGroup, Container, Navbar, Card, ListGroupItem } from "react-bootstrap";
 import { Component, useEffect, useState } from "react";
 
-function recruiterDashboard() {
+function RecruiterDashboard() {
 
   const [listings, setListings] = useState([]);
 
@@ -48,7 +48,7 @@ function recruiterDashboard() {
   );
 }
 
-export default recruiterDashboard;
+export default RecruiterDashboard;
 
 class ApplicantList extends Component {
   constructor(props) {
