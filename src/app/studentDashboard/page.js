@@ -27,7 +27,13 @@ function StudentDashboard() {
     <main className="studentDashboard">
       <Navbar bg="light" expand="lg">
       <Container>
-        <Navbar.Brand href="/">InternHunt</Navbar.Brand>
+        <Navbar.Brand href="/"><img
+              alt=""
+              src="/favicon.ico"
+              width="30"
+              height="30"
+              className="d-inline-block align-top"
+            />{' '}InternHunt</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
