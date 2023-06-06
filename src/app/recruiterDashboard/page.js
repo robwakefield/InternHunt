@@ -1,8 +1,10 @@
 'use client'
 
+import './recruiterDashboard.css'
 import "bootstrap/dist/css/bootstrap.min.css"
 import { Nav, Button, ListGroup, Container, Navbar, Card, ListGroupItem } from "react-bootstrap";
 import { Component, useEffect, useState } from "react";
+import StudentNavbar from "../studentNavbar";
 
 function RecruiterDashboard() {
 
@@ -17,18 +19,7 @@ function RecruiterDashboard() {
 
   return (
     <main className="recruiterDashboard">
-      {/* Navigation Title Bar */}
-      <Navbar bg="light" expand="lg">
-        <Container>
-          <Container className="d-flex justify-content-start">
-            <Navbar.Brand>My Company</Navbar.Brand>
-            <Nav>
-              <Nav.Link href="/">Home</Nav.Link>
-            </Nav>
-          </Container>
-          <Button>Search</Button>
-        </Container>
-      </Navbar>
+      <StudentNavbar/>
       
       {/* Job Listings List */}
       <Container  style={{height: "80vh"}}>
@@ -38,9 +29,7 @@ function RecruiterDashboard() {
             <h4>My Listings</h4>
             <Button>New Post</Button>
           </Card.Header>
-
-        <ApplicantList listings={listings}></ApplicantList>
-          
+          <ApplicantList listings={listings}/>          
         </Card>
       </Container>
     </main>
@@ -99,29 +88,51 @@ class ListingItem extends Component {
     }
   }
 
-  render() {
-    let status_text;
-    switch (this.state.status) {
+  getStatusClass(status) {
+    switch (status) {
       case "Draft":
-        status_text = <p className="text-muted">{this.state.status}</p>
-        break
+        return "text-muted"
       case "Applications Open":
-        status_text = <p className="text-success">{this.state.status}</p>
-        break
+        return "text-success"
       case "Applications Closed":
-        status_text = <p className="text-error">{this.state.status}</p>
-        break
+        return "text-danger"
       default:
-        status_text = <p>{this.state.status}</p>
+        return ""
     }
+  }
 
+  getRatioClass(ratio) {
+    if (ratio >= 0.8) {
+      return "text-success"
+    } else if (ratio >= 0.4) {
+      return "text-warning"
+    } else if (ratio > 0){
+      return "text-danger"
+    } else {
+      return ""
+    }
+  }
+
+  render() {
+    
+    let status_class = this.getStatusClass(this.state.status)
+
+    let places_filled = 0
+    if (this.state.places_filled) {
+      places_filled = this.state.places_filled.length
+    }
+    let total_places = this.state.total_places
+    let ratio = places_filled / total_places
+    
+    let ratio_class = this.getRatioClass(ratio)
+    
     return (
-      <ListGroupItem>
+      <ListGroupItem className="listing">
         <Container className="d-flex justify-content-between" style={{cursor: "pointer"}} onClick={handleClick}>
-          {status_text}
+          <p className={status_class}>{this.state.status}</p>
           <p className="text-center">{this.state.title}</p>
-          <p className="text-warning">
-            {this.state.places_filled}/{this.state.total_places} Applications
+          <p className={ratio_class}>
+            {places_filled}/{total_places} Applications
           </p>
         </Container>
       </ListGroupItem>
