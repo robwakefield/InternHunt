@@ -3,9 +3,6 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import "./studentDashboard.css"
 import Accordion from 'react-bootstrap/Accordion';
 import Form from 'react-bootstrap/Form';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -16,6 +13,7 @@ import ProgressBar from "react-bootstrap/ProgressBar";
 import { useEffect, useState, useRef } from 'react';
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
+import StudentNavbar from "../studentNavbar";
 
 function StudentDashboard() {
 
@@ -25,23 +23,7 @@ function StudentDashboard() {
 
   return (
     <main className="studentDashboard">
-      <Navbar bg="light" expand="lg">
-      <Container>
-        <Navbar.Brand href="/"><img
-              alt=""
-              src="/favicon.ico"
-              width="30"
-              height="30"
-              className="d-inline-block align-top"
-            />{' '}InternHunt</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link href="/">Home</Nav.Link>
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+      <StudentNavbar></StudentNavbar>
 
 
       <Container fluid="md" className="dashboardContainer">
