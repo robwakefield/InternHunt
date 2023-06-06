@@ -23,6 +23,7 @@ studentDashboard {
 .vertical-timeline::before{
   top: 70px !important;
   height: 75% !important;
+  color: white;
   
 }
 
@@ -49,4 +50,16 @@ studentDashboard {
 
 .feedback {
   font-size: small !important;
+}
+
+.progress{
+  width: 10rem !important;
+}
+.applicationEntry{
+  border: 1px solid lightgrey !important;
+}
+
+.applicationEntry:hover{
+  background-color: lightgrey;
+  border: 1px solid grey;
 }

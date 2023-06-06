@@ -4,12 +4,15 @@ import "./studentDashboard.css"
 import Accordion from 'react-bootstrap/Accordion';
 import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import NavDropdown from 'react-bootstrap/NavDropdown';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import ListGroup from "react-bootstrap/ListGroup";
 import { Card, CarouselItem, ListGroupItem } from "react-bootstrap";
+import ProgressBar from "react-bootstrap/ProgressBar";
 import { useEffect, useState, useRef } from 'react';
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
@@ -22,11 +25,17 @@ function StudentDashboard() {
 
   return (
     <main className="studentDashboard">
-      <Nav fill className="navbar" activeKey="/home">
-        <Nav.Item>
-          <h4>Dashboard</h4>
-        </Nav.Item>
-      </Nav>
+      <Navbar bg="light" expand="lg">
+      <Container>
+        <Navbar.Brand href="/">InternHunt</Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="me-auto">
+            <Nav.Link href="/">Home</Nav.Link>
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
 
 
       <Container fluid="md" className="dashboardContainer">
@@ -36,28 +45,39 @@ function StudentDashboard() {
               <Card className="mt-4 h-100">
                 <Card.Header className="d-flex justify-content-between">
                   <Button>Sort</Button>
-                  <h4>My Listings</h4>
+                  <h4>My Applications</h4>
                   <Button>New Post</Button>
                 </Card.Header>
 
                 <ListGroup>
 
-                  <ListGroupItem>
-                    <Container className="d-flex justify-content-between" style={{ cursor: "pointer" }} onClick={handleClick}>
-                      <p className="text-center">IT Intern</p>
+                  <ListGroupItem className="applicationEntry">
+                    <Container fluid="md" style={{ cursor: "pointer" }} onClick={handleClick}>
+                      <Row>
+                        <Col><p className="text-left">IT Intern</p></Col>
+                          <Col><p className="deadline"  style={{color:'darkgreen'}}>Deadline: 08/10/23</p></Col>
+                          <Col><ProgressBar variant='success' now={50} /></Col>
+                        </Row>
                     </Container>
                   </ListGroupItem>
 
-                  <ListGroupItem>
-                    <Container className="d-flex justify-content-between" style={{ cursor: "pointer" }} onClick={handleClick}>
-                    <p className="text-center">Softare Engineer Intern</p>
+                  <ListGroupItem className="applicationEntry">
+                  <Container fluid="md" style={{ cursor: "pointer" }} onClick={handleClick}>
+                      <Row>
+                        <Col><p className="text-left">Softare Engineer Intern</p></Col>
+                          <Col><p className="deadline" style={{color:'orange'}}>Deadline: 08/10/23</p></Col>
+                          <Col><ProgressBar variant='warning' now={20} /></Col>
+                        </Row>
                     </Container>
                   </ListGroupItem>
 
-                  <ListGroupItem>
-                    <Container className="d-flex justify-content-between" style={{ cursor: "pointer" }} onClick={handleClick}>
-                      <p className="text-center">Management Intern</p>
-                      <p></p>
+                  <ListGroupItem className="applicationEntry">
+                  <Container fluid="md" style={{ cursor: "pointer" }} onClick={handleClick}>
+                      <Row>
+                        <Col><p className="text-left">Management Intern</p></Col>
+                          <Col><p className="deadline" style={{color:'red'}} >Application Closed</p></Col>
+                          <Col><ProgressBar variant='danger' now={100} /></Col>
+                        </Row>
                     </Container>
                   </ListGroupItem>
 
