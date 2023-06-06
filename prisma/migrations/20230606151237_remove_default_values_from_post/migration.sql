@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Post" ALTER COLUMN "status" DROP DEFAULT,
+ALTER COLUMN "totalPlaces" DROP DEFAULT;
