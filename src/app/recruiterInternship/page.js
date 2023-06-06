@@ -91,7 +91,7 @@ class SkillList extends Component {
           
           <Accordion>{
             this.skills.map((skill) => (
-              <Accordion.Item eventKey={skill.name}>
+              <Accordion.Item eventKey={skill.name} key={skill.name}>
                 <Accordion.Header>{skill.name}</Accordion.Header>
                 <Accordion.Body><Container className="d-flex justify-content-between" style={{cursor: "pointer"}}>
                   <p className="text-center">Evidenceasdfasdfasdfads asdfasdfsdfasdf asdfasdfasd fasd sdafasdfasdf asdf asdf asdfasdf asdf asdfasdfasdf asdfasdf asdfasdf asdf adasdf</p><StarRating /></Container></Accordion.Body>
