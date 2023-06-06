@@ -114,8 +114,6 @@ class ListingItem extends Component {
   }
 
   render() {
-
-    console.log(this.state.places_filled)
     
     let status_class = this.getStatusClass(this.state.status)
 
