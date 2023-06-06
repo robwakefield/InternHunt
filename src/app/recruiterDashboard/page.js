@@ -1,15 +1,19 @@
 'use client'
 
 import "bootstrap/dist/css/bootstrap.min.css"
-import Nav from 'react-bootstrap/Nav';
-import Button from 'react-bootstrap/Button';
-import ListGroup from "react-bootstrap/ListGroup";
-import { Container, Navbar, Card, ListGroupItem } from "react-bootstrap";
+import { Nav, Button, ListGroup, Container, Navbar, Card, ListGroupItem } from "react-bootstrap";
+import { Component, useEffect, useState } from "react";
 
 function recruiterDashboard() {
-const handleClick = () => {
-  window.location.href = "./recruiterInternship";
-}
+
+const [post, setPost] = useState({name: "", applications: [], totalPlaces: 0, status: ""});
+
+useEffect(() => {
+  fetch('/api/post')
+    .then((response) => response.json())
+    .then((data) => setPost(data));
+}, []);
+
 
   return (
     <main className="recruiterDashboard">
@@ -35,39 +39,68 @@ const handleClick = () => {
             <Button>New Post</Button>
           </Card.Header>
 
-          <ListGroup>
-
-            <ListGroupItem>
-              <Container className="d-flex justify-content-between" style={{cursor: "pointer"}} onClick={handleClick}>
-                <p className="text-danger">Applications Closed</p>
-                <p className="text-center">IT Intern</p>
-                <p className="text-success">3/50 Applications</p>
-              </Container>
-            </ListGroupItem>
-
-            <ListGroupItem>
-              <Container className="d-flex justify-content-between" style={{cursor: "pointer"}} onClick={handleClick}>
-                <p className="text-success">Applications Open</p>
-                <p className="text-center">Softare Engineer Intern</p>
-                <p className="text-warning">30/35 Applications</p>
-              </Container>
-            </ListGroupItem>
-
-            <ListGroupItem>
-              <Container className="d-flex justify-content-between" style={{cursor: "pointer"}} onClick={handleClick}>
-                <p className="text-muted">Draft</p>
-                <p className="text-center">Management Intern</p>
-                <p></p>
-              </Container>
-            </ListGroupItem>
-
-          </ListGroup>
+        <ApplicantList listings={[1, 2, 3]}></ApplicantList>
+          
         </Card>
       </Container>
     </main>
-
     
   );
 }
 
 export default recruiterDashboard;
+
+class ApplicantList extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      listings: props.listings
+    };
+  }
+
+  render() {
+    return (
+      <ListGroup>
+        {this.state.listings.map((listing) => <ListingItem key={listing.title}></ListingItem>)}
+      </ListGroup>
+    )
+  }
+}
+
+const handleClick = () => {
+  window.location.href = "./recruiterInternship";
+}
+
+class ListingItem extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      title: "IT Intern",
+      status: "Applications Open",
+      places_filled: "3",
+      total_places: "50"
+    };
+  }
+
+  render() {
+    return (
+      <ListGroupItem>
+        <Container className="d-flex justify-content-between" style={{cursor: "pointer"}} onClick={handleClick}>
+          <p className="text-muted">{this.state.status}</p>
+          <p className="text-center">{this.state.title}</p>
+          <p className="text-warning">
+            {this.state.places_filled}/{this.state.total_places} Applications
+          </p>
+        </Container>
+      </ListGroupItem>
+    )
+  }
+}
+
+{/* <ListGroupItem>
+<Container className="d-flex justify-content-between" style={{cursor: "pointer"}} onClick={handleClick}>
+  <p className="text-success">Applications Open</p>
+  <p className="text-center">Softare Engineer Intern</p>
+  <p className="text-warning">30/35 Applications</p>
+</Container>
+</ListGroupItem> */}
