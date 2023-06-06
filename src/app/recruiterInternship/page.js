@@ -1,9 +1,7 @@
 'use client'
 import "bootstrap/dist/css/bootstrap.min.css"
-import Button from "react-bootstrap/Button";
-import { ListGroup, ListGroupItem, Nav } from "react-bootstrap";
+import { Button, Card, Col, Container, ListGroup, ListGroupItem, Nav, Row } from "react-bootstrap";
 import { Component, useEffect, useState } from "react";
-import Card from 'react-bootstrap/Card';
 
 function RecruiterInternship() {
   const [post, setPost] = useState({name: "", applications: []});
@@ -20,10 +18,14 @@ function RecruiterInternship() {
       <Card>
         <Card.Header>{post.name}</Card.Header>
         <Card.Body>
-          <Nav fill className="justify-content-center">
-            <ApplicantList post={post}/>
-            <SkillList />
-          </Nav>
+          <Row>
+            <Col>
+              <ApplicantList post={post}/>
+            </Col>
+            <Col>
+              <SkillList />
+            </Col>
+          </Row>
         </Card.Body>
       </Card>
     </main>
@@ -46,7 +48,25 @@ class ApplicantList extends Component {
   }
   render() {
     return (
-      <ListGroup>{this.state.applications.map((application) => (<ListGroupItem key={application.student.name}>{application.student.name}</ListGroupItem>))}</ListGroup>
+      <Container style={{height: "80vh"}}>
+        <Card className="mt-4 h-100">
+          <Card.Header className="d-flex justify-content-between">
+            <Button>Sort</Button>
+            <h4>Applicants</h4>
+            <Button>Search</Button>
+          </Card.Header>
+        
+          <ListGroup componentClass="ul"> {
+            this.state.applications.map((application) => (
+              <ListGroupItem key={application.student.name}>
+                <Container className="d-flex justify-content-between" style={{cursor: "pointer"}}>
+                <p className="text-center">{application.student.name}</p>
+                </Container>
+              </ListGroupItem>
+            ))}
+          </ListGroup>
+        </Card>
+      </Container>
     )
   }
 }
@@ -59,7 +79,25 @@ class SkillList extends Component {
   ];
   render() {
     return (
-      <ListGroup>{this.skills.map((skill) => (<ListGroupItem key={skill.name}>{skill.name}</ListGroupItem>))}</ListGroup>
+      <Container style={{height: "80vh"}}>
+        <Card className="mt-4 h-100">
+          <Card.Header className="d-flex justify-content-between">
+            <Button>See Documents</Button>
+            <h4>Skills</h4>
+            <Button>Accept</Button>
+          </Card.Header>
+          
+          <ListGroup componentClass="ul">{
+            this.skills.map((skill) => (
+              <ListGroupItem key={skill.name}>
+                <Container className="d-flex justify-content-between" style={{cursor: "pointer"}}>
+                <p className="text-center">{skill.name}</p>
+                </Container>
+              </ListGroupItem>
+            ))}
+          </ListGroup>
+        </Card>
+      </Container>
     )
   }
 }
