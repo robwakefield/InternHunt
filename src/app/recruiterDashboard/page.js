@@ -6,13 +6,13 @@ import { Component, useEffect, useState } from "react";
 
 function recruiterDashboard() {
 
-const [post, setPost] = useState({name: "", applications: [], totalPlaces: 0, status: ""});
+  const [listings, setListings] = useState([]);
 
-useEffect(() => {
-  fetch('/api/post')
-    .then((response) => response.json())
-    .then((data) => setPost(data));
-}, []);
+  useEffect(() => {
+    fetch('/api/listings')
+      .then((response) => response.json())
+      .then((data) => setListings(data));
+  }, []);
 
 
   return (
@@ -39,7 +39,7 @@ useEffect(() => {
             <Button>New Post</Button>
           </Card.Header>
 
-        <ApplicantList listings={[1, 2, 3]}></ApplicantList>
+        <ApplicantList listings={listings}></ApplicantList>
           
         </Card>
       </Container>
@@ -56,6 +56,12 @@ class ApplicantList extends Component {
     this.state = {
       listings: props.listings
     };
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.listings !== this.props.listings) {
+      this.setState({ listings: this.props.listings });
+    }
   }
 
   render() {
@@ -96,11 +102,3 @@ class ListingItem extends Component {
     )
   }
 }
-
-{/* <ListGroupItem>
-<Container className="d-flex justify-content-between" style={{cursor: "pointer"}} onClick={handleClick}>
-  <p className="text-success">Applications Open</p>
-  <p className="text-center">Softare Engineer Intern</p>
-  <p className="text-warning">30/35 Applications</p>
-</Container>
-</ListGroupItem> */}
