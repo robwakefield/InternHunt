@@ -9,4 +9,44 @@ studentDashboard {
 
 .progressTimeline {
   background-color: lightgrey;
+  margin-top: 30px;
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-top: 0px;
+}
+
+.vertical-timeline{
+  padding: 0px !important;
+}
+
+
+.vertical-timeline::before{
+  top: 70px !important;
+  height: 75% !important;
+  
+}
+
+.vertical-timeline-element-icon{
+  width: 20px !important;
+  height: 20px !important;
+  left: 10px !important;
+  top: 30px !important;
+}
+
+.vertical-timeline-element {
+  position: relative;
+  margin: 2em 0 !important;
+}
+
+.vertical-timeline-element-content {
+  padding-bottom: 0px !important;
+}
+
+.vertical-timeline-element-content-arrow {
+  display: none;
+}
+
+
+.feedback {
+  font-size: small !important;
 }

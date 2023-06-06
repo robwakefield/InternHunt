@@ -69,27 +69,46 @@ function StudentDashboard() {
 
 
 
-          <Col xs={5} className="progressTimeline" ><VerticalTimeline style={{ height: "80vh" }} layout={{ default: '1-column-left'}}>
-            <VerticalTimelineElement position="right"
+          <Col xs={5}><Container style={{ height: "80vh" }} ><Card className="mt-4 h-100 progressTimeline">
+            <VerticalTimeline style={{ height: "80vh" }} layout={{ default: '1-column-left' }}>
+            <VerticalTimelineElement
               className="vertical-timeline-element--work"
               contentStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
-              contentArrowStyle={{ borderRight: '7px solid  rgb(33, 150, 243)' }}
               date="10 Mar 2023"
-              iconStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
+              iconStyle={{ background: 'rgb(33, 150, 243)', color: '#fff'}}
             >
-              <h3 className="vertical-timeline-element-title">Creative Director</h3>
+              <h6 className="vertical-timeline-element-title">Upload CV</h6>
             </VerticalTimelineElement>
-            <VerticalTimelineElement  position="right"
+            <VerticalTimelineElement
               className="vertical-timeline-element--work"
               date="10 Mar 2023"
-              iconStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
+              iconStyle={{ background: 'grey', color: '#fff' }}
             >
-              <h3 className="vertical-timeline-element-title">Art Director</h3>
+              <h6 className="vertical-timeline-element-title">Applpication Submitted</h6>
             </VerticalTimelineElement>
-            <VerticalTimelineElement position="right"
-              iconStyle={{ background: 'rgb(16, 204, 82)', color: '#fff' }}
-            />
-          </VerticalTimeline></Col>
+            <VerticalTimelineElement
+              className="vertical-timeline-element--work"
+              date="10 Mar 2023"
+              iconStyle={{ background: 'grey', color: '#fff' }}
+            >
+              <h6 className="vertical-timeline-element-title">CV Viewed</h6>
+              </VerticalTimelineElement>
+              <VerticalTimelineElement
+              className="vertical-timeline-element--work"
+              date="10 Mar 2023"
+              iconStyle={{ background: 'grey', color: '#fff' }}
+            >
+              <h6 className="vertical-timeline-element-title">Interview</h6>
+              </VerticalTimelineElement>
+              <VerticalTimelineElement
+              className="vertical-timeline-element--work"
+              date="10 Mar 2023"
+              iconStyle={{ background: 'red', color: '#fff' }}
+            >
+                <h6 className="vertical-timeline-element-title">Applpication Unsuccessful <br></br>
+                  <a className="feedback" href="./studentApplication">View Feedback</a> </h6>
+            </VerticalTimelineElement>
+          </VerticalTimeline></Card></Container></Col>
         </Row>
       </Container>
     </main>
