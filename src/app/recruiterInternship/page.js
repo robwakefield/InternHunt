@@ -1,5 +1,6 @@
 'use client'
 import "bootstrap/dist/css/bootstrap.min.css"
+import starStyle from './Star.module.css';
 import { Button, Card, Col, Container, ListGroup, ListGroupItem, Nav, Row } from "react-bootstrap";
 import { Component, useEffect, useState } from "react";
 
@@ -92,6 +93,7 @@ class SkillList extends Component {
               <ListGroupItem key={skill.name}>
                 <Container className="d-flex justify-content-between" style={{cursor: "pointer"}}>
                 <p className="text-center">{skill.name}</p>
+                <StarRating />
                 </Container>
               </ListGroupItem>
             ))}
@@ -101,3 +103,26 @@ class SkillList extends Component {
     )
   }
 }
+
+const StarRating = () => {
+  const [rating, setRating] = useState(-1);
+  const [hover, setHover] = useState(-1);
+  return (
+    <div className="star-rating">
+      {[...Array(5)].map((_, index) => (
+          <button
+            type="button"
+            key={index}
+            className={index <= (hover || rating) ? starStyle.on : starStyle.off}
+            onClick={() => setRating(index)}
+            onMouseEnter={() => setHover(index)}
+            onMouseLeave={() => setHover(rating)}
+            onDoubleClick={() => {setRating(-1); setHover(-1);}}
+          >
+            <span className="star">&#9733;</span>
+          </button>
+        )
+      )}
+    </div>
+  );
+};
