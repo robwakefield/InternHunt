@@ -1,54 +1,141 @@
 'use client'
 
+import './recruiterDashboard.css'
 import "bootstrap/dist/css/bootstrap.min.css"
-import Accordion from 'react-bootstrap/Accordion';
-import Form from 'react-bootstrap/Form';
-import Nav from 'react-bootstrap/Nav';
-import Button from 'react-bootstrap/Button';
-import { ListGroup } from "react-bootstrap";
+import { Nav, Button, ListGroup, Container, Navbar, Card, ListGroupItem } from "react-bootstrap";
+import { Component, useEffect, useState } from "react";
+import StudentNavbar from "../studentNavbar";
 
-function recruiterDashboard() {
-const handleClick = () => {
-  alert("Going to Intern Page!")
-}
+function RecruiterDashboard() {
+
+  const [listings, setListings] = useState([]);
+
+  useEffect(() => {
+    fetch('/api/listings')
+      .then((response) => response.json())
+      .then((data) => setListings(data));
+  }, []);
+
 
   return (
     <main className="recruiterDashboard">
-      <Nav justify activeKey="/home">
-      <Nav.Item><Nav.Link href="./studentDashboard">to studentDashboard</Nav.Link></Nav.Item>
-      <Nav.Item>
-      <h1>Job Listings</h1>
-      </Nav.Item>
-      <Nav.Item><Button>New Listing</Button></Nav.Item>
-      </Nav>
+      <StudentNavbar/>
       
-      <ListGroup>
-        <ListGroup.Item>
-          <Nav justify onClick={handleClick} >
-          <Nav.Item>Open</Nav.Item>
-          <Nav.Item>IT Intern</Nav.Item>
-          <Nav.Item>3/50 Remaining</Nav.Item>
-          </Nav>
-      </ListGroup.Item>
-      <ListGroup.Item>
-          <Nav justify onClick={handleClick}>
-          <Nav.Item>Closed</Nav.Item>
-          <Nav.Item>Software Engineer Intern</Nav.Item>
-          <Nav.Item>30/50 Remaining</Nav.Item>
-          </Nav>
-      </ListGroup.Item>
-      <ListGroup.Item>
-          <Nav justify onClick={handleClick}>
-          <Nav.Item>Draft</Nav.Item>
-          <Nav.Item>Manangement Intern</Nav.Item>
-          <Nav.Item></Nav.Item>
-          </Nav>
-      </ListGroup.Item>
-      </ListGroup>
+      {/* Job Listings List */}
+      <Container  style={{height: "80vh"}}>
+        <Card className="mt-4 h-100">
+          <Card.Header className="d-flex justify-content-between">
+            <Button>Sort</Button>
+            <h4>My Listings</h4>
+            <Button>New Post</Button>
+          </Card.Header>
+          <ApplicantList listings={listings}/>          
+        </Card>
+      </Container>
     </main>
-    
     
   );
 }
 
-export default recruiterDashboard;
+export default RecruiterDashboard;
+
+class ApplicantList extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      listings: props.listings
+    };
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.listings !== this.props.listings) {
+      this.setState({ listings: this.props.listings });
+    }
+  }
+
+  render() {
+    return (
+      <ListGroup>
+        {this.state.listings.map((listing) => <ListingItem key={listing.title} post={listing}></ListingItem>)}
+      </ListGroup>
+    )
+  }
+}
+
+const handleClick = () => {
+  window.location.href = "./recruiterInternship";
+}
+
+class ListingItem extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { 
+      title: this.props.post.name,
+      status: this.props.post.status,
+      places_filled: this.props.post.applications,
+      total_places: this.props.post.totalPlaces
+    };
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.listings !== this.props.listings) {
+      this.setState({ 
+        title: this.props.post.name,
+        status: this.props.post.status,
+        places_filled: this.props.post.applications,
+        total_places: this.props.post.totalPlaces
+      });
+    }
+  }
+
+  getStatusClass(status) {
+    switch (status) {
+      case "Draft":
+        return "text-muted"
+      case "Applications Open":
+        return "text-success"
+      case "Applications Closed":
+        return "text-danger"
+      default:
+        return ""
+    }
+  }
+
+  getRatioClass(ratio) {
+    if (ratio >= 0.8) {
+      return "text-success"
+    } else if (ratio >= 0.4) {
+      return "text-warning"
+    } else if (ratio > 0){
+      return "text-danger"
+    } else {
+      return ""
+    }
+  }
+
+  render() {
+    
+    let status_class = this.getStatusClass(this.state.status)
+
+    let places_filled = 0
+    if (this.state.places_filled) {
+      places_filled = this.state.places_filled.length
+    }
+    let total_places = this.state.total_places
+    let ratio = places_filled / total_places
+    
+    let ratio_class = this.getRatioClass(ratio)
+    
+    return (
+      <ListGroupItem className="listing">
+        <Container className="d-flex justify-content-between" style={{cursor: "pointer"}} onClick={handleClick}>
+          <p className={status_class}>{this.state.status}</p>
+          <p className="text-center">{this.state.title}</p>
+          <p className={ratio_class}>
+            {places_filled}/{total_places} Applications
+          </p>
+        </Container>
+      </ListGroupItem>
+    )
+  }
+}
