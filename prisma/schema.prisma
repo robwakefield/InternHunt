@@ -16,3 +16,20 @@ model Student {
   language String
   maths    String
 }
+
+model Post {
+  id           Int @id @default(autoincrement())
+  name        String
+  status       String
+  totalPlaces  Int
+  applications Application[]
+}
+
+model Application {
+  post      Post @relation(fields: [postID], references: [id])
+  postID    Int
+  student   Student @relation(fields: [studentID], references: [id])
+  studentID Int
+
+  @@id([postID, studentID])
+}
