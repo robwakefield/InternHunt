@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Post" ADD COLUMN     "status" TEXT NOT NULL DEFAULT 'Draft',
+ADD COLUMN     "totalPlaces" INTEGER NOT NULL DEFAULT 0;
