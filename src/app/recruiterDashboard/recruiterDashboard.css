@@ -5,3 +5,12 @@ recruiterDashboard {
 clickable {
   cursor: pointer;
 }
+
+.listing{
+  border: 1px solid lightgrey !important;
+}
+
+.listing:hover{
+  background-color: lightgrey;
+  border: 1px solid grey;
+}
