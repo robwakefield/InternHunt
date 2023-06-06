@@ -4,7 +4,10 @@ import Accordion from 'react-bootstrap/Accordion';
 import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Button from 'react-bootstrap/Button';
+import Container from "react-bootstrap/Container";
 import { useEffect, useState, useRef } from 'react';
+import StudentNavbar from "../studentNavbar";
+import { Card } from "react-bootstrap";
 
 function StudentApplication() {
   const langRef = useRef();
@@ -33,17 +36,14 @@ function StudentApplication() {
 
   return (
     <main className="studentApplication">
-      <Nav fill className="justify-content-center" activeKey="/home">
-        <Nav.Item>
-          <h6>3 Requirements Matched </h6>
-        </Nav.Item>
-        <Nav.Item>
-        <h4>Your Application </h4>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link eventKey="link-2">Upload CV</Nav.Link>
-        </Nav.Item>
-      </Nav>
+      <StudentNavbar></StudentNavbar>
+      <Container style={{ height: "80vh" }}>
+              <Card className="mt-4 h-100">
+              <Card.Header className="d-flex justify-content-between">
+                  <Button>Filter</Button>
+                  <h4>IT Intern</h4>
+                  <Button>Upload CV</Button>
+                </Card.Header>
       
       <Form onSubmit={handleSubmit}>
         <Accordion defaultActiveKey={['0']} alwaysOpen>
@@ -67,7 +67,10 @@ function StudentApplication() {
         <Button variant="primary" type="submit">
           Submit
         </Button>
-      </Form>
+        </Form>
+        </Card>
+        </Container>
+      
     </main>
   );
 }
