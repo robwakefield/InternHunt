@@ -56,7 +56,7 @@ class ApplicantList extends Component {
             <Button>Search</Button>
           </Card.Header>
         
-          <ListGroup componentClass="ul"> {
+          <ListGroup> {
             this.state.applications.map((application) => (
               <ListGroupItem key={application.student.name}>
                 <Container className="d-flex justify-content-between" style={{cursor: "pointer"}}>
@@ -87,7 +87,7 @@ class SkillList extends Component {
             <Button>Accept</Button>
           </Card.Header>
           
-          <ListGroup componentClass="ul">{
+          <ListGroup>{
             this.skills.map((skill) => (
               <ListGroupItem key={skill.name}>
                 <Container className="d-flex justify-content-between" style={{cursor: "pointer"}}>
