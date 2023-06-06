@@ -1,8 +1,9 @@
 'use client'
 import "bootstrap/dist/css/bootstrap.min.css"
 import starStyle from './Star.module.css';
-import { Button, Card, Col, Container, ListGroup, ListGroupItem, Nav, Row } from "react-bootstrap";
+import { Accordion, Button, Card, Col, Container, ListGroup, ListGroupItem, Nav, Row } from "react-bootstrap";
 import { Component, useEffect, useState } from "react";
+import RecruiterNavbar from "../recruiterNavbar";
 
 function RecruiterInternship() {
   const [post, setPost] = useState({name: "", applications: []});
@@ -15,12 +16,12 @@ function RecruiterInternship() {
 
   return (
     <main className="recruiterInternship">
-      <Button href="./recruiterDashboard">Return to Dashboard</Button>
+      <RecruiterNavbar></RecruiterNavbar>
       <Card>
         <Card.Header>{post.name}</Card.Header>
         <Card.Body>
           <Row>
-            <Col>
+            <Col xs={4}>
               <ApplicantList post={post}/>
             </Col>
             <Col>
@@ -88,16 +89,15 @@ class SkillList extends Component {
             <Button>Accept</Button>
           </Card.Header>
           
-          <ListGroup>{
+          <Accordion>{
             this.skills.map((skill) => (
-              <ListGroupItem key={skill.name}>
-                <Container className="d-flex justify-content-between" style={{cursor: "pointer"}}>
-                <p className="text-center">{skill.name}</p>
-                <StarRating />
-                </Container>
-              </ListGroupItem>
+              <Accordion.Item eventKey={skill.name}>
+                <Accordion.Header>{skill.name}</Accordion.Header>
+                <Accordion.Body><Container className="d-flex justify-content-between" style={{cursor: "pointer"}}>
+                  <p className="text-center">Evidenceasdfasdfasdfads asdfasdfsdfasdf asdfasdfasd fasd sdafasdfasdf asdf asdf asdfasdf asdf asdfasdfasdf asdfasdf asdfasdf asdf adasdf</p><StarRating /></Container></Accordion.Body>
+              </Accordion.Item>
             ))}
-          </ListGroup>
+          </Accordion>
         </Card>
       </Container>
     )
