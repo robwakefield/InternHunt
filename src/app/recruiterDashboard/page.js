@@ -3,6 +3,7 @@
 import "bootstrap/dist/css/bootstrap.min.css"
 import { Nav, Button, ListGroup, Container, Navbar, Card, ListGroupItem } from "react-bootstrap";
 import { Component, useEffect, useState } from "react";
+import StudentNavbar from "../studentNavbar";
 
 function RecruiterDashboard() {
 
@@ -17,18 +18,7 @@ function RecruiterDashboard() {
 
   return (
     <main className="recruiterDashboard">
-      {/* Navigation Title Bar */}
-      <Navbar bg="light" expand="lg">
-        <Container>
-          <Container className="d-flex justify-content-start">
-            <Navbar.Brand>My Company</Navbar.Brand>
-            <Nav>
-              <Nav.Link href="/">Home</Nav.Link>
-            </Nav>
-          </Container>
-          <Button>Search</Button>
-        </Container>
-      </Navbar>
+      <StudentNavbar/>
       
       {/* Job Listings List */}
       <Container  style={{height: "80vh"}}>
@@ -38,9 +28,7 @@ function RecruiterDashboard() {
             <h4>My Listings</h4>
             <Button>New Post</Button>
           </Card.Header>
-
-        <ApplicantList listings={listings}></ApplicantList>
-          
+          <ApplicantList listings={listings}/>          
         </Card>
       </Container>
     </main>
