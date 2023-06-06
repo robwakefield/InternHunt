@@ -27,7 +27,7 @@ function RecruiterDashboard() {
           <Card.Header className="d-flex justify-content-between">
             <Button>Sort</Button>
             <h4>My Listings</h4>
-            <Button>New Post</Button>
+            <Button href="./addListing">New Post</Button>
           </Card.Header>
           <ApplicantList listings={listings}/>          
         </Card>
