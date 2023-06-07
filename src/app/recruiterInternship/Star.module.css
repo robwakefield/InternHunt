@@ -1,0 +1,12 @@
+.star-rating, .on, .off {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+.on {
+  color: #ffc800;
+}
+.off {
+  color: #272727;
+}
