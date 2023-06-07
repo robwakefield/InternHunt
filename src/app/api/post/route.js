@@ -11,6 +11,17 @@ export async function GET() {
             select: {
               name: true
             }
+          },
+          evidences: {
+            select: {
+              evidenceText: true,
+              rating: true,
+              requirement: {
+                select: {
+                  requirementText: true
+                }
+              }
+            }
           }
         }
       },
