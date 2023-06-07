@@ -22,6 +22,13 @@ function RecruiterInternship() {
   return (
     <main className="recruiterInternship">
       <RecruiterNavbar></RecruiterNavbar>
+      <Nav>
+        <Nav.Item>
+          <Nav.Link href="./recruiterDashboard">
+            Back to Dashboard
+          </Nav.Link>
+        </Nav.Item>
+      </Nav>
       <Card>
         <Card.Header>{post.name}</Card.Header>
         <Card.Body>
