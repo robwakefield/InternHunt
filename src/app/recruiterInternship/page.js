@@ -6,6 +6,7 @@ import { Accordion, Button, Card, Col, Container, ListGroup, ListGroupItem, Nav,
 import { Component, useEffect, useState } from "react";
 import RecruiterNavbar from "../recruiterNavbar";
 import { BsSearch, BsSortDown } from 'react-icons/bs';
+import { AiFillStar } from 'react-icons/ai'
 import '../globals.css'
 
 function RecruiterInternship() {
@@ -63,9 +64,12 @@ class ApplicantList extends Component {
         
           <ListGroup> {
             this.state.applications.map((application) => (
-              <ListGroupItem key={application.student.name}>
-                <Container className="d-flex justify-content-between" style={{cursor: "pointer"}}>
-                <p className="text-center">{application.student.name}</p>
+              <ListGroupItem className="applicantListItem" key={application.student.name}>
+                <Container fluid style={{ cursor: "pointer" }}>
+                  <Row className="applicantListRow">
+                    <Col sm={9} className="studentNameCol"><p className="text-left studentName">{application.student.name} </p></Col>
+                    <Col sm={3} className="avgRatingCol"><p className="text-center avgRating">3.5</p><AiFillStar style={{alignContent: "center"}} size={30}  color="#ffc800"/></Col>
+                  </Row>
                 </Container>
               </ListGroupItem>
             ))}
@@ -131,7 +135,7 @@ const StarRating = () => {
             onMouseLeave={() => setHover(rating)}
             onDoubleClick={() => {setRating(0); setHover(0);}}
           >
-            <span className="star">&#9733;</span>
+              <span className="star"><AiFillStar size={20} /></span>
           </button>
         );}
       )}
