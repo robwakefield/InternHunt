@@ -2,9 +2,9 @@
 
 import './addListing.css'
 import "bootstrap/dist/css/bootstrap.min.css"
-import { FormText, FormCheck, Nav, Button, ListGroup, Container, Navbar, Card, ListGroupItem, Form } from "react-bootstrap";
+import { Pagination, FormCheck, Nav, Button, PageItem, Container, Card } from "react-bootstrap";
 import { Component, useEffect, useState } from "react";
-import StudentNavbar from "../studentNavbar";
+import RecruiterNavbar from "../recruiterNavbar";
 
 function AddListing() {
 
@@ -19,10 +19,16 @@ function AddListing() {
 
   return (
     <main className="addListing">
-      <StudentNavbar/>
-      
+      <RecruiterNavbar/>
       <Container  style={{height: "80vh"}}>
-        <h1 className="text-center mt-4">IT Intern</h1>
+      <Nav className="mt-2">
+          <Pagination>
+            <PageItem href="./recruiterDashboard">
+              Back to Dashboard
+            </PageItem>
+          </Pagination>
+        </Nav>
+        <h1 className="text-center">IT Intern</h1>
         <Card className="mt-4 h-100">
           <Card.Header className="d-flex justify-content-between">
           <Container className="d-flex justify-content-start">
