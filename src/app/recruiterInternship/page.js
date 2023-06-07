@@ -56,6 +56,7 @@ class ApplicantList extends Component {
     }
   }
   render() {
+    this.state.applications.sort((a, b) => averageRating(b) - averageRating(a));
     return (
       <Container style={{height: "80vh"}}>
         <Card className="mt-4 h-100">
