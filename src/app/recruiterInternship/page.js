@@ -105,23 +105,24 @@ class SkillList extends Component {
 }
 
 const StarRating = () => {
-  const [rating, setRating] = useState(-1);
-  const [hover, setHover] = useState(-1);
+  const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(0);
   return (
     <div className="star-rating">
-      {[...Array(5)].map((_, index) => (
+      {[...Array(5)].map((_, index) => {
+          return (
           <button
             type="button"
-            key={index}
-            className={index <= (hover || rating) ? starStyle.on : starStyle.off}
-            onClick={() => setRating(index)}
-            onMouseEnter={() => setHover(index)}
+            key={index + 1}
+            className={index + 1 <= (hover || rating) ? starStyle.on : starStyle.off}
+            onClick={() => setRating(index + 1)}
+            onMouseEnter={() => setHover(index + 1)}
             onMouseLeave={() => setHover(rating)}
-            onDoubleClick={() => {setRating(-1); setHover(-1);}}
+            onDoubleClick={() => {setRating(0); setHover(0);}}
           >
             <span className="star">&#9733;</span>
           </button>
-        )
+        );}
       )}
     </div>
   );
