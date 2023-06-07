@@ -135,11 +135,6 @@ class SkillList extends Component {
                       setPost={this.props.setPost}
                       studentID={selectedApplicant(this.props.selectedApplicant, this.props.post.applications).student.id}
                       requirementID={skill.requirement.id}
-                      ratingSchemeList={[this.props.post.rating1Text,
-                        this.props.post.rating2Text,
-                        this.props.post.rating3Text,
-                        this.props.post.rating4Text,
-                        this.props.post.rating5Text]}
                     />
                   </Card.Body></Card>
                 </Accordion.Body>
@@ -159,40 +154,44 @@ class StarRating extends Component {
       rating: props.initialRating,
       hover: props.initialRating,
       showPopUp: new Array(6).fill(false),
-      modalShow: false
+      modalShow: false,
+      ratingTextList: [props.post.rating1Text,
+        props.post.rating2Text,
+        props.post.rating3Text,
+        props.post.rating4Text,
+        props.post.rating5Text]
     };
-    this.schemeRef = [1, 2, 3, 4, 5];
   }
   
   handleModalShow = () => {
-    this.setState({ ...this.state, modalShow: true });
+    this.setState({ modalShow: true });
   }
 
   handleModalClose = () => {
-    this.setState({ ...this.state, modalShow: true });
+    this.setState({ modalShow: false });
   }
 
   handleClick(index) {
-    const newShow = [...this.state.showPopUp];
+    const newShow = this.state.showPopUp;
     newShow[index] = !newShow[index];
-    this.setState({ ...this.state, showPopUp: newShow });
+    this.setState({showPopUp: newShow });
   }
 
   handleHover(index) {
-    const newShow = [...this.state.showPopUp];
+    const newShow = this.state.showPopUp;
     newShow[index] = true;
-    this.setState({ ...this.state, showPopUp: newShow });
+    this.setState({showPopUp: newShow });
   }
 
   handleHoverOut(index) {
-    const newShow = [...this.state.showPopUp];
+    const newShow = this.state.showPopUp;
     newShow[index] = false;
-    this.setState({ ...this.state, showPopUp: newShow });
+    this.setState({showPopUp: newShow });
   }
 
 
   selectRating(n) {
-    this.setState({ ...this.state, rating: n });
+    this.setState({rating: n });
 
     const newPost = {...this.props.post};
     newPost.applications
@@ -213,14 +212,54 @@ class StarRating extends Component {
     });
   }
 
+  updateRatingScheme = (event) => {
+    event.preventDefault();
+  
+    // Create a new array to store the new textarea values
+    let newTextareaValues = [];
+    
+    // Loop through the refs and get the value of each textarea
+    for (let i = 0; i < this.state.ratingTextList.length; i++) {
+      newTextareaValues.push(this[`textarea_${i}`].value);
+    }
+
+    this.setState({ ratingTextList: newTextareaValues })
+  
+    // Update the state
+    fetch('/api/ratingScheme', {
+      method: 'PUT',
+      body: JSON.stringify({
+        postID: this.props.post.id,
+        rating1Text: this[`textarea_0`].value,
+        rating2Text: this[`textarea_1`].value,
+        rating3Text: this[`textarea_2`].value,
+        rating4Text: this[`textarea_3`].value,
+        rating5Text: this[`textarea_4`].value,
+      })
+    });
+
+    const newPost = {...this.props.post};
+    newPost.rating1Text = this[`textarea_0`].value;
+    newPost.rating2Text = this[`textarea_1`].value;
+    newPost.rating3Text = this[`textarea_2`].value;
+    newPost.rating4Text = this[`textarea_3`].value;
+    newPost.rating5Text = this[`textarea_4`].value;
+    console.log(newPost);
+    this.props.setPost(newPost);
+  };
+
+
   componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
-      this.setState({ rating: this.props.initialRating, hover: this.props.initialRating });
+      this.setState({ rating: this.props.initialRating, hover: this.props.initialRating, ratingTextList: [this.props.post.rating1Text,
+        this.props.post.rating2Text,
+        this.props.post.rating3Text,
+        this.props.post.rating4Text,
+        this.props.post.rating5Text]});
     }
   }
 
-  render() {
-    console.log(this.state.modalShow)
+  render = () => {
     return (
       <div className="star-rating">
         {[...Array(5)].map((_, index) => {
@@ -230,8 +269,8 @@ class StarRating extends Component {
               key={index + 1}
               className={index + 1 <= (this.state.hover || this.state.rating) ? starStyle.on : starStyle.off}
               onClick={() => this.selectRating(index + 1)}
-              onMouseEnter={() => this.setState({ ...this.state, hover: index + 1 })}
-              onMouseLeave={() => this.setState({ ...this.state, hover: this.state.rating })}
+              onMouseEnter={() => this.setState({hover: index + 1 })}
+              onMouseLeave={() => this.setState({hover: this.state.rating })}
               >
               <OverlayTrigger
               trigger="manual"
@@ -247,18 +286,18 @@ class StarRating extends Component {
                   <Container fluid>
                     <Row>
                       <Col sm={9} >{`Star Rating - ${index + 1}`} </Col>
-                      <Col sm={3} ><Button size="sm" onClick={() => this.handleModalShow()}>Edit</Button></Col>
+                        <Col sm={3} ><Button size="sm" onClick={this.handleModalShow}>Edit</Button></Col>
                     </Row>
                   </Container>
                   </Popover.Header>
                   <Popover.Body>
-                    {this.props.ratingSchemeList[index]}
+                    {this.state.ratingTextList[index]}
                   </Popover.Body>
                 </Popover>
               }>
                 <span><Modal
                 show={this.state.modalShow}
-                onHide={this.handleModalShow}
+                onHide={this.handleModalClose}
                 backdrop="static"
                     keyboard={false}
                     centered
@@ -268,16 +307,16 @@ class StarRating extends Component {
                       <Modal.Title>Edit Rating Scheme</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                      {this.props.ratingSchemeList.map((rateSchemeText, rateNum) => {
+                      {this.state.ratingTextList.map((rateSchemeText, rateNum) => {
                         return (<Form.Group className="mb-3" controlId={`rating-${rateNum}`} key={`rating-${rateNum}`}>
                           <Form.Label><strong>Rating {rateNum} Description</strong></Form.Label>
-                          <Form.Control contenteditable="true" type="textarea" placeholder="Enter description on this" defaultValue={rateSchemeText} ref={this.schemeRef[rateNum]}/>
+                          <Form.Control contenteditable="true" type="textarea" placeholder="Enter description on this" defaultValue={rateSchemeText} ref={(input) => this[`textarea_${rateNum}`] = input}/>
                         </Form.Group>); })}
                     
                     </Modal.Body>
                     <Modal.Footer>
                       <Button variant="secondary" type="submit" >Save</Button>
-                        <Button variant="secondary" onClick={this.handleModalShow}>Close</Button>
+                        <Button variant="secondary" onClick={this.handleModalClose}>Close</Button>
                       </Modal.Footer>
                   </Form>
                 </Modal>
