@@ -268,7 +268,7 @@ const StarRating = ({ initialRating, post, setPost, studentID, requirementID, ra
                     </Modal.Header>
                     <Modal.Body>
                       {ratingSchemeList.map((rateSchemeText, rateNum) => {
-                        return (<Form.Group className="mb-3" controlId={`rating-${rateNum}`}>
+                        return (<Form.Group className="mb-3" controlId={`rating-${rateNum}`} key={`rating-${rateNum}`}>
                           <Form.Label><strong>Rating {rateNum} Description</strong></Form.Label>
                           <Form.Control contenteditable="true" type="textarea" placeholder="Enter description on this" defaultValue={rateSchemeText} ref={schemeRef[rateNum]}/>
                         </Form.Group>); })}
