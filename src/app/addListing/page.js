@@ -7,6 +7,22 @@ import { Component, useEffect, useRef, useState } from "react";
 import StudentNavbar from "../studentNavbar";
 
 function AddListing() {
+  const descRef = useRef();
+  const reqRef = useRef();
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    fetch('/api/listings', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        description : descRef.current.value,
+        requirement : reqRef.current.value
+      }),
+    });
+  }
 
   const [listings, setListings] = useState([]);
 
