@@ -166,12 +166,23 @@ class SkillList extends Component {
                   View Documents
                 </Button>
 
-              <Modal show={this.state.showDocs} onHide={this.handleDocsClose} centered>
+              <Modal className="docModal" show={this.state.showDocs} onHide={this.handleDocsClose} centered>
                 <Modal.Header closeButton>
                   <Modal.Title>Documents</Modal.Title>
                 </Modal.Header>
-                    <Modal.Body>
-                    <iframe src="https://docs.google.com/gview?url=https://path.com/to/your/pdf.pdf&embedded=true" style={{width: "100%", height:"100%"}} frameborder="0"></iframe>
+              <Modal.Body >
+              <Nav variant="tabs" defaultActiveKey="/home">
+                <Nav.Item>
+                  <Nav.Link eventKey="doc-1">CV</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link eventKey="doc-2" >Cover Letter</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link eventKey="doc-3" >Transcript</Nav.Link>
+                </Nav.Item>
+              </Nav>
+                    <iframe src="http://docs.google.com/gview?url=http://infolab.stanford.edu/pub/papers/google.pdf&embedded=true" style={{width: "60vw", height:"30vw"}} frameborder="0"></iframe>
                     </Modal.Body>
                 <Modal.Footer>
                   <Button variant="secondary" onClick={this.handleDocsClose}>

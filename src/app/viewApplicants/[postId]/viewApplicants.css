@@ -51,3 +51,7 @@ p {
 .modal-backdrop.fade{filter:alpha(opacity=.2);opacity:.2}
 
 .modal-backdrop.in{filter:alpha(opacity=50);opacity:.1}
+
+.docModal {
+  --bs-modal-width: 1500px !important;
+}
