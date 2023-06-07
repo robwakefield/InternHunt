@@ -3,7 +3,6 @@ import { NextResponse } from 'next/server';
 
 export async function PUT(request) {
   const body = await request.json()
-  console.log(body)
   await prisma.evidence.update({
     where: {
       postID_requirementID_studentID: {
