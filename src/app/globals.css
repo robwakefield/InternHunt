@@ -1,39 +1,39 @@
 .sortButton {
-  background-color: transparent;
-  background-repeat: no-repeat;
-  border: none;
-  cursor: pointer;
-  overflow: hidden;
-  outline: none;
-  padding: 0px;
+  background-color: transparent !important;
+  background-repeat: no-repeat !important;
+  border: none !important;
+  cursor: pointer !important;
+  overflow: hidden !important;
+  outline: none !important;
+  padding: 0px !important;
 }
 
 .sortButton:hover{
-  background-color: transparent;
-  background-repeat: no-repeat;
-  border: none;
-  cursor: pointer;
-  overflow: hidden;
-  outline: none;
-  padding: 0px;
+  background-color: transparent !important;
+  background-repeat: no-repeat !important;
+  border: none !important;
+  cursor: pointer !important;
+  overflow: hidden !important;
+  outline: none !important;
+  padding: 0px !important;
 }
 
 .searchButton {
-  background-color: transparent;
-  background-repeat: no-repeat;
-  border: none;
-  cursor: pointer;
-  overflow: hidden;
-  outline: none;
-  padding: 0px;
+  background-color: transparent !important;
+  background-repeat: no-repeat !important;
+  border: none !important;
+  cursor: pointer !important;
+  overflow: hidden !important;
+  outline: none !important;
+  padding: 0px !important;
 }
 
 .searchButton:hover{
-  background-color: transparent;
-  background-repeat: no-repeat;
-  border: none;
-  cursor: pointer;
-  overflow: hidden;
-  outline: none;
-  padding: 0px;
+  background-color: transparent !important;
+  background-repeat: no-repeat !important;
+  border: none !important;
+  cursor: pointer !important;
+  overflow: hidden !important;
+  outline: none !important;
+  padding: 0px !important;
 }
