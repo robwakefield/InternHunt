@@ -11,10 +11,18 @@ p {
   border: 0em;
 }
 
+.selectedApplicantListItem {
+  margin: 20px;
+  margin-bottom: 0px;
+  border: 1px solid grey !important;
+  background-color: lightgrey;
+  padding: 5px;
+}
+
 .applicantListItem {
   margin: 20px;
   margin-bottom: 0px;
-  border: 1px solid lightgray !important;
+  border: 1px solid lightgrey !important;
   padding: 5px;
 }
 

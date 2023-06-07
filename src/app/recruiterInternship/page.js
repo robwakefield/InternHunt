@@ -35,7 +35,7 @@ function RecruiterInternship() {
           <Card.Body>
             <Row>
               <Col xs={4}>
-                <ApplicantList post={post} setSelectedApplicant={setSelectedApplicant}/>
+                <ApplicantList post={post} setSelectedApplicant={setSelectedApplicant} selectedApplicant={selectedApplicant}/>
               </Col>
               <Col>
                 <SkillList post={post} selectedApplicant={selectedApplicant}/>
@@ -71,7 +71,7 @@ class ApplicantList extends Component {
         
           <ListGroup> {
             this.state.applications.map((application, i) => (
-              <ListGroupItem className="applicantListItem" key={application.student.name}>
+              <ListGroupItem className={(i == this.props.selectedApplicant)? "selectedApplicantListItem" : "applicantListItem"} key={application.student.name}>
                 <Container fluid style={{ cursor: "pointer" }} onClick={this.selectApplicant(i)}>
                   <Row className="applicantListRow">
                     <Col sm={9} className="studentNameCol"><p className="text-left studentName">{application.student.name} </p></Col>
@@ -88,12 +88,13 @@ class ApplicantList extends Component {
 }
 
 class SkillList extends Component {
-  state = { skills: [] }
+  state = { skills: [], name: ""}
 
   componentDidUpdate(prevProps) {
     if (prevProps.selectedApplicant !== this.props.selectedApplicant) {
       this.setState({
-        skills: (this.props.selectedApplicant != -1 ? this.props.post.applications[this.props.selectedApplicant].evidences : [])
+        skills: (this.props.selectedApplicant != -1 ? this.props.post.applications[this.props.selectedApplicant].evidences : []),
+        name: (this.props.selectedApplicant != -1 ? this.props.post.applications[this.props.selectedApplicant].student.name + "'s Application" : "")
       });
     }
   }
@@ -103,7 +104,7 @@ class SkillList extends Component {
         <Card className="mt-4 h-100">
           <Card.Header className="d-flex justify-content-between">
             <Button>See Documents</Button>
-            <h4>Skills</h4>
+            <h4>{this.state.name}</h4>
             <Button>Accept</Button>
           </Card.Header>
           
