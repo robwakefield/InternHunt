@@ -61,7 +61,7 @@ class ApplicantList extends Component {
           </Card.Header>
         
           <ListGroup> {
-            this.state.applications.map((application) => (
+            this.state.applications.map((application, i) => (
               <ListGroupItem className="applicantListItem" key={application.student.name}>
                 <Container fluid style={{ cursor: "pointer" }} onClick={this.selectApplicant(i)}>
                   <Row className="applicantListRow">
