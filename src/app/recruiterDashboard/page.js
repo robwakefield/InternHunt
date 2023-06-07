@@ -4,7 +4,7 @@ import './recruiterDashboard.css'
 import "bootstrap/dist/css/bootstrap.min.css"
 import { Nav, Button, ListGroup, Container, Navbar, Card, ListGroupItem } from "react-bootstrap";
 import { Component, useEffect, useState } from "react";
-import StudentNavbar from "../studentNavbar";
+import RecruiterNavbar from '../recruiterNavbar';
 
 function RecruiterDashboard() {
 
@@ -19,7 +19,7 @@ function RecruiterDashboard() {
 
   return (
     <main className="recruiterDashboard">
-      <StudentNavbar/>
+      <RecruiterNavbar></RecruiterNavbar>
       
       {/* Job Listings List */}
       <Container  style={{height: "80vh"}}>
