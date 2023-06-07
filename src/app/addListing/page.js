@@ -7,22 +7,6 @@ import { Component, useEffect, useState } from "react";
 import RecruiterNavbar from "../recruiterNavbar";
 
 function AddListing() {
-  const descRef = useRef();
-  const reqRef = useRef();
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    fetch('/api/listings', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        description : descRef.current.value,
-        requirement : reqRef.current.value
-      }),
-    });
-  }
 
   const [listings, setListings] = useState([]);
 
@@ -75,29 +59,28 @@ class JobDescription extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      listings: props.listings
+      description: "Bowtie’s mission is to make insurance good again and our vision is to build a category-defining health insurance company.\nAs a young and fast-growing company, grooming and learning from the next generation is always our priority. We are looking for interns to join us throughout the year - as a Bowtie intern, you will be treated and work like the rest of the team (no fetching coffee duties), and gain experience in substantive marketing or growth projects.\nWe also offer return offers for high achievers who share our values!"
     };
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.listings !== this.props.listings) {
       this.setState({
-        listings: this.props.listings
+        description: "Bowtie’s mission is to make insurance good again and our vision is to build a category-defining health insurance company.\nAs a young and fast-growing company, grooming and learning from the next generation is always our priority. We are looking for interns to join us throughout the year - as a Bowtie intern, you will be treated and work like the rest of the team (no fetching coffee duties), and gain experience in substantive marketing or growth projects.\nWe also offer return offers for high achievers who share our values!"
       });
     }
   }
 
   render() {
-    const {listings, descRef} = this.props;
     return (
       <Card className="mt-4 mb-2 mx-3">
         <Card.Header className="d-flex justify-content-between">
         <p>Job Description</p>
         <Button>Edit</Button>
         </Card.Header>
-        <Form.Group className="mb-3" controlId="formJobDesc">
-          <Form.Control as="textarea" rows={3} placeholder="Enter your Job Description" defaultValue={listings.description} ref={descRef}/>
-        </Form.Group>
+        <Container className="px-4 py-3">
+          {this.state.description.split("\n").map((para) => {return <p key={para}>{para}</p>})}
+        </Container>
       </Card>
     )
   }
@@ -107,14 +90,14 @@ class JobRequirementsList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      listings: props.listings
+      description: "Bowtie’s mission is to make insurance good again and our vision is to build a category-defining health insurance company.\nAs a young and fast-growing company, grooming and learning from the next generation is always our priority. We are looking for interns to join us throughout the year - as a Bowtie intern, you will be treated and work like the rest of the team (no fetching coffee duties), and gain experience in substantive marketing or growth projects.\nWe also offer return offers for high achievers who share our values!"
     };
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.listings !== this.props.listings) {
       this.setState({
-        listings: this.props.listings
+        description: "Bowtie’s mission is to make insurance good again and our vision is to build a category-defining health insurance company.\nAs a young and fast-growing company, grooming and learning from the next generation is always our priority. We are looking for interns to join us throughout the year - as a Bowtie intern, you will be treated and work like the rest of the team (no fetching coffee duties), and gain experience in substantive marketing or growth projects.\nWe also offer return offers for high achievers who share our values!"
       });
     }
   }
@@ -128,9 +111,9 @@ class JobRequirementsList extends Component {
         <Button>Edit</Button>
         </Card.Header>
         <Container className="px-4 py-3">
-          <JobRequirementsItem listings={listings} reqRef={reqRef} />
-          <JobRequirementsItem listings={listings} reqRef={reqRef} />
-          <JobRequirementsItem listings={listings} reqRef={reqRef} />
+          <JobRequirementsItem/>
+          <JobRequirementsItem/>
+          <JobRequirementsItem/>
         </Container>
       </Card>
     )
@@ -141,14 +124,14 @@ class JobRequirementsItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      listings: props.listings
+      requirement: "Hold a bachelor's degree or above, with graduation expected in 2023"
     };
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.listings !== this.props.listings) {
       this.setState({
-        listings: this.props.listings
+        requirement: "Hold a bachelor's degree or above, with graduation expected in 2023"
       });
     }
   }
@@ -157,9 +140,9 @@ class JobRequirementsItem extends Component {
     const {listings, reqRef} = this.props;
     let requirement = "- " + this.state.requirement
     return (
-      <Form.Group className="mb-3" controlId="formJobReq">
-        <Form.Control as="textarea" rows={1} placeholder="Enter your Requirements" defaultValue={listings.description} ref={reqRef}/>
-      </Form.Group>
+      <Container className="px-0 py-0">
+        {<p key={requirement}>{requirement}</p>}
+      </Container>
     )
   }
 }
