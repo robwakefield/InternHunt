@@ -137,8 +137,16 @@ class ApplicantList extends Component {
 }
 
 class SkillList extends Component {
-  state = { skills: [], name: "" }
-  getSelectedStudent = () => this.props.post.applications.filter(app => app.student.id == this.props.selectedApplicant)[0]
+  state = { skills: [], name: "", showDocs: false}
+  getSelectedStudent = () => this.props.post.applications.filter(app => app.student.id == this.props.selectedApplicant)[0];
+
+  handleDocsShow = () => {
+    this.setState({ showDocs: true });
+  }
+
+  handleDocsClose = () => {
+    this.setState({ showDocs: false });
+  }
 
   componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
@@ -154,7 +162,23 @@ class SkillList extends Component {
       <Container style={{height: "70vh"}}>
         <Card className="mt-4 h-100">
           <Card.Header className="d-flex justify-content-between">
-            <Button>See Documents </Button>
+          <Button style={{float: "right"}} variant="primary" onClick={this.handleDocsShow}>
+                  View Documents
+                </Button>
+
+              <Modal show={this.state.showDocs} onHide={this.handleDocsClose} centered>
+                <Modal.Header closeButton>
+                  <Modal.Title>Documents</Modal.Title>
+                </Modal.Header>
+                    <Modal.Body>
+                    <iframe src="https://docs.google.com/gview?url=https://path.com/to/your/pdf.pdf&embedded=true" style={{width: "100%", height:"100%"}} frameborder="0"></iframe>
+                    </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={this.handleDocsClose}>
+                    Close
+                  </Button>
+                </Modal.Footer>
+              </Modal>
             <h4>{this.state.name}</h4>
             <Button>Accept</Button>
           </Card.Header>
