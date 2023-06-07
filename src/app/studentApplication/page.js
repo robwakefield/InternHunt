@@ -8,6 +8,8 @@ import Container from "react-bootstrap/Container";
 import { useEffect, useState, useRef } from 'react';
 import StudentNavbar from "../studentNavbar";
 import { Card } from "react-bootstrap";
+import {BsSortDown} from 'react-icons/bs'
+import '../globals.css'
 
 function StudentApplication() {
   const langRef = useRef();
@@ -40,7 +42,7 @@ function StudentApplication() {
       <Container style={{ height: "80vh" }}>
               <Card className="mt-4 h-100">
               <Card.Header className="d-flex justify-content-between">
-                  <Button>Filter</Button>
+                  <Button className="sortButton"><BsSortDown color="black" size={30}/></Button>
                   <h4>IT Intern</h4>
                   <Button>Upload CV</Button>
                 </Card.Header>

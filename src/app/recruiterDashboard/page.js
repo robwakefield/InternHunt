@@ -4,7 +4,9 @@ import './recruiterDashboard.css'
 import "bootstrap/dist/css/bootstrap.min.css"
 import { Nav, Button, ListGroup, Container, Navbar, Card, ListGroupItem } from "react-bootstrap";
 import { Component, useEffect, useState } from "react";
-import StudentNavbar from "../studentNavbar";
+import RecruiterNavbar from '../recruiterNavbar';
+import '../globals.css'
+import {BsSortDown} from 'react-icons/bs'
 
 function RecruiterDashboard() {
 
@@ -19,13 +21,13 @@ function RecruiterDashboard() {
 
   return (
     <main className="recruiterDashboard">
-      <StudentNavbar/>
+      <RecruiterNavbar></RecruiterNavbar>
       
       {/* Job Listings List */}
       <Container  style={{height: "80vh"}}>
         <Card className="mt-4 h-100">
           <Card.Header className="d-flex justify-content-between">
-            <Button>Sort</Button>
+            <Button className="sortButton"><BsSortDown color="black" size={30}/></Button>
             <h4>My Listings</h4>
             <Button href="./addListing">New Post</Button>
           </Card.Header>
@@ -125,15 +127,18 @@ class ListingItem extends Component {
     let ratio = places_filled / total_places
     
     let ratio_class = this.getRatioClass(ratio)
+
+    let rhs = <p className={ratio_class}>{places_filled}/{total_places} Applications</p>
+    if (this.state.status == "Draft") {
+      rhs = <Button href="./addListing">Click to Edit</Button>
+    }
     
     return (
       <ListGroupItem className="listing">
         <Container className="d-flex justify-content-between" style={{cursor: "pointer"}} onClick={handleClick}>
           <p className={status_class}>{this.state.status}</p>
           <p className="text-center">{this.state.title}</p>
-          <p className={ratio_class}>
-            {places_filled}/{total_places} Applications
-          </p>
+          {rhs}
         </Container>
       </ListGroupItem>
     )

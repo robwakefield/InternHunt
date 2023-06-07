@@ -1,3 +1,39 @@
 recruiterInternship {
   margin: 5px;
 }
+
+p {
+  word-break: break-all;
+  white-space: normal;
+}
+
+.ratingCard {
+  border: 0em;
+}
+
+.applicantListItem {
+  margin: 20px;
+  margin-bottom: 0px;
+  border: 1px solid lightgray !important;
+  padding: 5px;
+}
+
+.applicantListRow {
+  width: 100%;
+  margin: 0px;
+}
+
+.studentName{
+  width: 100%;
+  margin: 0px;
+}
+
+.avgRating{
+  margin: 0px;
+}
+
+.avgRatingCol{
+  padding: 0px;
+  align-items: center;
+  display: flex;
+}
