@@ -67,8 +67,8 @@ function ViewApplicants() {
                       <strong>Description:</strong><br></br>
                       {post.description}<br></br><br></br>
                       <strong>Requirements:</strong>
-                      {post.requirements.map((requirement) => (
-                        <p>- {requirement.requirementText}</p>
+                      {post.requirements.map((requirement, index) => (
+                        <p key={index}>- {requirement.requirementText}</p>
                       ))}
                     </Modal.Body>
                 <Modal.Footer>
