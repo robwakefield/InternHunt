@@ -95,6 +95,7 @@ class SkillList extends Component {
     }
   }
   render() {
+    this.state.skills.sort((a, b) => a.requirement.requirementText >= b.requirement.requirementText ? 1 : -1)
     return (
       <Container style={{height: "80vh"}}>
         <Card className="mt-4 h-100">
