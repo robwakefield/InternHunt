@@ -11,6 +11,11 @@ import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
 import '../globals.css'
 
+function averageRating(application) {
+  if (application.evidences.length == 0) return 0;
+  return application.evidences.map(ev => ev.rating).reduce((a, b) => a + b, 0) / application.evidences.length;
+}
+
 function RecruiterInternship() {
   const [post, setPost] = useState({name: "", applications: []});
   const [selectedApplicant, setSelectedApplicant] = useState(-1);
@@ -40,7 +45,7 @@ function RecruiterInternship() {
                 <ApplicantList post={post} setSelectedApplicant={setSelectedApplicant} selectedApplicant={selectedApplicant}/>
               </Col>
               <Col>
-                <SkillList post={post} selectedApplicant={selectedApplicant}/>
+                <SkillList post={post} setPost={setPost} selectedApplicant={selectedApplicant}/>
               </Col>
             </Row>
           </Card.Body>
@@ -57,11 +62,12 @@ class ApplicantList extends Component {
   state = { applications: this.props.post.applications };
 
   componentDidUpdate(prevProps) {
-    if (prevProps.post !== this.props.post) {
+    if (prevProps !== this.props) {
       this.setState({ applications: this.props.post.applications });
     }
   }
   render() {
+    this.state.applications.sort((a, b) => averageRating(b) - averageRating(a));
     return (
       <Container style={{height: "70vh"}}>
         <Card className="mt-4 h-100">
@@ -77,7 +83,7 @@ class ApplicantList extends Component {
                 <Container fluid style={{ cursor: "pointer" }} onClick={this.selectApplicant(i)}>
                   <Row className="applicantListRow">
                     <Col sm={9} className="studentNameCol"><p className="text-left studentName">{application.student.name} </p></Col>
-                    <Col sm={3} className="avgRatingCol"><p className="text-center avgRating">3.5</p><AiFillStar style={{alignContent: "center"}} size={30}  color="#ffc800"/></Col>
+                    <Col sm={3} className="avgRatingCol"><p className="text-center avgRating">{averageRating(application)}</p><AiFillStar style={{alignContent: "center"}} size={30}  color="#ffc800"/></Col>
                   </Row>
                 </Container>
               </ListGroupItem>
@@ -93,7 +99,7 @@ class SkillList extends Component {
   state = { skills: [], name: ""}
 
   componentDidUpdate(prevProps) {
-    if (prevProps.selectedApplicant !== this.props.selectedApplicant) {
+    if (prevProps !== this.props) {
       this.setState({
         skills: (this.props.selectedApplicant != -1 ? this.props.post.applications[this.props.selectedApplicant].evidences : []),
         name: (this.props.selectedApplicant != -1 ? this.props.post.applications[this.props.selectedApplicant].student.name + "'s Application" : "")
@@ -101,6 +107,7 @@ class SkillList extends Component {
     }
   }
   render() {
+    this.state.skills.sort((a, b) => a.requirement.requirementText >= b.requirement.requirementText ? 1 : -1)
     return (
       <Container style={{height: "70vh"}}>
         <Card className="mt-4 h-100">
@@ -119,7 +126,8 @@ class SkillList extends Component {
                   <Card className="ratingCard"><Card.Body style={{ alignSelf: "flex-end" }}>
                     <StarRating 
                       initialRating={skill.rating}
-                      postID={this.props.post.id}
+                      post={this.props.post}
+                      setPost={this.props.setPost}
                       studentID={this.props.post.applications[this.props.selectedApplicant].student.id}
                       requirementID={skill.requirement.id}
                     />
@@ -134,17 +142,26 @@ class SkillList extends Component {
   }
 }
 
-const StarRating = ({ initialRating, studentID, postID, requirementID }) => {
+const StarRating = ({ initialRating, post, setPost, studentID, requirementID }) => {
   const [rating, setRating] = useState(initialRating);
   const [hover, setHover] = useState(0);
 
   const selectRating = (n) => {
     setRating(n);
+
+    const newPost = {...post};
+    newPost.applications
+      .filter(app => app.student.id == studentID)
+      .flatMap(app => app.evidences)
+      .filter(ev => ev.requirement.id == requirementID)
+      .forEach(ev => {ev.rating = n})
+    setPost(newPost);
+
     fetch('/api/rating', {
       method: 'PUT',
       body: JSON.stringify({
         studentID: studentID,
-        postID: postID,
+        postID: post.id,
         requirementID: requirementID,
         rating: n
       })
