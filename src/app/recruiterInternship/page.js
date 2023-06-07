@@ -112,7 +112,7 @@ class SkillList extends Component {
       <Container style={{height: "70vh"}}>
         <Card className="mt-4 h-100">
           <Card.Header className="d-flex justify-content-between">
-            <Button>See Documents</Button>
+            <Button>See Documents </Button>
             <h4>{this.state.name}</h4>
             <Button>Accept</Button>
           </Card.Header>
@@ -130,6 +130,11 @@ class SkillList extends Component {
                       setPost={this.props.setPost}
                       studentID={this.props.post.applications[this.props.selectedApplicant].student.id}
                       requirementID={skill.requirement.id}
+                      ratingSchemeList={[this.props.post.rating1Text,
+                        this.props.post.rating2Text,
+                        this.props.post.rating3Text,
+                        this.props.post.rating4Text,
+                        this.props.post.rating5Text]}
                     />
                   </Card.Body></Card>
                 </Accordion.Body>
@@ -142,7 +147,7 @@ class SkillList extends Component {
   }
 }
 
-const StarRating = ({ initialRating, post, setPost, studentID, requirementID }) => {
+const StarRating = ({ initialRating, post, setPost, studentID, requirementID, ratingSchemeList }) => {
   const [rating, setRating] = useState(initialRating);
   const [hover, setHover] = useState(0);
   const [show, setShow] = useState(new Array(6).fill(false));
@@ -228,7 +233,7 @@ const StarRating = ({ initialRating, post, setPost, studentID, requirementID }) 
                   </Container>
                   </Popover.Header>
                   <Popover.Body>
-                    <strong>Just Mention</strong> Need more concrete examples
+                    {ratingSchemeList[index]}
                   </Popover.Body>
                 </Popover>
               }>
@@ -238,19 +243,22 @@ const StarRating = ({ initialRating, post, setPost, studentID, requirementID }) 
                 backdrop="static"
                     keyboard={false}
                     centered
-              >
+                >
+                  
                 <Modal.Header closeButton>
                   <Modal.Title>Edit Rating Scheme</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                 <Form>
-                  <Form.Group className="mb-3" controlId={`rating-${rating}`}>
-                    <Form.Label>Rating 1</Form.Label>
-                    <Form.Control type="textarea" placeholder="Enter description on this rating" defaultValue="" />
-                  </Form.Group>
+                  {ratingSchemeList.map((rateSchemeText, rateNum) => {
+                    return (<Form.Group className="mb-3" controlId={`rating-${rateNum}`}>
+                      <Form.Label><strong>Rating {rateNum} Description</strong></Form.Label>
+                      <Form.Control contenteditable="true" type="textarea" placeholder="Enter description on this" defaultValue={rateSchemeText} />
+                    </Form.Group>); })}
                 </Form>
                 </Modal.Body>
                 <Modal.Footer>
+                  <Button variant="secondary" onClick={handleModalClose}>Close</Button>
                   <Button variant="secondary" onClick={handleModalClose}>Save</Button>
                 </Modal.Footer>
                 </Modal>

@@ -6,6 +6,11 @@ export async function GET() {
     select: {
       id: true,
       name: true,
+      rating1Text: true,
+      rating2Text: true,
+      rating3Text: true,
+      rating4Text: true,
+      rating5Text: true,
       applications: {
         select: {
           student: {
