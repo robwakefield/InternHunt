@@ -18,8 +18,12 @@ function averageRating(application) {
 }
 
 function ViewApplicants() {
-  const [post, setPost] = useState({name: "", applications: []});
+  const [post, setPost] = useState({name: "", applications: [], description: "", requirements: []});
   const [selectedApplicant, setSelectedApplicant] = useState(-1);
+  const [showJobListing, setJobListing] = useState(false);
+
+  const handleClose = () => setJobListing(false);
+  const handleShow = () => setJobListing(true);
 
   const router = useRouter()
   const params = useParams()
@@ -47,7 +51,35 @@ function ViewApplicants() {
           </Pagination>
         </Nav>
         <Card>
-          <Card.Header>{post.name}</Card.Header>
+          <Card.Header>
+            <Container>
+              <Row>
+                <Col xs={10}>{post.name}</Col>
+                <Col xs={2}><Button style={{float: "right"}} variant="primary" onClick={handleShow}>
+                  View Job Listing
+                </Button>
+
+              <Modal show={showJobListing} onHide={handleClose}>
+                <Modal.Header closeButton>
+                  <Modal.Title>{post.name}</Modal.Title>
+                </Modal.Header>
+                    <Modal.Body>
+                      <strong>Description:</strong><br></br>
+                      {post.description}<br></br><br></br>
+                      <strong>Requirements:</strong>
+                      {post.requirements.map((requirement) => (
+                        <p>- {requirement.requirementText}</p>
+                      ))}
+                    </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleClose}>
+                    Close
+                  </Button>
+                </Modal.Footer>
+              </Modal></Col>
+              </Row>
+            </Container>
+          </Card.Header>
           <Card.Body>
             <Row>
               <Col xs={4}>
