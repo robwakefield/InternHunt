@@ -1,11 +1,13 @@
-import { Nav, Navbar, Image, Container } from 'react-bootstrap';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import NavDropdown from 'react-bootstrap/NavDropdown';
+import Container from 'react-bootstrap/Container';
 
-function StudentNavbar() { 
+function RecruiterNavbar() { 
     return (
         <Navbar bg="light" expand="lg">
       <Container>
-        <Navbar.Brand href="/">
-          <Image
+        <Navbar.Brand href="/"><img
               alt=""
               src="/favicon.ico"
               width="30"
@@ -15,7 +17,7 @@ function StudentNavbar() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="./studentDashboard">Dashboard</Nav.Link>
+            <Nav.Link href="./recruiterDashboard">Dashboard</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
@@ -23,4 +25,4 @@ function StudentNavbar() {
     )
 }
 
-export default StudentNavbar;
+export default RecruiterNavbar;
