@@ -8,8 +8,8 @@ studentDashboard {
 }
 
 .progressTimeline {
-  background-color: lightgrey;
-  margin-top: 30px;
+  background-color: lightgrey !important;
+  margin-top: 30px !important;
   padding-left: 30px;
   padding-right: 30px;
   padding-top: 0px;

@@ -16,7 +16,7 @@ model Student {
   name        String
   language    String
   maths       String
-  Application Application[]
+  applications Application[]
 }
 
 model Post {
@@ -25,13 +25,38 @@ model Post {
   status       String
   totalPlaces  Int
   applications Application[]
+  requirements Requirement[]
 }
 
 model Application {
-  post      Post    @relation(fields: [postID], references: [id])
-  postID    Int
-  student   Student @relation(fields: [studentID], references: [id])
-  studentID Int
+  post        Post    @relation(fields: [postID], references: [id])
+  postID      Int
+  student     Student @relation(fields: [studentID], references: [id])
+  studentID   Int
+  evidences   Evidence[]
 
   @@id([postID, studentID])
+}
+
+model Requirement {
+  post        Post    @relation(fields: [postID], references: [id])
+  postID      Int
+  id          Int     @default(autoincrement())
+  requirementText String
+  evidences   Evidence[]
+
+  @@id([postID, id])
+}
+
+model Evidence {
+  app             Application @relation(fields: [postID, studentID], references: [postID, studentID])
+  postID          Int
+  studentID       Int
+
+  requirement     Requirement @relation(fields: [postID, requirementID], references: [postID, id])
+  requirementID   Int
+  rating          Int
+  evidenceText    String
+
+  @@id([postID, requirementID, studentID])
 }
