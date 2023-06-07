@@ -2,7 +2,7 @@
 import "bootstrap/dist/css/bootstrap.min.css"
 import starStyle from './Star.module.css';
 import './recruiterInternship.css'
-import { Accordion, Button, Card, Col, Container, ListGroup, ListGroupItem, Nav, Row } from "react-bootstrap";
+import { Accordion, Button, Card, Col, Container, ListGroup, ListGroupItem, Nav, PageItem, Pagination, Row } from "react-bootstrap";
 import { Component, useEffect, useState } from "react";
 import RecruiterNavbar from "../recruiterNavbar";
 import { BsSearch, BsSortDown } from 'react-icons/bs';
@@ -22,26 +22,28 @@ function RecruiterInternship() {
   return (
     <main className="recruiterInternship">
       <RecruiterNavbar></RecruiterNavbar>
-      <Nav>
-        <Nav.Item>
-          <Nav.Link href="./recruiterDashboard">
-            Back to Dashboard
-          </Nav.Link>
-        </Nav.Item>
-      </Nav>
-      <Card>
-        <Card.Header>{post.name}</Card.Header>
-        <Card.Body>
-          <Row>
-            <Col xs={4}>
-              <ApplicantList post={post} setSelectedApplicant={setSelectedApplicant}/>
-            </Col>
-            <Col>
-              <SkillList post={post} selectedApplicant={selectedApplicant}/>
-            </Col>
-          </Row>
-        </Card.Body>
-      </Card>
+      <Container>
+        <Nav className="mt-2">
+          <Pagination>
+            <PageItem href="./recruiterDashboard">
+              Back to Dashboard
+            </PageItem>
+          </Pagination>
+        </Nav>
+        <Card>
+          <Card.Header>{post.name}</Card.Header>
+          <Card.Body>
+            <Row>
+              <Col xs={4}>
+                <ApplicantList post={post} setSelectedApplicant={setSelectedApplicant}/>
+              </Col>
+              <Col>
+                <SkillList post={post} selectedApplicant={selectedApplicant}/>
+              </Col>
+            </Row>
+          </Card.Body>
+        </Card>
+      </Container>
     </main>
   );
 }
