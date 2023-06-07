@@ -73,7 +73,7 @@ class JobDescription extends Component {
         <Button>Edit</Button>
         </Card.Header>
         <Container className="px-4 py-3">
-          {this.state.description.split("\n").map((para) => {return <p>{para}</p>})}
+          {this.state.description.split("\n").map((para) => {return <p key={para}>{para}</p>})}
         </Container>
       </Card>
     )
@@ -133,7 +133,7 @@ class JobRequirementsItem extends Component {
     let requirement = "- " + this.state.requirement
     return (
       <Container className="px-0 py-0">
-        {<p>{requirement}</p>}
+        {<p key={requirement}>{requirement}</p>}
       </Container>
     )
   }
