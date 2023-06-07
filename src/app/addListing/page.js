@@ -54,8 +54,8 @@ function AddListing() {
               </Container>
               <Button variant="primary" type="submit">Publish</Button>
             </Card.Header>
-            <JobDescription/>    
-            <JobRequirementsList/>
+            <JobDescription listings={listings} descRef={descRef} />    
+            <JobRequirementsList listings={listings} reqRef={reqRef} />
             <SavedBox/>   
           </Card>
         </Form>
@@ -71,27 +71,28 @@ class JobDescription extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      description: "Bowtie’s mission is to make insurance good again and our vision is to build a category-defining health insurance company.\nAs a young and fast-growing company, grooming and learning from the next generation is always our priority. We are looking for interns to join us throughout the year - as a Bowtie intern, you will be treated and work like the rest of the team (no fetching coffee duties), and gain experience in substantive marketing or growth projects.\nWe also offer return offers for high achievers who share our values!"
+      listings: props.listings
     };
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.listings !== this.props.listings) {
       this.setState({
-        description: "Bowtie’s mission is to make insurance good again and our vision is to build a category-defining health insurance company.\nAs a young and fast-growing company, grooming and learning from the next generation is always our priority. We are looking for interns to join us throughout the year - as a Bowtie intern, you will be treated and work like the rest of the team (no fetching coffee duties), and gain experience in substantive marketing or growth projects.\nWe also offer return offers for high achievers who share our values!"
+        listings: this.props.listings
       });
     }
   }
 
   render() {
+    const {listings, descRef} = this.props;
     return (
       <Card className="mt-4 mb-2 mx-3">
         <Card.Header className="d-flex justify-content-between">
         <p>Job Description</p>
         <Button>Edit</Button>
         </Card.Header>
-        <Form.Group className="mb-3" controlId="formGroupSkill1">
-          <Form.Control as="textarea" rows={3} placeholder="Enter your Job Description"/>
+        <Form.Group className="mb-3" controlId="formJobDesc">
+          <Form.Control as="textarea" rows={3} placeholder="Enter your Job Description" defaultValue={listings.description} ref={descRef}/>
         </Form.Group>
       </Card>
     )
@@ -102,19 +103,20 @@ class JobRequirementsList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      description: "Bowtie’s mission is to make insurance good again and our vision is to build a category-defining health insurance company.\nAs a young and fast-growing company, grooming and learning from the next generation is always our priority. We are looking for interns to join us throughout the year - as a Bowtie intern, you will be treated and work like the rest of the team (no fetching coffee duties), and gain experience in substantive marketing or growth projects.\nWe also offer return offers for high achievers who share our values!"
+      listings: props.listings
     };
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.listings !== this.props.listings) {
       this.setState({
-        description: "Bowtie’s mission is to make insurance good again and our vision is to build a category-defining health insurance company.\nAs a young and fast-growing company, grooming and learning from the next generation is always our priority. We are looking for interns to join us throughout the year - as a Bowtie intern, you will be treated and work like the rest of the team (no fetching coffee duties), and gain experience in substantive marketing or growth projects.\nWe also offer return offers for high achievers who share our values!"
+        listings: this.props.listings
       });
     }
   }
 
   render() {
+    const {listings, reqRef} = this.props;
     return (
       <Card className="my-2 mx-3">
         <Card.Header className="d-flex justify-content-between">
@@ -122,9 +124,9 @@ class JobRequirementsList extends Component {
         <Button>Edit</Button>
         </Card.Header>
         <Container className="px-4 py-3">
-          <JobRequirementsItem/>
-          <JobRequirementsItem/>
-          <JobRequirementsItem/>
+          <JobRequirementsItem listings={listings} reqRef={reqRef} />
+          <JobRequirementsItem listings={listings} reqRef={reqRef} />
+          <JobRequirementsItem listings={listings} reqRef={reqRef} />
         </Container>
       </Card>
     )
@@ -135,23 +137,24 @@ class JobRequirementsItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      requirement: "Hold a bachelor's degree or above, with graduation expected in 2023"
+      listings: props.listings
     };
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.listings !== this.props.listings) {
       this.setState({
-        requirement: "Hold a bachelor's degree or above, with graduation expected in 2023"
+        listings: this.props.listings
       });
     }
   }
 
   render() {
+    const {listings, reqRef} = this.props;
     let requirement = "- " + this.state.requirement
     return (
-      <Form.Group className="mb-3" controlId="formGroupSkill1">
-        <Form.Control as="textarea" rows={3} placeholder="Enter your Job Description"/>
+      <Form.Group className="mb-3" controlId="formJobReq">
+        <Form.Control as="textarea" rows={1} placeholder="Enter your Requirements" defaultValue={listings.description} ref={reqRef}/>
       </Form.Group>
     )
   }
