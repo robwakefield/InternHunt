@@ -3,7 +3,7 @@
 import './addListing.css'
 import "bootstrap/dist/css/bootstrap.min.css"
 import { FormText, FormCheck, Nav, Button, ListGroup, Container, Navbar, Card, ListGroupItem, Form } from "react-bootstrap";
-import { Component, useEffect, useState } from "react";
+import { Component, useEffect, useRef, useState } from "react";
 import StudentNavbar from "../studentNavbar";
 
 function AddListing() {
@@ -23,24 +23,26 @@ function AddListing() {
       
       <Container  style={{height: "80vh"}}>
         <h1 className="text-center mt-4">IT Intern</h1>
-        <Card className="mt-4 h-100">
-          <Card.Header className="d-flex justify-content-between">
-          <Container className="d-flex justify-content-start">
-            <FormCheck className="align-middle">
-                <FormCheck.Input/>
-                <FormCheck.Label>Ask for Cover Letter</FormCheck.Label>
-              </FormCheck>
-              <FormCheck className="mx-2">
-                <FormCheck.Input/>
-                <FormCheck.Label>Ask for Academic Results</FormCheck.Label>
-              </FormCheck>
-            </Container>
-            <Button>Publish</Button>
-          </Card.Header>
-          <JobDescription/>    
-          <JobRequirementsList/>
-          <SavedBox/>   
-        </Card>
+        <Form onSubmit={handleSubmit}>
+          <Card className="mt-4 h-100">
+            <Card.Header className="d-flex justify-content-between">
+            <Container className="d-flex justify-content-start">
+              <FormCheck className="align-middle">
+                  <FormCheck.Input/>
+                  <FormCheck.Label>Ask for Cover Letter</FormCheck.Label>
+                </FormCheck>
+                <FormCheck className="mx-2">
+                  <FormCheck.Input/>
+                  <FormCheck.Label>Ask for Academic Results</FormCheck.Label>
+                </FormCheck>
+              </Container>
+              <Button variant="primary" type="submit">Publish</Button>
+            </Card.Header>
+            <JobDescription/>    
+            <JobRequirementsList/>
+            <SavedBox/>   
+          </Card>
+        </Form>
       </Container>
     </main>
     
@@ -72,9 +74,9 @@ class JobDescription extends Component {
         <p>Job Description</p>
         <Button>Edit</Button>
         </Card.Header>
-        <Container className="px-4 py-3">
-          {this.state.description.split("\n").map((para) => {return <p key={para}>{para}</p>})}
-        </Container>
+        <Form.Group className="mb-3" controlId="formGroupSkill1">
+          <Form.Control as="textarea" rows={3} placeholder="Enter your Job Description"/>
+        </Form.Group>
       </Card>
     )
   }
@@ -132,9 +134,9 @@ class JobRequirementsItem extends Component {
   render() {
     let requirement = "- " + this.state.requirement
     return (
-      <Container className="px-0 py-0">
-        {<p key={requirement}>{requirement}</p>}
-      </Container>
+      <Form.Group className="mb-3" controlId="formGroupSkill1">
+        <Form.Control as="textarea" rows={3} placeholder="Enter your Job Description"/>
+      </Form.Group>
     )
   }
 }
