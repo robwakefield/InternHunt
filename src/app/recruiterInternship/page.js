@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import starStyle from './Star.module.css';
 import './recruiterInternship.css'
 import { Accordion, Button, Card, Col, Container, ListGroup, ListGroupItem, Nav, PageItem, Pagination, Row, Modal, Form} from "react-bootstrap";
-import { Component, useEffect, useState } from "react";
+import { Component, useEffect, useState, useRef} from "react";
 import RecruiterNavbar from "../recruiterNavbar";
 import { BsSearch, BsSortDown } from 'react-icons/bs';
 import { AiFillStar } from 'react-icons/ai'
@@ -153,6 +153,8 @@ const StarRating = ({ initialRating, post, setPost, studentID, requirementID, ra
   const [show, setShow] = useState(new Array(6).fill(false));
   const [modalShow, setModalShow] = useState(false);
 
+  const schemeRef = [useRef(), useRef(), useRef(), useRef(), useRef()];
+
   const handleModalClose = () => setModalShow(false);
   const handleModalShow = () => setModalShow(true);
 
@@ -177,6 +179,22 @@ const StarRating = ({ initialRating, post, setPost, studentID, requirementID, ra
       })
     });
   }
+
+  const updateRatingScheme = (event) => {
+    event.preventDefault();
+
+    fetch('/api/ratingScheme', {
+      method: 'PUT',
+      body: JSON.stringify({
+        postID: post.id,
+        rating1Text: schemeRef[0].current.value,
+        rating2Text: schemeRef[1].current.value,
+        rating3Text: schemeRef[2].current.value,
+        rating4Text: schemeRef[3].current.value,
+        rating5Text: schemeRef[4].current.value,
+      })
+    });
+  };
 
   const handleClick = index => {
     selectRating(index + 1);
@@ -244,23 +262,23 @@ const StarRating = ({ initialRating, post, setPost, studentID, requirementID, ra
                     keyboard={false}
                     centered
                 >
-                  
-                <Modal.Header closeButton>
-                  <Modal.Title>Edit Rating Scheme</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                <Form>
-                  {ratingSchemeList.map((rateSchemeText, rateNum) => {
-                    return (<Form.Group className="mb-3" controlId={`rating-${rateNum}`}>
-                      <Form.Label><strong>Rating {rateNum} Description</strong></Form.Label>
-                      <Form.Control contenteditable="true" type="textarea" placeholder="Enter description on this" defaultValue={rateSchemeText} />
-                    </Form.Group>); })}
-                </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button variant="secondary" onClick={handleModalClose}>Close</Button>
-                  <Button variant="secondary" onClick={handleModalClose}>Save</Button>
-                </Modal.Footer>
+                  <Form onSubmit={updateRatingScheme}>
+                    <Modal.Header closeButton>
+                      <Modal.Title>Edit Rating Scheme</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                      {ratingSchemeList.map((rateSchemeText, rateNum) => {
+                        return (<Form.Group className="mb-3" controlId={`rating-${rateNum}`}>
+                          <Form.Label><strong>Rating {rateNum} Description</strong></Form.Label>
+                          <Form.Control contenteditable="true" type="textarea" placeholder="Enter description on this" defaultValue={rateSchemeText} ref={schemeRef[rateNum]}/>
+                        </Form.Group>); })}
+                    
+                    </Modal.Body>
+                    <Modal.Footer>
+                      <Button variant="secondary" type="submit" >Save</Button>
+                      <Button variant="secondary" onClick={handleModalClose}>Close</Button>
+                      </Modal.Footer>
+                  </Form>
                 </Modal>
                 <span className="star">
                 
