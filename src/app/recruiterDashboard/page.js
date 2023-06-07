@@ -127,15 +127,18 @@ class ListingItem extends Component {
     let ratio = places_filled / total_places
     
     let ratio_class = this.getRatioClass(ratio)
+
+    let rhs = <p className={ratio_class}>{places_filled}/{total_places} Applications</p>
+    if (this.state.status == "Draft") {
+      rhs = <Button href="./addListing">Click to Edit</Button>
+    }
     
     return (
       <ListGroupItem className="listing">
         <Container className="d-flex justify-content-between" style={{cursor: "pointer"}} onClick={handleClick}>
           <p className={status_class}>{this.state.status}</p>
           <p className="text-center">{this.state.title}</p>
-          <p className={ratio_class}>
-            {places_filled}/{total_places} Applications
-          </p>
+          {rhs}
         </Container>
       </ListGroupItem>
     )

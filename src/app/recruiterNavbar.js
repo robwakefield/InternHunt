@@ -1,6 +1,4 @@
-import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
 import Container from 'react-bootstrap/Container';
 
 function RecruiterNavbar() { 
@@ -15,11 +13,6 @@ function RecruiterNavbar() {
               className="d-inline-block align-top"
             />{' '}InternHunt</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link href="./recruiterDashboard">Dashboard</Nav.Link>
-          </Nav>
-        </Navbar.Collapse>
       </Container>
     </Navbar>
     )
