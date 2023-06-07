@@ -4,7 +4,9 @@ import './recruiterDashboard.css'
 import "bootstrap/dist/css/bootstrap.min.css"
 import { Nav, Button, ListGroup, Container, Navbar, Card, ListGroupItem } from "react-bootstrap";
 import { Component, useEffect, useState } from "react";
-import StudentNavbar from "../studentNavbar";
+import RecruiterNavbar from '../recruiterNavbar';
+import '../globals.css'
+import {BsSortDown} from 'react-icons/bs'
 
 function RecruiterDashboard() {
 
@@ -19,15 +21,15 @@ function RecruiterDashboard() {
 
   return (
     <main className="recruiterDashboard">
-      <StudentNavbar/>
+      <RecruiterNavbar></RecruiterNavbar>
       
       {/* Job Listings List */}
       <Container  style={{height: "80vh"}}>
         <Card className="mt-4 h-100">
           <Card.Header className="d-flex justify-content-between">
-            <Button>Sort</Button>
+            <Button className="sortButton"><BsSortDown color="black" size={30}/></Button>
             <h4>My Listings</h4>
-            <Button>New Post</Button>
+            <Button href="./addListing">New Post</Button>
           </Card.Header>
           <ApplicantList listings={listings}/>          
         </Card>
