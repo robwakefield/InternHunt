@@ -10,6 +10,7 @@ import '../globals.css'
 
 function RecruiterInternship() {
   const [post, setPost] = useState({name: "", applications: []});
+  const [selectedApplicant, setSelectedApplicant] = useState(-1);
 
   useEffect(() => {
     fetch('/api/post')
@@ -25,10 +26,10 @@ function RecruiterInternship() {
         <Card.Body>
           <Row>
             <Col xs={4}>
-              <ApplicantList post={post}/>
+              <ApplicantList post={post} setSelectedApplicant={setSelectedApplicant}/>
             </Col>
             <Col>
-              <SkillList />
+              <SkillList post={post} selectedApplicant={selectedApplicant}/>
             </Col>
           </Row>
         </Card.Body>
@@ -40,12 +41,9 @@ function RecruiterInternship() {
 export default RecruiterInternship;
 
 class ApplicantList extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      applications: props.post.applications
-    };
-  }
+  selectApplicant = (n) => () => {this.props.setSelectedApplicant(n);}
+  state = { applications: this.props.post.applications };
+
   componentDidUpdate(prevProps) {
     if (prevProps.post !== this.props.post) {
       this.setState({ applications: this.props.post.applications });
@@ -62,9 +60,9 @@ class ApplicantList extends Component {
           </Card.Header>
         
           <ListGroup> {
-            this.state.applications.map((application) => (
+            this.state.applications.map((application, i) => (
               <ListGroupItem key={application.student.name}>
-                <Container className="d-flex justify-content-between" style={{cursor: "pointer"}}>
+                <Container className="d-flex justify-content-between" style={{cursor: "pointer"}} onClick={this.selectApplicant(i)}>
                 <p className="text-center">{application.student.name}</p>
                 </Container>
               </ListGroupItem>
@@ -77,11 +75,15 @@ class ApplicantList extends Component {
 }
 
 class SkillList extends Component {
-  skills = [
-    {name: "skill1"},
-    {name: "skill2"},
-    {name: "skill3"}
-  ];
+  state = { skills: [] }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.selectedApplicant !== this.props.selectedApplicant) {
+      this.setState({
+        skills: (this.props.selectedApplicant != -1 ? this.props.post.applications[this.props.selectedApplicant].evidences : [])
+      });
+    }
+  }
   render() {
     return (
       <Container style={{height: "80vh"}}>
@@ -93,18 +95,14 @@ class SkillList extends Component {
           </Card.Header>
           
           <Accordion>{
-            this.skills.map((skill) => (
-              <Accordion.Item eventKey={skill.name} key={skill.name}>
-                <Accordion.Header>{skill.name}</Accordion.Header>
+            this.state.skills.map((skill) => (
+              <Accordion.Item eventKey={skill.requirement.requirementText} key={skill.requirement.requirementText}>
+                <Accordion.Header>{skill.requirement.requirementText}</Accordion.Header>
                 <Accordion.Body>
-                  <Card><Card.Body>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-          culpa qui officia deserunt mollit anim id est laborum.</Card.Body></Card>
-                <Card className="ratingCard" ><Card.Body style={{ alignSelf: "flex-end" }}><StarRating /></Card.Body></Card>
+                  <Card><Card.Body>{skill.evidenceText}</Card.Body></Card>
+                  <Card className="ratingCard"><Card.Body style={{ alignSelf: "flex-end" }}>
+                    <StarRating initialRating={skill.rating}/>
+                  </Card.Body></Card>
                 </Accordion.Body>
               </Accordion.Item>
             ))}
@@ -115,8 +113,8 @@ class SkillList extends Component {
   }
 }
 
-const StarRating = () => {
-  const [rating, setRating] = useState(0);
+const StarRating = ({ initialRating }) => {
+  const [rating, setRating] = useState(initialRating);
   const [hover, setHover] = useState(0);
   return (
     <div className="star-rating">
