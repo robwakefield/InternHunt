@@ -1,5 +1,6 @@
 'use client'
 import "bootstrap/dist/css/bootstrap.min.css"
+import starStyle from './Star.module.css';
 import { Button, Card, Col, Container, ListGroup, ListGroupItem, Nav, Row } from "react-bootstrap";
 import { Component, useEffect, useState } from "react";
 
@@ -56,7 +57,7 @@ class ApplicantList extends Component {
             <Button>Search</Button>
           </Card.Header>
         
-          <ListGroup componentClass="ul"> {
+          <ListGroup> {
             this.state.applications.map((application) => (
               <ListGroupItem key={application.student.name}>
                 <Container className="d-flex justify-content-between" style={{cursor: "pointer"}}>
@@ -87,11 +88,12 @@ class SkillList extends Component {
             <Button>Accept</Button>
           </Card.Header>
           
-          <ListGroup componentClass="ul">{
+          <ListGroup>{
             this.skills.map((skill) => (
               <ListGroupItem key={skill.name}>
                 <Container className="d-flex justify-content-between" style={{cursor: "pointer"}}>
                 <p className="text-center">{skill.name}</p>
+                <StarRating />
                 </Container>
               </ListGroupItem>
             ))}
@@ -101,3 +103,27 @@ class SkillList extends Component {
     )
   }
 }
+
+const StarRating = () => {
+  const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(0);
+  return (
+    <div className="star-rating">
+      {[...Array(5)].map((_, index) => {
+          return (
+          <button
+            type="button"
+            key={index + 1}
+            className={index + 1 <= (hover || rating) ? starStyle.on : starStyle.off}
+            onClick={() => setRating(index + 1)}
+            onMouseEnter={() => setHover(index + 1)}
+            onMouseLeave={() => setHover(rating)}
+            onDoubleClick={() => {setRating(0); setHover(0);}}
+          >
+            <span className="star">&#9733;</span>
+          </button>
+        );}
+      )}
+    </div>
+  );
+};
