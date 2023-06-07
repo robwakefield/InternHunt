@@ -1,13 +1,11 @@
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
-import Container from 'react-bootstrap/Container';
+import { Nav, Navbar, Image, Container } from 'react-bootstrap';
 
 function StudentNavbar() { 
     return (
         <Navbar bg="light" expand="lg">
       <Container>
-        <Navbar.Brand href="/"><img
+        <Navbar.Brand href="/">
+          <Image
               alt=""
               src="/favicon.ico"
               width="30"
