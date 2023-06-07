@@ -6,3 +6,7 @@ p {
   word-break: break-all;
   white-space: normal;
 }
+
+.ratingCard {
+  border: 0em;
+}

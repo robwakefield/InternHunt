@@ -1,9 +1,12 @@
 'use client'
 import "bootstrap/dist/css/bootstrap.min.css"
 import starStyle from './Star.module.css';
+import './recruiterInternship.css'
 import { Accordion, Button, Card, Col, Container, ListGroup, ListGroupItem, Nav, Row } from "react-bootstrap";
 import { Component, useEffect, useState } from "react";
 import RecruiterNavbar from "../recruiterNavbar";
+import { BsSearch, BsSortDown } from 'react-icons/bs';
+import '../globals.css'
 
 function RecruiterInternship() {
   const [post, setPost] = useState({name: "", applications: []});
@@ -53,9 +56,9 @@ class ApplicantList extends Component {
       <Container style={{height: "80vh"}}>
         <Card className="mt-4 h-100">
           <Card.Header className="d-flex justify-content-between">
-            <Button>Sort</Button>
+            <Button className="sortButton"><BsSortDown color="black" size={30}/></Button>
             <h4>Applicants</h4>
-            <Button>Search</Button>
+            <Button className="searchButton"><BsSearch color="black" size={30}/></Button>
           </Card.Header>
         
           <ListGroup> {
@@ -93,8 +96,16 @@ class SkillList extends Component {
             this.skills.map((skill) => (
               <Accordion.Item eventKey={skill.name} key={skill.name}>
                 <Accordion.Header>{skill.name}</Accordion.Header>
-                <Accordion.Body><Container className="d-flex justify-content-between" style={{cursor: "pointer"}}>
-                  <p className="text-center">Evidenceasdfasdfasdfads asdfasdfsdfasdf asdfasdfasd fasd sdafasdfasdf asdf asdf asdfasdf asdf asdfasdfasdf asdfasdf asdfasdf asdf adasdf</p><StarRating /></Container></Accordion.Body>
+                <Accordion.Body>
+                  <Card><Card.Body>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+          culpa qui officia deserunt mollit anim id est laborum.</Card.Body></Card>
+                <Card className="ratingCard" ><Card.Body style={{ alignSelf: "flex-end" }}><StarRating /></Card.Body></Card>
+                </Accordion.Body>
               </Accordion.Item>
             ))}
           </Accordion>
