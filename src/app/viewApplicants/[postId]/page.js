@@ -137,13 +137,14 @@ class ApplicantList extends Component {
 }
 
 class SkillList extends Component {
-  state = { skills: [], name: ""}
+  state = { skills: [], name: "" }
+  getSelectedStudent = () => this.props.post.applications.filter(app => app.student.id == this.props.selectedApplicant)[0]
 
   componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
       this.setState({
-        skills: (this.props.selectedApplicant != -1 ? this.props.post.applications[this.props.selectedApplicant].evidences : []),
-        name: (this.props.selectedApplicant != -1 ? this.props.post.applications[this.props.selectedApplicant].student.name + "'s Application" : "")
+        skills: (this.props.selectedApplicant != -1 ? this.getSelectedStudent().evidences : []),
+        name: (this.props.selectedApplicant != -1 ? this.getSelectedStudent().student.name + "'s Application" : "")
       });
     }
   }
@@ -169,7 +170,7 @@ class SkillList extends Component {
                       initialRating={skill.rating}
                       post={this.props.post}
                       setPost={this.props.setPost}
-                      studentID={this.props.post.applications[this.props.selectedApplicant].student.id}
+                      studentID={this.getSelectedStudent().student.id}
                       requirementID={skill.requirement.id}
                     />
                   </Card.Body></Card>
