@@ -34,6 +34,7 @@ model Application {
   student     Student @relation(fields: [studentID], references: [id])
   studentID   Int
   evidences   Evidence[]
+  cv          Bytes?
 
   @@id([postID, studentID])
 }
