@@ -4,11 +4,13 @@ import { NextResponse } from 'next/server';
 export async function GET() {
   const post = await prisma.post.findFirst({
     select: {
+      id: true,
       name: true,
       applications: {
         select: {
           student: {
             select: {
+              id: true,
               name: true
             }
           },
@@ -18,6 +20,7 @@ export async function GET() {
               rating: true,
               requirement: {
                 select: {
+                  id: true,
                   requirementText: true
                 }
               }

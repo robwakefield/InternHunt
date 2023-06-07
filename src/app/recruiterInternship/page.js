@@ -101,7 +101,12 @@ class SkillList extends Component {
                 <Accordion.Body>
                   <Card><Card.Body>{skill.evidenceText}</Card.Body></Card>
                   <Card className="ratingCard"><Card.Body style={{ alignSelf: "flex-end" }}>
-                    <StarRating initialRating={skill.rating}/>
+                    <StarRating 
+                      initialRating={skill.rating}
+                      postID={this.props.post.id}
+                      studentID={this.props.post.applications[this.props.selectedApplicant].student.id}
+                      requirementID={skill.requirement.id}
+                    />
                   </Card.Body></Card>
                 </Accordion.Body>
               </Accordion.Item>
@@ -113,9 +118,23 @@ class SkillList extends Component {
   }
 }
 
-const StarRating = ({ initialRating }) => {
+const StarRating = ({ initialRating, studentID, postID, requirementID }) => {
   const [rating, setRating] = useState(initialRating);
   const [hover, setHover] = useState(0);
+
+  const selectRating = (n) => {
+    setRating(n);
+    fetch('/api/rating', {
+      method: 'PUT',
+      body: JSON.stringify({
+        studentID: studentID,
+        postID: postID,
+        requirementID: requirementID,
+        rating: n
+      })
+    });
+  }
+
   return (
     <div className="star-rating">
       {[...Array(5)].map((_, index) => {
@@ -124,10 +143,9 @@ const StarRating = ({ initialRating }) => {
             type="button"
             key={index + 1}
             className={index + 1 <= (hover || rating) ? starStyle.on : starStyle.off}
-            onClick={() => setRating(index + 1)}
+            onClick={() => selectRating(index + 1)}
             onMouseEnter={() => setHover(index + 1)}
             onMouseLeave={() => setHover(rating)}
-            onDoubleClick={() => {setRating(0); setHover(0);}}
           >
             <span className="star">&#9733;</span>
           </button>
