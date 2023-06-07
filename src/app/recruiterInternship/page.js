@@ -7,6 +7,8 @@ import { Component, useEffect, useState } from "react";
 import RecruiterNavbar from "../recruiterNavbar";
 import { BsSearch, BsSortDown } from 'react-icons/bs';
 import { AiFillStar } from 'react-icons/ai'
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Popover from "react-bootstrap/Popover";
 import '../globals.css'
 
 function RecruiterInternship() {
@@ -61,7 +63,7 @@ class ApplicantList extends Component {
   }
   render() {
     return (
-      <Container style={{height: "80vh"}}>
+      <Container style={{height: "70vh"}}>
         <Card className="mt-4 h-100">
           <Card.Header className="d-flex justify-content-between">
             <Button className="sortButton"><BsSortDown color="black" size={30}/></Button>
@@ -100,7 +102,7 @@ class SkillList extends Component {
   }
   render() {
     return (
-      <Container style={{height: "80vh"}}>
+      <Container style={{height: "70vh"}}>
         <Card className="mt-4 h-100">
           <Card.Header className="d-flex justify-content-between">
             <Button>See Documents</Button>
@@ -160,8 +162,23 @@ const StarRating = ({ initialRating, studentID, postID, requirementID }) => {
             onClick={() => selectRating(index + 1)}
             onMouseEnter={() => setHover(index + 1)}
             onMouseLeave={() => setHover(rating)}
-          >
-              <span className="star"><AiFillStar size={20} /></span>
+            >
+            <OverlayTrigger
+              key={index}
+              placement="top"
+              overlay={
+                <Popover id={`popover-positioned-${index}`}>
+                  <Popover.Header as="h3">{`Star Rating - ${index + 1}`}</Popover.Header>
+                  <Popover.Body>
+                    <strong>Just Mention</strong> Need more concrete examples
+                  </Popover.Body>
+                </Popover>
+              }>
+              <span className="star">
+              <AiFillStar size={20} />
+              
+              </span>
+            </OverlayTrigger>
           </button>
         );}
       )}
