@@ -2,7 +2,7 @@
 import "bootstrap/dist/css/bootstrap.min.css"
 import starStyle from './Star.module.css';
 import './recruiterInternship.css'
-import { Accordion, Button, Card, Col, Container, ListGroup, ListGroupItem, Nav, PageItem, Pagination, Row } from "react-bootstrap";
+import { Accordion, Button, Card, Col, Container, ListGroup, ListGroupItem, Nav, PageItem, Pagination, Row, Modal, Form} from "react-bootstrap";
 import { Component, useEffect, useState } from "react";
 import RecruiterNavbar from "../recruiterNavbar";
 import { BsSearch, BsSortDown } from 'react-icons/bs';
@@ -145,6 +145,11 @@ class SkillList extends Component {
 const StarRating = ({ initialRating, post, setPost, studentID, requirementID }) => {
   const [rating, setRating] = useState(initialRating);
   const [hover, setHover] = useState(0);
+  const [show, setShow] = useState(new Array(6).fill(false));
+  const [modalShow, setModalShow] = useState(false);
+
+  const handleModalClose = () => setModalShow(false);
+  const handleModalShow = () => setModalShow(true);
 
   const selectRating = (n) => {
     setRating(n);
@@ -168,6 +173,31 @@ const StarRating = ({ initialRating, post, setPost, studentID, requirementID }) 
     });
   }
 
+  const handleClick = index => {
+    selectRating(index + 1);
+    setShow(prev => {
+      const newShow = [...prev];
+      newShow[index] = !newShow[index];
+      return newShow;
+    });
+  };
+
+  const handleHover = index => {
+    setShow(prev => {
+      const newShow = [...prev];
+      newShow[index] = true;
+      return newShow;
+    });
+  };
+
+  const handleHoverOut = index => {
+    setShow(prev => {
+      const newShow = [...prev];
+      newShow[index] = false;
+      return newShow;
+    });
+  };
+
   return (
     <div className="star-rating">
       {[...Array(5)].map((_, index) => {
@@ -176,27 +206,68 @@ const StarRating = ({ initialRating, post, setPost, studentID, requirementID }) 
             type="button"
             key={index + 1}
             className={index + 1 <= (hover || rating) ? starStyle.on : starStyle.off}
-            onClick={() => selectRating(index + 1)}
             onMouseEnter={() => setHover(index + 1)}
             onMouseLeave={() => setHover(rating)}
             >
             <OverlayTrigger
+              trigger="manual"
+              show={show[index]}
               key={index}
               placement="top"
               overlay={
-                <Popover id={`popover-positioned-${index}`}>
-                  <Popover.Header as="h3">{`Star Rating - ${index + 1}`}</Popover.Header>
+                <Popover
+                  id={`popover-positioned-${index}`}
+                  onMouseEnter={() => handleHover(index)}
+                  onMouseLeave={() => handleHoverOut(index)}>
+                  <Popover.Header as="h3">
+                  <Container fluid>
+                    <Row>
+                      <Col sm={9} >{`Star Rating - ${index + 1}`} </Col>
+                        <Col sm={3} ><Button size="sm" onClick={function (event) { handleModalShow()}}>Edit</Button></Col>
+                    </Row>
+                  </Container>
+                  </Popover.Header>
                   <Popover.Body>
                     <strong>Just Mention</strong> Need more concrete examples
                   </Popover.Body>
                 </Popover>
               }>
-              <span className="star">
-              <AiFillStar size={20} />
+                <span><Modal
+                show={modalShow}
+                onHide={handleModalClose}
+                backdrop="static"
+                    keyboard={false}
+                    centered
+              >
+                <Modal.Header closeButton>
+                  <Modal.Title>Edit Rating Scheme</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                <Form>
+                  <Form.Group className="mb-3" controlId={`rating-${rating}`}>
+                    <Form.Label>Rating 1</Form.Label>
+                    <Form.Control type="textarea" placeholder="Enter description on this rating" defaultValue="" />
+                  </Form.Group>
+                </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleModalClose}>Save</Button>
+                </Modal.Footer>
+                </Modal>
+                <span className="star">
+                
+                <AiFillStar size={20}
+                  onClick={() => handleClick(index)}
+                  onMouseEnter={() => handleHover(index)}
+                    onMouseLeave={() => handleHoverOut(index)} />
+                  </span>
+                </span>
+                
               
-              </span>
-            </OverlayTrigger>
-          </button>
+              </OverlayTrigger>
+              
+            </button>
+          
         );}
       )}
     </div>
