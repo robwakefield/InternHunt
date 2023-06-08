@@ -24,10 +24,8 @@ function ViewApplicants() {
   const params = useParams()
   const postId = params.postId
 
-  console.log('/api/post/' + postId)
-
   useEffect(() => {
-    fetch('/api/post')
+    fetch('/api/post/' + postId)
       .then((response) => response.json())
       .then((data) => setPost(data));
   }, []);
