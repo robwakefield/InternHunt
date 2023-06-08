@@ -7,14 +7,14 @@ export async function GET() {
 }
 
 export async function PUT(request) {
-  const { description, requirement } = await request.json();
+  const { description, requirements } = await request.json();
   await prisma.listings.update({
     where: {
       id: 1
     },
     data: {
       description: description,
-      requirement: requirement
+      requirements: requirements
     }
   });
   return NextResponse.json({});
