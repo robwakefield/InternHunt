@@ -10,7 +10,7 @@ import { AiFillStar } from 'react-icons/ai'
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
 import '../../globals.css'
-import { useParams } from "next/navigation";
+import { useParams, useRouter, notFound } from "next/navigation";
 
 function averageRating(application) {
   if (application.evidences.length == 0) return 0;
@@ -21,6 +21,7 @@ function ViewApplicants() {
   const [post, setPost] = useState({name: "", applications: []});
   const [selectedApplicant, setSelectedApplicant] = useState(-1);
 
+  const router = useRouter()
   const params = useParams()
   const postId = params.postId
 
@@ -29,6 +30,10 @@ function ViewApplicants() {
       .then((response) => response.json())
       .then((data) => setPost(data));
   }, []);
+
+  if (post == undefined) {
+    notFound();
+  }
 
   return (
     <main className="viewApplicants">
