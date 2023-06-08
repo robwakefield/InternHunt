@@ -38,7 +38,7 @@ export async function PUT(request) {
       postID_studentID: { postID: body.postID, studentID: body.studentID }
     },
     data: {
-      cv: body.cv
+      cv: Buffer.from(body.cv, 'base64')
     }
   })
   return NextResponse.json({})
