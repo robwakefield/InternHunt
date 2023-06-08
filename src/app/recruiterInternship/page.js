@@ -148,14 +148,12 @@ class SkillList extends Component {
 }
 
 class StarRating extends Component {
-  state = { rating: 0, hover: 0 };
-  
   constructor(props) {
     super(props);
-    this.setState({
+    this.state = {
       rating: props.initialRating,
       hover: props.initialRating
-    });
+    };
   }
 
   selectRating(n) {
