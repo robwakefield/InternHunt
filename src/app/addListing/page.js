@@ -23,7 +23,7 @@ function AddListing() {
       <Container  style={{height: "80vh"}}>
       <Nav className="mt-2">
           <Pagination>
-            <PageItem href="./recruiterDashboard">
+            <PageItem href="/recruiterDashboard">
               Back to Dashboard
             </PageItem>
           </Pagination>
