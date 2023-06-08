@@ -9,22 +9,22 @@ import JobDescription from "./jobDescription";
 import JobRequirementsList from "./jobRequirements";
 
 function AddListing() {
-  const descRef = useRef();
-  const reqRef = useRef();
+  // const descRef = useRef();
+  // const reqRef = useRef();
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    fetch('/api/listings', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        description : descRef.current.value,
-        requirement : reqRef.current.value
-      }),
-    });
-  }
+  // const handleSubmit = (event) => {
+  //   event.preventDefault();
+  //   fetch('/api/listings', {
+  //     method: 'PUT',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({
+  //       description : descRef.current.value,
+  //       requirement : reqRef.current.value
+  //     }),
+  //   });
+  // }
 
   const [listings, setListings] = useState([]);
 
@@ -46,7 +46,7 @@ function AddListing() {
           </Pagination>
         </Nav>
         <h1 className="text-center">IT Intern</h1>
-        <Form onSubmit={handleSubmit}>
+        {/* <Form onSubmit={handleSubmit}> */}
           <Card className="mt-4 h-100">
             <Card.Header className="d-flex justify-content-between">
               <Container className="d-flex justify-content-start">
@@ -61,11 +61,11 @@ function AddListing() {
               </Container>
               <Button>Publish</Button>
             </Card.Header>
-            <JobDescription listings={listings} descRef={descRef} />
-            <JobRequirementsList listings={listings} reqRef={reqRef} />
+            <JobDescription />
+            <JobRequirementsList />
             <SavedBox/>
           </Card>
-        </Form>
+        {/* </Form> */}
       </Container>
     </main>
     
