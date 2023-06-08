@@ -9,29 +9,12 @@ import JobDescription from "./jobDescription";
 import JobRequirementsList from "./jobRequirements";
 
 function AddListing() {
-  // const descRef = useRef();
-  // const reqRef = useRef();
-
-  // const handleSubmit = (event) => {
-  //   event.preventDefault();
-  //   fetch('/api/listings', {
-  //     method: 'PUT',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({
-  //       description : descRef.current.value,
-  //       requirement : reqRef.current.value
-  //     }),
-  //   });
-  // }
-
-  const [listings, setListings] = useState([]);
+  const [listing, setListing] = useState([]);
 
   useEffect(() => {
     fetch('/api/listings')
       .then((response) => response.json())
-      .then((data) => setListings(data));
+      .then((data) => setListing(data));
   }, []);
 
   return (
@@ -45,7 +28,7 @@ function AddListing() {
             </PageItem>
           </Pagination>
         </Nav>
-        <h1 className="text-center">IT Intern</h1>
+        <h1 className="text-center">{listing.name}</h1>
         {/* <Form onSubmit={handleSubmit}> */}
           <Card className="mt-4 h-100">
             <Card.Header className="d-flex justify-content-between">
@@ -59,7 +42,7 @@ function AddListing() {
                   <FormCheck.Label>Ask for Academic Results</FormCheck.Label>
                 </FormCheck>
               </Container>
-              <Button>Publish</Button>
+              <Button type='submit'>Publish</Button>
             </Card.Header>
             <JobDescription />
             <JobRequirementsList />

@@ -45,8 +45,8 @@ function JobDescription() {
       </Card.Header>
       <Form.Group className="mb-3" controlId="formJobDesc">
         <Form.Control as="textarea" rows={3}
-         placeholder="Enter your Job Description" defaultValue={description}
-         ref={descRef} onChange={handleSubmit} disabled={isDisabled} />
+          placeholder="Enter your Job Description" defaultValue={description}
+          ref={descRef} onChange={handleSubmit} disabled={isDisabled} />
       </Form.Group>
     </Card>
   )
