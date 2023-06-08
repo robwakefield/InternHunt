@@ -65,7 +65,7 @@ class ApplicantList extends Component {
 }
 
 const handleClick = () => {
-  window.location.href = "./recruiterInternship";
+  window.location.href = "./viewApplicants";
 }
 
 class ListingItem extends Component {
