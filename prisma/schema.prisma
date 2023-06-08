@@ -24,6 +24,7 @@ model Post {
   name         String
   status       String
   totalPlaces  Int
+  description  String
   applications Application[]
   requirements Requirement[]
 }
