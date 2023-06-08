@@ -8,7 +8,7 @@ import RecruiterNavbar from "../recruiterNavbar";
 
 function JobDescription() {
   const descRef = useRef();
-  
+
   const [description, setDescription] = useState('');
   useEffect(() => {
     fetch('/api/listings')
@@ -29,14 +29,24 @@ function JobDescription() {
     });
   }
 
+  const [isDisabled, setIsDisabled] = useState(true);
+
+  const handleDisable = () => {
+    setIsDisabled(!isDisabled);
+  };
+
   return (
     <Card className="mt-4 mb-2 mx-3">
       <Card.Header className="d-flex justify-content-between">
       <p>Job Description (Autosave ON)</p>
-      <Button>Edit</Button>
+      <Button onClick={handleDisable}>
+        {isDisabled ? 'Edit' : 'Finish'}
+      </Button>
       </Card.Header>
       <Form.Group className="mb-3" controlId="formJobDesc">
-        <Form.Control as="textarea" rows={3} placeholder="Enter your Job Description" defaultValue={description} ref={descRef} onChange={handleSubmit}/>
+        <Form.Control as="textarea" rows={3}
+         placeholder="Enter your Job Description" defaultValue={description}
+         ref={descRef} onChange={handleSubmit} disabled={isDisabled} />
       </Form.Group>
     </Card>
   )
