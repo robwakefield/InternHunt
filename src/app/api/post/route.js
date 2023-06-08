@@ -1,5 +1,5 @@
 import { prisma } from '../../db/client'
-import { NextRequest, NextResponse } from 'next';
+import { NextResponse } from 'next/server';
 
 export async function GET() {
   const post = await prisma.post.findFirst({
