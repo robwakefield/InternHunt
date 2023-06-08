@@ -5,7 +5,7 @@ export async function GET(request, {params,}) {
   const postId = parseInt(params.postId)
   const post = await prisma.post.findUnique({
     where: {
-      id: 1
+      id: postId
     },
     select: {
       id: true,
