@@ -10,6 +10,7 @@ import { AiFillStar } from 'react-icons/ai'
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
 import '../../globals.css'
+import { useParams, usePathname, useRouter } from "next/navigation";
 
 function averageRating(application) {
   if (application.evidences.length == 0) return 0;
@@ -19,6 +20,9 @@ function averageRating(application) {
 function ViewApplicants() {
   const [post, setPost] = useState({name: "", applications: []});
   const [selectedApplicant, setSelectedApplicant] = useState(-1);
+
+  const params = useParams()
+  const postId = params.postId
 
   useEffect(() => {
     fetch('/api/post')
@@ -38,7 +42,7 @@ function ViewApplicants() {
           </Pagination>
         </Nav>
         <Card>
-          <Card.Header>{post.name}</Card.Header>
+          <Card.Header>{postId}</Card.Header>
           <Card.Body>
             <Row>
               <Col xs={4}>
