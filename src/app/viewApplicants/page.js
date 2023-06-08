@@ -1,7 +1,7 @@
 'use client'
 import "bootstrap/dist/css/bootstrap.min.css"
 import starStyle from './Star.module.css';
-import './recruiterInternship.css'
+import './viewApplicants.css'
 import { Accordion, Button, Card, Col, Container, ListGroup, ListGroupItem, Nav, PageItem, Pagination, Row, Modal, Form} from "react-bootstrap";
 import { Component, useEffect, useState, useRef} from "react";
 import RecruiterNavbar from "../recruiterNavbar";
@@ -16,7 +16,7 @@ function averageRating(application) {
   return application.evidences.map(ev => ev.rating).reduce((a, b) => a + b, 0) / application.evidences.length;
 }
 
-function RecruiterInternship() {
+function ViewApplicants() {
   const [post, setPost] = useState({name: "", applications: []});
   const [selectedApplicant, setSelectedApplicant] = useState(-1);
 
@@ -27,7 +27,7 @@ function RecruiterInternship() {
   }, []);
 
   return (
-    <main className="recruiterInternship">
+    <main className="viewApplicants">
       <RecruiterNavbar></RecruiterNavbar>
       <Container>
         <Nav className="mt-2">
@@ -55,7 +55,7 @@ function RecruiterInternship() {
   );
 }
 
-export default RecruiterInternship;
+export default ViewApplicants;
 
 class ApplicantList extends Component {
   selectApplicant = (n) => () => {this.props.setSelectedApplicant(n);}
