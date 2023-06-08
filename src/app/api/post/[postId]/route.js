@@ -10,6 +10,7 @@ export async function GET(request, {params,}) {
     select: {
       id: true,
       name: true,
+      description: true,
       rating1Text: true,
       rating2Text: true,
       rating3Text: true,
@@ -37,6 +38,12 @@ export async function GET(request, {params,}) {
           }
         }
       },
+      requirements: {
+        select: {
+          id: true,
+          requirementText: true
+        }
+      }
     }
   });
   return NextResponse.json(post);
