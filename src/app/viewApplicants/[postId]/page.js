@@ -47,7 +47,7 @@ function ViewApplicants() {
           </Pagination>
         </Nav>
         <Card>
-          <Card.Header>{postId}</Card.Header>
+          <Card.Header>{post.name}</Card.Header>
           <Card.Body>
             <Row>
               <Col xs={4}>

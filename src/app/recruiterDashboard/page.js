@@ -64,14 +64,15 @@ class ApplicantList extends Component {
   }
 }
 
-const handleClick = () => {
-  window.location.href = "./viewApplicants";
+const handleClick = (postId) => {
+  window.location.href = "/viewApplicants/" + postId;
 }
 
 class ListingItem extends Component {
   constructor(props) {
     super(props);
     this.state = { 
+      id: this.props.post.id,
       title: this.props.post.name,
       status: this.props.post.status,
       places_filled: this.props.post.applications,
@@ -82,6 +83,7 @@ class ListingItem extends Component {
   componentDidUpdate(prevProps) {
     if (prevProps.listings !== this.props.listings) {
       this.setState({ 
+        id: this.props.post.id,
         title: this.props.post.name,
         status: this.props.post.status,
         places_filled: this.props.post.applications,
@@ -135,7 +137,7 @@ class ListingItem extends Component {
     
     return (
       <ListGroupItem className="listing">
-        <Container className="d-flex justify-content-between" style={{cursor: "pointer"}} onClick={handleClick}>
+        <Container className="d-flex justify-content-between" style={{cursor: "pointer"}} onClick={() => {handleClick(this.state.id)}}>
           <p className={status_class}>{this.state.status}</p>
           <p className="text-center">{this.state.title}</p>
           {rhs}
