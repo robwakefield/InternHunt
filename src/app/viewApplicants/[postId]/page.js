@@ -4,12 +4,12 @@ import starStyle from './Star.module.css';
 import './viewApplicants.css'
 import { Accordion, Button, Card, Col, Container, ListGroup, ListGroupItem, Nav, PageItem, Pagination, Row, Modal, Form} from "react-bootstrap";
 import { Component, useEffect, useState, useRef} from "react";
-import RecruiterNavbar from "../recruiterNavbar";
+import RecruiterNavbar from "../../recruiterNavbar";
 import { BsSearch, BsSortDown } from 'react-icons/bs';
 import { AiFillStar } from 'react-icons/ai'
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
-import '../globals.css'
+import '../../globals.css'
 
 function averageRating(application) {
   if (application.evidences.length == 0) return 0;
