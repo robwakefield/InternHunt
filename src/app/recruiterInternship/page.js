@@ -16,6 +16,11 @@ function averageRating(application) {
   return application.evidences.map(ev => ev.rating).reduce((a, b) => a + b, 0) / application.evidences.length;
 }
 
+function selectedApplicant(selected, applications) {
+  if (selected == -1) return;
+  return applications.filter((application) => application.student.id == selected)[0];
+}
+
 function RecruiterInternship() {
   const [post, setPost] = useState({name: "", applications: []});
   const [selectedApplicant, setSelectedApplicant] = useState(-1);
@@ -78,9 +83,9 @@ class ApplicantList extends Component {
           </Card.Header>
         
           <ListGroup> {
-            this.state.applications.map((application, i) => (
-              <ListGroupItem className={(i == this.props.selectedApplicant)? "selectedApplicantListItem" : "applicantListItem"} key={application.student.name}>
-                <Container fluid style={{ cursor: "pointer" }} onClick={this.selectApplicant(i)}>
+            this.state.applications.map((application) => (
+              <ListGroupItem className={(application.student.id == this.props.selectedApplicant)? "selectedApplicantListItem" : "applicantListItem"} key={application.student.name}>
+                <Container fluid style={{ cursor: "pointer" }} onClick={this.selectApplicant(application.student.id)}>
                   <Row className="applicantListRow">
                     <Col sm={9} className="studentNameCol"><p className="text-left studentName">{application.student.name} </p></Col>
                     <Col sm={3} className="avgRatingCol"><p className="text-center avgRating">{averageRating(application)}</p><AiFillStar style={{alignContent: "center"}} size={30}  color="#ffc800"/></Col>
@@ -101,8 +106,8 @@ class SkillList extends Component {
   componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
       this.setState({
-        skills: (this.props.selectedApplicant != -1 ? this.props.post.applications[this.props.selectedApplicant].evidences : []),
-        name: (this.props.selectedApplicant != -1 ? this.props.post.applications[this.props.selectedApplicant].student.name + "'s Application" : "")
+        skills: (this.props.selectedApplicant != -1 ? selectedApplicant(this.props.selectedApplicant, this.props.post.applications).evidences : []),
+        name: (this.props.selectedApplicant != -1 ? selectedApplicant(this.props.selectedApplicant, this.props.post.applications).student.name + "'s Application" : "")
       });
     }
   }
@@ -128,7 +133,7 @@ class SkillList extends Component {
                       initialRating={skill.rating}
                       post={this.props.post}
                       setPost={this.props.setPost}
-                      studentID={this.props.post.applications[this.props.selectedApplicant].student.id}
+                      studentID={selectedApplicant(this.props.selectedApplicant, this.props.post.applications).student.id}
                       requirementID={skill.requirement.id}
                     />
                   </Card.Body></Card>
@@ -142,63 +147,79 @@ class SkillList extends Component {
   }
 }
 
-const StarRating = ({ initialRating, post, setPost, studentID, requirementID }) => {
-  const [rating, setRating] = useState(initialRating);
-  const [hover, setHover] = useState(0);
+class StarRating extends Component {
+  state = { rating: 0, hover: 0 };
+  
+  constructor(props) {
+    super(props);
+    this.setState({
+      rating: props.initialRating,
+      hover: props.initialRating
+    });
+  }
 
-  const selectRating = (n) => {
-    setRating(n);
+  selectRating(n) {
+    this.setState({ ...this.state, rating: n });
 
-    const newPost = {...post};
+    const newPost = {...this.props.post};
     newPost.applications
-      .filter(app => app.student.id == studentID)
+      .filter(app => app.student.id == this.props.studentID)
       .flatMap(app => app.evidences)
-      .filter(ev => ev.requirement.id == requirementID)
+      .filter(ev => ev.requirement.id == this.props.requirementID)
       .forEach(ev => {ev.rating = n})
-    setPost(newPost);
+    this.props.setPost(newPost);
 
     fetch('/api/rating', {
       method: 'PUT',
       body: JSON.stringify({
-        studentID: studentID,
-        postID: post.id,
-        requirementID: requirementID,
+        studentID: this.props.studentID,
+        postID: this.props.post.id,
+        requirementID: this.props.requirementID,
         rating: n
       })
     });
   }
 
-  return (
-    <div className="star-rating">
-      {[...Array(5)].map((_, index) => {
-          return (
-          <button
-            type="button"
-            key={index + 1}
-            className={index + 1 <= (hover || rating) ? starStyle.on : starStyle.off}
-            onClick={() => selectRating(index + 1)}
-            onMouseEnter={() => setHover(index + 1)}
-            onMouseLeave={() => setHover(rating)}
-            >
-            <OverlayTrigger
-              key={index}
-              placement="top"
-              overlay={
-                <Popover id={`popover-positioned-${index}`}>
-                  <Popover.Header as="h3">{`Star Rating - ${index + 1}`}</Popover.Header>
-                  <Popover.Body>
-                    <strong>Just Mention</strong> Need more concrete examples
-                  </Popover.Body>
-                </Popover>
-              }>
-              <span className="star">
-              <AiFillStar size={20} />
-              
-              </span>
-            </OverlayTrigger>
-          </button>
-        );}
-      )}
-    </div>
-  );
-};
+  componentDidUpdate(prevProps) {
+    if (prevProps !== this.props) {
+      this.setState({ rating: this.props.initialRating, hover: this.props.initialRating });
+    }
+  }
+
+  render() {
+    return (
+      <div className="star-rating">
+        {[...Array(5)].map((_, index) => {
+            return (
+            <button
+              type="button"
+              key={index + 1}
+              className={index + 1 <= (this.state.hover || this.state.rating) ? starStyle.on : starStyle.off}
+              onClick={() => this.selectRating(index + 1)}
+              onMouseEnter={() => this.setState({ ...this.state, hover: index + 1 })}
+              onMouseLeave={() => this.setState({ ...this.state, hover: this.state.rating })}
+              >
+              <OverlayTrigger
+                key={index}
+                placement="top"
+                overlay={
+                  <Popover id={`popover-positioned-${index}`}>
+                    <Popover.Header as="h3">{`Star Rating - ${index + 1}`}</Popover.Header>
+                    <Popover.Body>
+                      <strong>Just Mention</strong> Need more concrete examples
+                    </Popover.Body>
+                  </Popover>
+                }>
+                <span className="star">
+                <AiFillStar size={20} />
+                
+                </span>
+              </OverlayTrigger>
+            </button>
+          );}
+        )}
+      </div>
+    );
+  }
+
+}

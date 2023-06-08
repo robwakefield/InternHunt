@@ -55,7 +55,7 @@ model Evidence {
 
   requirement     Requirement @relation(fields: [postID, requirementID], references: [postID, id])
   requirementID   Int
-  rating          Int
+  rating          Int? @default(0)
   evidenceText    String
 
   @@id([postID, requirementID, studentID])
