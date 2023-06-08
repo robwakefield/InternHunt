@@ -10,7 +10,7 @@ import { AiFillStar } from 'react-icons/ai'
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
 import '../../globals.css'
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 
 function averageRating(application) {
   if (application.evidences.length == 0) return 0;
@@ -23,6 +23,8 @@ function ViewApplicants() {
 
   const params = useParams()
   const postId = params.postId
+
+  console.log('/api/post/' + postId)
 
   useEffect(() => {
     fetch('/api/post')

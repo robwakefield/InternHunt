@@ -1,10 +1,11 @@
-import { prisma } from '../../db/client'
+import { prisma } from '../../../db/client'
 import { NextRequest, NextResponse } from 'next';
 
-export async function GET() {
+export async function GET(req) {
+  const { postId } = req.query;
   const post = await prisma.post.findFirst({
     select: {
-      id: true,
+      id: postId,
       name: true,
       rating1Text: true,
       rating2Text: true,
