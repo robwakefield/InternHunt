@@ -2,8 +2,8 @@
 import "bootstrap/dist/css/bootstrap.min.css"
 import starStyle from './Star.module.css';
 import './recruiterInternship.css'
-import { Accordion, Button, Card, Col, Container, ListGroup, ListGroupItem, Nav, PageItem, Pagination, Row } from "react-bootstrap";
-import { Component, useEffect, useState } from "react";
+import { Accordion, Button, Card, Col, Container, ListGroup, ListGroupItem, Nav, PageItem, Pagination, Row, Modal, Form} from "react-bootstrap";
+import { Component, useEffect, useState, useRef} from "react";
 import RecruiterNavbar from "../recruiterNavbar";
 import { BsSearch, BsSortDown } from 'react-icons/bs';
 import { AiFillStar } from 'react-icons/ai'
@@ -112,7 +112,7 @@ class SkillList extends Component {
       <Container style={{height: "70vh"}}>
         <Card className="mt-4 h-100">
           <Card.Header className="d-flex justify-content-between">
-            <Button>See Documents</Button>
+            <Button>See Documents </Button>
             <h4>{this.state.name}</h4>
             <Button>Accept</Button>
           </Card.Header>
@@ -130,6 +130,11 @@ class SkillList extends Component {
                       setPost={this.props.setPost}
                       studentID={this.props.post.applications[this.props.selectedApplicant].student.id}
                       requirementID={skill.requirement.id}
+                      ratingSchemeList={[this.props.post.rating1Text,
+                        this.props.post.rating2Text,
+                        this.props.post.rating3Text,
+                        this.props.post.rating4Text,
+                        this.props.post.rating5Text]}
                     />
                   </Card.Body></Card>
                 </Accordion.Body>
@@ -142,9 +147,16 @@ class SkillList extends Component {
   }
 }
 
-const StarRating = ({ initialRating, post, setPost, studentID, requirementID }) => {
+const StarRating = ({ initialRating, post, setPost, studentID, requirementID, ratingSchemeList }) => {
   const [rating, setRating] = useState(initialRating);
   const [hover, setHover] = useState(0);
+  const [show, setShow] = useState(new Array(6).fill(false));
+  const [modalShow, setModalShow] = useState(false);
+
+  const schemeRef = [useRef(), useRef(), useRef(), useRef(), useRef()];
+
+  const handleModalClose = () => setModalShow(false);
+  const handleModalShow = () => setModalShow(true);
 
   const selectRating = (n) => {
     setRating(n);
@@ -168,6 +180,47 @@ const StarRating = ({ initialRating, post, setPost, studentID, requirementID }) 
     });
   }
 
+  const updateRatingScheme = (event) => {
+    event.preventDefault();
+
+    fetch('/api/ratingScheme', {
+      method: 'PUT',
+      body: JSON.stringify({
+        postID: post.id,
+        rating1Text: schemeRef[0].current.value,
+        rating2Text: schemeRef[1].current.value,
+        rating3Text: schemeRef[2].current.value,
+        rating4Text: schemeRef[3].current.value,
+        rating5Text: schemeRef[4].current.value,
+      })
+    });
+  };
+
+  const handleClick = index => {
+    selectRating(index + 1);
+    setShow(prev => {
+      const newShow = [...prev];
+      newShow[index] = !newShow[index];
+      return newShow;
+    });
+  };
+
+  const handleHover = index => {
+    setShow(prev => {
+      const newShow = [...prev];
+      newShow[index] = true;
+      return newShow;
+    });
+  };
+
+  const handleHoverOut = index => {
+    setShow(prev => {
+      const newShow = [...prev];
+      newShow[index] = false;
+      return newShow;
+    });
+  };
+
   return (
     <div className="star-rating">
       {[...Array(5)].map((_, index) => {
@@ -176,27 +229,71 @@ const StarRating = ({ initialRating, post, setPost, studentID, requirementID }) 
             type="button"
             key={index + 1}
             className={index + 1 <= (hover || rating) ? starStyle.on : starStyle.off}
-            onClick={() => selectRating(index + 1)}
             onMouseEnter={() => setHover(index + 1)}
             onMouseLeave={() => setHover(rating)}
             >
             <OverlayTrigger
+              trigger="manual"
+              show={show[index]}
               key={index}
               placement="top"
               overlay={
-                <Popover id={`popover-positioned-${index}`}>
-                  <Popover.Header as="h3">{`Star Rating - ${index + 1}`}</Popover.Header>
+                <Popover
+                  id={`popover-positioned-${index}`}
+                  onMouseEnter={() => handleHover(index)}
+                  onMouseLeave={() => handleHoverOut(index)}>
+                  <Popover.Header as="h3">
+                  <Container fluid>
+                    <Row>
+                      <Col sm={9} >{`Star Rating - ${index + 1}`} </Col>
+                        <Col sm={3} ><Button size="sm" onClick={function (event) { handleModalShow()}}>Edit</Button></Col>
+                    </Row>
+                  </Container>
+                  </Popover.Header>
                   <Popover.Body>
-                    <strong>Just Mention</strong> Need more concrete examples
+                    {ratingSchemeList[index]}
                   </Popover.Body>
                 </Popover>
               }>
-              <span className="star">
-              <AiFillStar size={20} />
+                <span><Modal
+                show={modalShow}
+                onHide={handleModalClose}
+                backdrop="static"
+                    keyboard={false}
+                    centered
+                >
+                  <Form onSubmit={updateRatingScheme}>
+                    <Modal.Header closeButton>
+                      <Modal.Title>Edit Rating Scheme</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                      {ratingSchemeList.map((rateSchemeText, rateNum) => {
+                        return (<Form.Group className="mb-3" controlId={`rating-${rateNum}`} key={`rating-${rateNum}`}>
+                          <Form.Label><strong>Rating {rateNum} Description</strong></Form.Label>
+                          <Form.Control contenteditable="true" type="textarea" placeholder="Enter description on this" defaultValue={rateSchemeText} ref={schemeRef[rateNum]}/>
+                        </Form.Group>); })}
+                    
+                    </Modal.Body>
+                    <Modal.Footer>
+                      <Button variant="secondary" type="submit" >Save</Button>
+                      <Button variant="secondary" onClick={handleModalClose}>Close</Button>
+                      </Modal.Footer>
+                  </Form>
+                </Modal>
+                <span className="star">
+                
+                <AiFillStar size={20}
+                  onClick={() => handleClick(index)}
+                  onMouseEnter={() => handleHover(index)}
+                    onMouseLeave={() => handleHoverOut(index)} />
+                  </span>
+                </span>
+                
               
-              </span>
-            </OverlayTrigger>
-          </button>
+              </OverlayTrigger>
+              
+            </button>
+          
         );}
       )}
     </div>

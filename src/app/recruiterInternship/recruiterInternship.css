@@ -45,3 +45,9 @@ p {
   align-items: center;
   display: flex;
 }
+
+.modal-backdrop{position:fixed;top:0;right:0;bottom:0;left:0;z-index:1040;background-color:#000}
+
+.modal-backdrop.fade{filter:alpha(opacity=.2);opacity:.2}
+
+.modal-backdrop.in{filter:alpha(opacity=50);opacity:.1}
