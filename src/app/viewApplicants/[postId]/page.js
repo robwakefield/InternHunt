@@ -100,8 +100,11 @@ export default ViewApplicants;
 
 class ApplicantList extends Component {
   selectApplicant = (n) => () => {this.props.setSelectedApplicant(n);}
-  state = { applications: this.props.post.applications,
-    rejections: this.props.post.applications.filter(function(application) {return application.rejected}) };
+
+  state = {
+    applications: this.props.post.applications,
+    rejections: this.props.post.applications.filter(function(application) {return application.rejected})
+  };
 
   componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
@@ -120,7 +123,9 @@ class ApplicantList extends Component {
       <Container style={{height: "70vh"}}>
         <Card className="mt-4 h-100">
           <Card.Header className="d-flex justify-content-between">
-            <Button className="sortButton"><BsSortDown color="black" size={30}/></Button>
+            <Button className="sortButton">
+                <BsSortDown color="black" size={30}/>
+            </Button>
             <h4>Applicants</h4>
             <Button className="searchButton"><BsSearch color="black" size={30}/></Button>
           </Card.Header>
@@ -129,6 +134,7 @@ class ApplicantList extends Component {
             {this.state.applications.map((application) => (
               this.renderApplicant(application, false)
             ))}
+            <hr/>
             {this.state.rejections.map((application) => (
               this.renderApplicant(application, true)
             ))}
@@ -394,12 +400,11 @@ class StarRating extends Component {
                 </Popover>
               }>
                 <span><Modal
-                show={this.state.modalShow}
-                onHide={this.handleModalClose}
-                backdrop="static"
+                  show={this.state.modalShow}
+                  onHide={this.handleModalClose}
+                  backdrop="static"
                     keyboard={false}
-                    centered
-                >
+                    centered>
                   <Form onSubmit={this.updateRatingScheme}>
                     <Modal.Header closeButton>
                       <Modal.Title>Edit Rating Scheme</Modal.Title>
