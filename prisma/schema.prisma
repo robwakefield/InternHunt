@@ -24,8 +24,14 @@ model Post {
   name         String
   status       String
   totalPlaces  Int
+  description  String
   applications Application[]
   requirements Requirement[]
+  rating1Text  String       @default("Just Mentioning")
+  rating2Text  String       @default("Minimal Evidence")
+  rating3Text  String       @default("Decent Evidence")
+  rating4Text  String       @default("Excellent Evidence")
+  rating5Text  String       @default("Perfect Match")
 }
 
 model Application {
@@ -34,6 +40,7 @@ model Application {
   student     Student @relation(fields: [studentID], references: [id])
   studentID   Int
   evidences   Evidence[]
+  cv          Bytes?
 
   @@id([postID, studentID])
 }
@@ -55,7 +62,7 @@ model Evidence {
 
   requirement     Requirement @relation(fields: [postID, requirementID], references: [postID, id])
   requirementID   Int
-  rating          Int
+  rating          Int? @default(0)
   evidenceText    String
 
   @@id([postID, requirementID, studentID])

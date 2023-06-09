@@ -23,7 +23,7 @@ function AddListing() {
       <Container  style={{height: "80vh"}}>
       <Nav className="mt-2">
           <Pagination>
-            <PageItem href="./recruiterDashboard">
+            <PageItem href="/recruiterDashboard">
               Back to Dashboard
             </PageItem>
           </Pagination>
@@ -103,6 +103,7 @@ class JobRequirementsList extends Component {
   }
 
   render() {
+    const {listings, reqRef} = this.props;
     return (
       <Card className="my-2 mx-3">
         <Card.Header className="d-flex justify-content-between">
@@ -136,6 +137,7 @@ class JobRequirementsItem extends Component {
   }
 
   render() {
+    const {listings, reqRef} = this.props;
     let requirement = "- " + this.state.requirement
     return (
       <Container className="px-0 py-0">

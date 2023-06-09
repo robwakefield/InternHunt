@@ -167,3 +167,4 @@ const StarRating = ({ initialRating, studentID, postID, requirementID }) => {
     </div>
   );
 };
+
