@@ -9,7 +9,7 @@ import RecruiterNavbar from "../recruiterNavbar";
 function JobRequirementsList() {
   const [post, setPost] = useState({description: "", requirements: []});
   useEffect(() => {
-    fetch('/api/listings')
+    fetch('/api/listingEdit')
       .then((response) => response.json())
       .then((data) => setPost(data));
   }, []);
@@ -45,7 +45,7 @@ function JobRequirementsItem({ requirement, isDisabled }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    fetch('/api/listings', {
+    fetch('/api/listingEdit', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

@@ -9,10 +9,10 @@ import JobDescription from "./jobDescription";
 import JobRequirementsList from "./jobRequirements";
 
 function AddListing() {
-  const [listing, setListing] = useState([]);
+  const [listing, setListing] = useState({description: "", requirements: []});
 
   useEffect(() => {
-    fetch('/api/listings')
+    fetch('/api/listingEdit')
       .then((response) => response.json())
       .then((data) => setListing(data));
   }, []);
@@ -44,8 +44,8 @@ function AddListing() {
               </Container>
               <Button type='submit'>Publish</Button>
             </Card.Header>
-            <JobDescription />
-            <JobRequirementsList />
+            <JobDescription listing={listing} />
+            <JobRequirementsList listing={listing} />
             <SavedBox/>
           </Card>
         {/* </Form> */}

@@ -11,14 +11,14 @@ function JobDescription() {
 
   const [description, setDescription] = useState('');
   useEffect(() => {
-    fetch('/api/listings')
+    fetch('/api/listingEdit')
       .then((response) => response.json())
       .then((data) => setDescription(data.description));
   }, []);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    fetch('/api/listings', {
+    fetch('/api/listingEdit', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
