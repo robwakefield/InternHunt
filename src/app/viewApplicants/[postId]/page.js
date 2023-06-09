@@ -100,15 +100,22 @@ export default ViewApplicants;
 
 class ApplicantList extends Component {
   selectApplicant = (n) => () => {this.props.setSelectedApplicant(n);}
-  state = { applications: this.props.post.applications };
+  state = { applications: this.props.post.applications,
+    rejections: this.props.post.applications.filter(function(application) {return application.rejected}) };
 
   componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
-      this.setState({ applications: this.props.post.applications });
+      const applicants = this.props.post.applications.filter(function(application) {return !application.rejected})
+      const rejections = this.props.post.applications.filter(function(application) {return application.rejected})
+      this.setState({
+        applications: applicants,
+        rejections: rejections
+      });
     }
   }
   render() {
     this.state.applications.sort((a, b) => averageRating(b) - averageRating(a));
+    this.state.rejections.sort((a, b) => averageRating(b) - averageRating(a));
     return (
       <Container style={{height: "70vh"}}>
         <Card className="mt-4 h-100">
@@ -118,21 +125,28 @@ class ApplicantList extends Component {
             <Button className="searchButton"><BsSearch color="black" size={30}/></Button>
           </Card.Header>
         
-          <ListGroup> {
-            this.state.applications.map((application) => (
-              <ListGroupItem className={(application.student.id == this.props.selectedApplicant)? "selectedApplicantListItem" : "applicantListItem"} key={application.student.name}>
-                <Container fluid style={{ cursor: "pointer" }} onClick={this.selectApplicant(application.student.id)}>
-                  <Row className="applicantListRow">
-                    <Col sm={9} className="studentNameCol"><p className="text-left studentName">{application.student.name} </p></Col>
-                    <Col sm={3} className="avgRatingCol"><p className="text-center avgRating">{averageRating(application)}</p><AiFillStar style={{alignContent: "center"}} size={30}  color="#ffc800"/></Col>
-                  </Row>
-                </Container>
-              </ListGroupItem>
+          <ListGroup>
+            {this.state.applications.map((application) => (
+              this.renderApplicant(application, false)
+            ))}
+            {this.state.rejections.map((application) => (
+              this.renderApplicant(application, true)
             ))}
           </ListGroup>
         </Card>
       </Container>
     )
+  }
+
+  renderApplicant(application, rejected) {
+    return <ListGroupItem className={(application.student.id == this.props.selectedApplicant)? "selectedApplicantListItem" : (rejected ? "rejectedApplicantListItem" : "applicantListItem")} key={application.student.name}>
+      <Container fluid style={{ cursor: "pointer" }} onClick={this.selectApplicant(application.student.id)}>
+        <Row className="applicantListRow">
+          <Col sm={9} className="studentNameCol"><p className="text-left studentName">{application.student.name} </p></Col>
+          <Col sm={3} className="avgRatingCol"><p className="text-center avgRating">{averageRating(application)}</p><AiFillStar style={{alignContent: "center"}} size={30}  color="#ffc800"/></Col>
+        </Row>
+      </Container>
+    </ListGroupItem>
   }
 }
 
