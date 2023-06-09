@@ -35,7 +35,7 @@ function JobDescription() {
     <Form>
       <Card className="mt-4 mb-2 mx-3">
         <Card.Header className="d-flex justify-content-between">
-        <p>Job Description (Autosave ON)</p>
+        <p>Job Description</p>
         <Button onClick={handleSubmit}>Save</Button>
         </Card.Header>
           <Form.Group className="mb-3" controlId="formJobDesc">

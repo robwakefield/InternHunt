@@ -7,41 +7,14 @@ import { Component, useEffect, useRef, useState } from "react";
 import RecruiterNavbar from "../recruiterNavbar";
 
 function JobRequirementsList() {
+  const reqRef = useRef();
+
   const [post, setPost] = useState({description: "", requirements: []});
   useEffect(() => {
     fetch('/api/listingEdit')
       .then((response) => response.json())
       .then((data) => setPost(data));
   }, []);
-
-  const [isDisabled, setIsDisabled] = useState(true);
-
-  const handleDisable = () => {
-    setIsDisabled(!isDisabled);
-  };
-
-  return (
-    <Card className="my-2 mx-3">
-      <Card.Header className="d-flex justify-content-between">
-      <p>Requirements</p>
-      <ButtonGroup>
-        {/* <Button>Add</Button> */}
-        <Button onClick={handleDisable}>
-        {isDisabled ? 'Edit' : 'Finish'}</Button>
-        {/* <Button>Remove</Button> */}
-      </ButtonGroup>
-      </Card.Header>
-      <Container className="px-4 py-3">
-        {post.requirements.map((requirement) => <JobRequirementsItem key={requirement.id} requirement={requirement} isDisabled={isDisabled} />)}
-      </Container>
-    </Card>
-  )
-}
-
-export default JobRequirementsList;
-
-function JobRequirementsItem({ requirement, isDisabled }) {
-  const reqRef = useRef();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -51,15 +24,38 @@ function JobRequirementsItem({ requirement, isDisabled }) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        requirementText : reqRef.current.value
+        description: post.description,
+        requirements: post.requirements
       }),
     });
   }
+
+  return (
+    <Form>
+      <Card className="my-2 mx-3">
+        <Card.Header className="d-flex justify-content-between">
+        <p>Requirements</p>
+        <ButtonGroup>
+          {/* <Button>Add</Button> */}
+          <Button onClick={handleSubmit}>Save</Button>
+          {/* <Button>Remove</Button> */}
+        </ButtonGroup>
+        </Card.Header>
+          {post.requirements.map((requirement) =>
+            <JobRequirementsItem key={requirement.id} requirement={requirement} reqRef={reqRef} />)}
+      </Card>
+    </Form>
+  )
+}
+
+export default JobRequirementsList;
+
+function JobRequirementsItem({ requirement, reqRef }) {
   return (
     <Form.Group className="mb-3" controlId="formJobReq">
       <Form.Control as="textarea" rows={1}
         placeholder="Enter your Requirements" defaultValue={requirement.requirementText}
-        ref={reqRef} onChange={handleSubmit} disabled={isDisabled} />
+        ref={reqRef} />
     </Form.Group>
   )
 }
