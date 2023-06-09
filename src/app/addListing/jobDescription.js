@@ -9,12 +9,13 @@ import RecruiterNavbar from "../recruiterNavbar";
 function JobDescription() {
   const descRef = useRef();
 
-  const [description, setDescription] = useState('');
+  const [post, setPost] = useState({description: "", requirements: []});
   useEffect(() => {
     fetch('/api/listingEdit')
       .then((response) => response.json())
-      .then((data) => setDescription(data.description));
+      .then((data) => setPost(data));
   }, []);
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -24,31 +25,26 @@ function JobDescription() {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        description : descRef.current.value
+        description : descRef.current.value,
+        requirements: post.requirements
       }),
     });
   }
 
-  const [isDisabled, setIsDisabled] = useState(true);
-
-  const handleDisable = () => {
-    setIsDisabled(!isDisabled);
-  };
-
   return (
-    <Card className="mt-4 mb-2 mx-3">
-      <Card.Header className="d-flex justify-content-between">
-      <p>Job Description (Autosave ON)</p>
-      <Button onClick={handleDisable}>
-        {isDisabled ? 'Edit' : 'Finish'}
-      </Button>
-      </Card.Header>
-      <Form.Group className="mb-3" controlId="formJobDesc">
-        <Form.Control as="textarea" rows={3}
-          placeholder="Enter your Job Description" defaultValue={description}
-          ref={descRef} onChange={handleSubmit} disabled={isDisabled} />
-      </Form.Group>
-    </Card>
+    <Form>
+      <Card className="mt-4 mb-2 mx-3">
+        <Card.Header className="d-flex justify-content-between">
+        <p>Job Description (Autosave ON)</p>
+        <Button onClick={handleSubmit}>Save</Button>
+        </Card.Header>
+          <Form.Group className="mb-3" controlId="formJobDesc">
+            <Form.Control as="textarea" rows={3}
+              placeholder="Enter your Job Description" defaultValue={post.description}
+              ref={descRef} />
+          </Form.Group>
+      </Card>
+    </Form>
   )
 }
 
