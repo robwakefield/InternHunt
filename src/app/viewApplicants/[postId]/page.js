@@ -137,8 +137,16 @@ class ApplicantList extends Component {
 }
 
 class SkillList extends Component {
-  state = { skills: [], name: "" }
-  getSelectedStudent = () => this.props.post.applications.filter(app => app.student.id == this.props.selectedApplicant)[0]
+  state = { skills: [], name: "", showDocs: false}
+  getSelectedStudent = () => this.props.post.applications.filter(app => app.student.id == this.props.selectedApplicant)[0];
+
+  handleDocsShow = () => {
+    this.setState({ showDocs: true });
+  }
+
+  handleDocsClose = () => {
+    this.setState({ showDocs: false });
+  }
 
   componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
@@ -154,7 +162,34 @@ class SkillList extends Component {
       <Container style={{height: "70vh"}}>
         <Card className="mt-4 h-100">
           <Card.Header className="d-flex justify-content-between">
-            <Button>See Documents </Button>
+          <Button style={{float: "right"}} variant="primary" onClick={this.handleDocsShow}>
+                  View Documents
+                </Button>
+
+              <Modal className="docModal" show={this.state.showDocs} onHide={this.handleDocsClose} centered>
+                <Modal.Header closeButton>
+                  <Modal.Title>Documents</Modal.Title>
+                </Modal.Header>
+              <Modal.Body >
+              <Nav variant="tabs" defaultActiveKey="/home">
+                <Nav.Item>
+                  <Nav.Link eventKey="doc-1">CV</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link eventKey="doc-2" >Cover Letter</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link eventKey="doc-3" >Transcript</Nav.Link>
+                </Nav.Item>
+              </Nav>
+                    <iframe src="http://docs.google.com/gview?url=http://infolab.stanford.edu/pub/papers/google.pdf&embedded=true" style={{width: "60vw", height:"30vw"}} frameborder="0"></iframe>
+                    </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={this.handleDocsClose}>
+                    Close
+                  </Button>
+                </Modal.Footer>
+              </Modal>
             <h4>{this.state.name}</h4>
             <Button>Accept</Button>
           </Card.Header>
