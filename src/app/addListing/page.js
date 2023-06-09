@@ -2,20 +2,20 @@
 
 import './addListing.css'
 import "bootstrap/dist/css/bootstrap.min.css"
-import { Pagination, FormCheck, Nav, Button, PageItem, Container, Card } from "react-bootstrap";
-import { Component, useEffect, useState } from "react";
+import { Pagination, FormCheck, Nav, Button, PageItem, Container, Card, Form } from "react-bootstrap";
+import { Component, useEffect, useRef, useState } from "react";
 import RecruiterNavbar from "../recruiterNavbar";
+import JobDescription from "./jobDescription";
+import JobRequirementsList from "./jobRequirements";
 
 function AddListing() {
-
-  const [listings, setListings] = useState([]);
+  const [listing, setListing] = useState({description: "", requirements: []});
 
   useEffect(() => {
-    fetch('/api/listings')
+    fetch('/api/listingEdit')
       .then((response) => response.json())
-      .then((data) => setListings(data));
+      .then((data) => setListing(data));
   }, []);
-
 
   return (
     <main className="addListing">
@@ -28,25 +28,27 @@ function AddListing() {
             </PageItem>
           </Pagination>
         </Nav>
-        <h1 className="text-center">IT Intern</h1>
-        <Card className="mt-4 h-100">
-          <Card.Header className="d-flex justify-content-between">
-          <Container className="d-flex justify-content-start">
-            <FormCheck className="align-middle">
-                <FormCheck.Input/>
-                <FormCheck.Label>Ask for Cover Letter</FormCheck.Label>
-              </FormCheck>
-              <FormCheck className="mx-2">
-                <FormCheck.Input/>
-                <FormCheck.Label>Ask for Academic Results</FormCheck.Label>
-              </FormCheck>
-            </Container>
-            <Button>Publish</Button>
-          </Card.Header>
-          <JobDescription/>    
-          <JobRequirementsList/>
-          <SavedBox/>   
-        </Card>
+        <h1 className="text-center">{listing.name}</h1>
+        {/* <Form onSubmit={handleSubmit}> */}
+          <Card className="mt-4 h-100">
+            <Card.Header className="d-flex justify-content-between">
+              <Container className="d-flex justify-content-start">
+                <FormCheck className="align-middle">
+                  <FormCheck.Input/>
+                  <FormCheck.Label>Ask for Cover Letter</FormCheck.Label>
+                </FormCheck>
+                <FormCheck className="mx-2">
+                  <FormCheck.Input/>
+                  <FormCheck.Label>Ask for Academic Results</FormCheck.Label>
+                </FormCheck>
+              </Container>
+              <Button type='submit'>Publish</Button>
+            </Card.Header>
+            <JobDescription listing={listing} />
+            <JobRequirementsList listing={listing} />
+            <SavedBox/>
+          </Card>
+        {/* </Form> */}
       </Container>
     </main>
     
@@ -54,98 +56,6 @@ function AddListing() {
 }
 
 export default AddListing;
-
-class JobDescription extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      description: "Bowtie’s mission is to make insurance good again and our vision is to build a category-defining health insurance company.\nAs a young and fast-growing company, grooming and learning from the next generation is always our priority. We are looking for interns to join us throughout the year - as a Bowtie intern, you will be treated and work like the rest of the team (no fetching coffee duties), and gain experience in substantive marketing or growth projects.\nWe also offer return offers for high achievers who share our values!"
-    };
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.listings !== this.props.listings) {
-      this.setState({
-        description: "Bowtie’s mission is to make insurance good again and our vision is to build a category-defining health insurance company.\nAs a young and fast-growing company, grooming and learning from the next generation is always our priority. We are looking for interns to join us throughout the year - as a Bowtie intern, you will be treated and work like the rest of the team (no fetching coffee duties), and gain experience in substantive marketing or growth projects.\nWe also offer return offers for high achievers who share our values!"
-      });
-    }
-  }
-
-  render() {
-    return (
-      <Card className="mt-4 mb-2 mx-3">
-        <Card.Header className="d-flex justify-content-between">
-        <p>Job Description</p>
-        <Button>Edit</Button>
-        </Card.Header>
-        <Container className="px-4 py-3">
-          {this.state.description.split("\n").map((para) => {return <p key={para}>{para}</p>})}
-        </Container>
-      </Card>
-    )
-  }
-}
-
-class JobRequirementsList extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      description: "Bowtie’s mission is to make insurance good again and our vision is to build a category-defining health insurance company.\nAs a young and fast-growing company, grooming and learning from the next generation is always our priority. We are looking for interns to join us throughout the year - as a Bowtie intern, you will be treated and work like the rest of the team (no fetching coffee duties), and gain experience in substantive marketing or growth projects.\nWe also offer return offers for high achievers who share our values!"
-    };
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.listings !== this.props.listings) {
-      this.setState({
-        description: "Bowtie’s mission is to make insurance good again and our vision is to build a category-defining health insurance company.\nAs a young and fast-growing company, grooming and learning from the next generation is always our priority. We are looking for interns to join us throughout the year - as a Bowtie intern, you will be treated and work like the rest of the team (no fetching coffee duties), and gain experience in substantive marketing or growth projects.\nWe also offer return offers for high achievers who share our values!"
-      });
-    }
-  }
-
-  render() {
-    const {listings, reqRef} = this.props;
-    return (
-      <Card className="my-2 mx-3">
-        <Card.Header className="d-flex justify-content-between">
-        <p>Requirements</p>
-        <Button>Edit</Button>
-        </Card.Header>
-        <Container className="px-4 py-3">
-          <JobRequirementsItem/>
-          <JobRequirementsItem/>
-          <JobRequirementsItem/>
-        </Container>
-      </Card>
-    )
-  }
-}
-
-class JobRequirementsItem extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      requirement: "Hold a bachelor's degree or above, with graduation expected in 2023"
-    };
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.listings !== this.props.listings) {
-      this.setState({
-        requirement: "Hold a bachelor's degree or above, with graduation expected in 2023"
-      });
-    }
-  }
-
-  render() {
-    const {listings, reqRef} = this.props;
-    let requirement = "- " + this.state.requirement
-    return (
-      <Container className="px-0 py-0">
-        {<p key={requirement}>{requirement}</p>}
-      </Container>
-    )
-  }
-}
 
 class SavedBox extends Component {
   constructor(props) {
