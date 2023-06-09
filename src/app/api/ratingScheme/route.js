@@ -3,16 +3,16 @@ import { NextResponse } from 'next/server';
 
 export async function PUT(request) {
   const body = await request.json()
-  await prisma.evidence.update({
+  await prisma.post.update({
     where: {
-      postID_requirementID_studentID: {
-        postID: body.postID,
-        requirementID: body.requirementID,
-        studentID: body.studentID
-      }
+      id: body.postID
     },
     data: {
-      rating: body.rating
+      rating1Text: body.rating1Text,
+      rating2Text: body.rating2Text,
+      rating3Text: body.rating3Text,
+      rating4Text: body.rating4Text,
+      rating5Text: body.rating5Text
     }
   })
   return NextResponse.json({})

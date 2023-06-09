@@ -1,0 +1,57 @@
+viewApplicants {
+  margin: 5px;
+}
+
+p {
+  word-break: break-all;
+  white-space: normal;
+}
+
+.ratingCard {
+  border: 0em;
+}
+
+.selectedApplicantListItem {
+  margin: 20px;
+  margin-bottom: 0px;
+  border: 1px solid grey !important;
+  background-color: lightgrey;
+  padding: 5px;
+}
+
+.applicantListItem {
+  margin: 20px;
+  margin-bottom: 0px;
+  border: 1px solid lightgrey !important;
+  padding: 5px;
+}
+
+.applicantListRow {
+  width: 100%;
+  margin: 0px;
+}
+
+.studentName{
+  width: 100%;
+  margin: 0px;
+}
+
+.avgRating{
+  margin: 0px;
+}
+
+.avgRatingCol{
+  padding: 0px;
+  align-items: center;
+  display: flex;
+}
+
+.modal-backdrop{position:fixed;top:0;right:0;bottom:0;left:0;z-index:1040;background-color:#000}
+
+.modal-backdrop.fade{filter:alpha(opacity=.2);opacity:.2}
+
+.modal-backdrop.in{filter:alpha(opacity=50);opacity:.1}
+
+.docModal {
+  --bs-modal-width: 1500px !important;
+}
