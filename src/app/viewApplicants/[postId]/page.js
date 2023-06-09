@@ -138,7 +138,8 @@ class ApplicantList extends Component {
 
 class SkillList extends Component {
   state = { skills: [], name: "", showDocs: false}
-  getSelectedStudent = () => this.props.post.applications.filter(app => app.student.id == this.props.selectedApplicant)[0];
+  getSelectedStudent = () => this.props.post.applications.filter(
+    app => app.student.id == this.props.selectedApplicant)[0];
 
   handleDocsShow = () => {
     this.setState({ showDocs: true });
@@ -146,6 +147,12 @@ class SkillList extends Component {
 
   handleDocsClose = () => {
     this.setState({ showDocs: false });
+  }
+
+  rejectApplicant = () => {
+    fetch("/api/reject?postId=" + this.props.post.id + "&studentId=" + this.props.selectedApplicant)
+      .then((response) => response.json())
+      .then((data) => console.log(data));
   }
 
   componentDidUpdate(prevProps) {
@@ -156,6 +163,7 @@ class SkillList extends Component {
       });
     }
   }
+
   render() {
     this.state.skills.sort((a, b) => a.requirement.requirementText >= b.requirement.requirementText ? 1 : -1)
     return (
@@ -191,7 +199,7 @@ class SkillList extends Component {
                 </Modal.Footer>
               </Modal>
             <h4>{this.state.name}</h4>
-            <Button>Accept</Button>
+            <Button onClick={this.rejectApplicant}>Reject</Button>
           </Card.Header>
           
           <Accordion>{
