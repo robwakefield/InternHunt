@@ -1,14 +1,18 @@
 import { prisma } from '../../db/client'
 import { NextResponse } from 'next/server';
 
-export async function GET(request, {params,}) {
-    const searchParams = new URL(request.url).searchParams
-    const studentId = parseInt(searchParams.get('studentId'))
-    const postId = parseInt(searchParams.get('postId'))
-    const student = await prisma.application.findFirst({
+export async function PUT(request) {
+    const body = await request.json()
+    const student = await prisma.application.update({
+        data: {
+            rejected: true,
+            accepted: false
+        },
         where: {
-            postID: postId,
-            studentID: studentId
+            postID_studentID: {
+                postID: body.postID,
+                studentID: body.studentID
+            }
         }
     })
     return NextResponse.json(student);

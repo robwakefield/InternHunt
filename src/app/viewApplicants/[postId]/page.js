@@ -150,9 +150,13 @@ class SkillList extends Component {
   }
 
   rejectApplicant = () => {
-    fetch("/api/reject?postId=" + this.props.post.id + "&studentId=" + this.props.selectedApplicant)
-      .then((response) => response.json())
-      .then((data) => console.log(data));
+    fetch('/api/reject', {
+      method: 'PUT',
+      body: JSON.stringify({
+        postID: this.props.post.id,
+        studentID: this.props.selectedApplicant
+      })
+    });
   }
 
   componentDidUpdate(prevProps) {
