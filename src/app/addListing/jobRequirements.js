@@ -32,7 +32,7 @@ function JobRequirementsList() {
       </ButtonGroup>
       </Card.Header>
       <Container className="px-4 py-3">
-        {post.requirements.map((requirement) => <JobRequirementsItem requirement={requirement} isDisabled={isDisabled} />)}
+        {post.requirements.map((requirement) => <JobRequirementsItem key={requirement.id} requirement={requirement} isDisabled={isDisabled} />)}
       </Container>
     </Card>
   )
