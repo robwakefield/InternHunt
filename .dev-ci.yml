@@ -25,3 +25,16 @@ unit-test-job:
       - cypress/videos/**/*.mp4
       - cypress/screenshots/**/*.png
     expire_in: 1 day
+
+e2e-test-job:
+  image: cypress/browsers:node16.16.0-chrome107-ff107-edge
+  stage: test
+  script:
+    - npm ci
+    - npm run test-e2e
+  artifacts:
+    when: always
+    paths:
+      - cypress/videos/**/*.mp4
+      - cypress/screenshots/**/*.png
+    expire_in: 1 day
