@@ -12,19 +12,23 @@ import {BsSortDown} from 'react-icons/bs'
 import '../globals.css'
 
 function StudentApplication() {
+  const [postID, setPostID] = useState(-1);
+  const [studentID, setStudentID] = useState(-1);
   const [application, setApplication] = useState({ evidences: [] });
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const studentID = parseInt(urlParams.get('studentID'));
-    const postID = parseInt(urlParams.get('postID'));
-    if (isNaN(studentID) || isNaN(postID)) window.location.replace("/studentDashboard");
+    const queryStudentID = parseInt(urlParams.get('studentID'));
+    const queryPostID = parseInt(urlParams.get('postID'));
+    if (isNaN(queryStudentID) || isNaN(queryPostID)) window.location.replace("/studentDashboard");
+    setStudentID(queryStudentID);
+    setPostID(queryPostID);
     
     fetch('/api/studentApplication', {
       method: "POST",
       body: JSON.stringify({
-        studentID: studentID,
-        postID: postID
+        studentID: queryStudentID,
+        postID: queryPostID
       })
     }).then((response) => response.json())
       .then((data) => {setApplication(data)});
@@ -46,7 +50,7 @@ function StudentApplication() {
           </Card.Header>
       
           <Form onSubmit={handleSubmit}>
-            <EvidenceEntryList application={application}/>
+            <EvidenceEntryList application={application} postID={postID} studentID={studentID}/>
           </Form>
         </Card>
       </Container>
@@ -63,6 +67,19 @@ class EvidenceEntryList extends Component {
       evidences: props.application.evidences,
       entryValues: props.application.evidences.map((evidence) => evidence.evidenceText)
     }
+  }
+  handleSubmit = () => {
+    this.state.evidences.forEach((evidence, i) => {
+      fetch("/api/studentApplication", {
+        method: "PUT",
+        body: JSON.stringify({
+          studentID: this.props.studentID,
+          postID: this.props.postID,
+          requirementID: evidence.requirementID,
+          evidenceText: this.state.entryValues[i]
+        })
+      })
+    });
   }
   componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
@@ -88,7 +105,9 @@ class EvidenceEntryList extends Component {
                     placeholder="Enter your evidence of the skill"
                     defaultValue={evidence.evidenceText}
                     onChange={(event) => {
-                      this.setState({ inputValue: event.target.value });
+                      const updatedEntryValues = [...this.state.entryValues];
+                      updatedEntryValues[i] = event.target.value;
+                      this.setState({ entryValues: updatedEntryValues });
                     }}
                   />
                 </Form.Group>
@@ -98,7 +117,7 @@ class EvidenceEntryList extends Component {
           })
         }
         </Accordion>
-        <Button variant="primary" type="submit">
+        <Button variant="primary" type="submit" onClick={this.handleSubmit}>
           Submit
         </Button>
       </div>
