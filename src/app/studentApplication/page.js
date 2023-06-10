@@ -95,7 +95,7 @@ class EvidenceEntryList extends Component {
         <Accordion defaultActiveKey={['0']} alwaysOpen>{
           this.state.evidences.map((evidence, i) => {
             return (
-              <Accordion.Item eventKey={i}>
+              <Accordion.Item eventKey={i} key={i}>
                 <Accordion.Header>{evidence.requirement.requirementText}</Accordion.Header>
                 <Accordion.Body>
                 <Form.Group className="mb-3" controlId={"formGroupEvidence"+i}>
