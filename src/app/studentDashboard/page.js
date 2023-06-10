@@ -18,7 +18,7 @@ import StudentNavbar from "../studentNavbar";
 function StudentDashboard() {
 
   const handleClick = () => {
-    window.location.href = "./studentApplication";
+    window.location.href = "./studentApplication?studentID=1&postID=1";
   }
 
   return (
