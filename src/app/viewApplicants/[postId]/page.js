@@ -104,7 +104,7 @@ class ApplicantList extends Component {
   state = {
     applications: this.props.post.applications,
     rejections: this.props.post.applications.filter(function(application) {return application.rejected}),
-    title: "Applicants"
+    rejected: false
   };
 
   componentDidUpdate(prevProps) {
@@ -114,14 +114,17 @@ class ApplicantList extends Component {
       this.setState({
         applications: applicants,
         rejections: rejections,
-        title: this.state.title
+        rejected: this.state.rejected
       });
     }
   }
 
   toggleRejected = () => {
-    this.setState({ applications: this.state.rejections, rejections: this.state.applications, 
-      title: this.state.title == "Applicants" ? "Rejected" : "Applicants" });
+    this.setState({ 
+      applications: this.state.rejections, 
+      rejections: this.state.applications, 
+      rejected: !this.state.rejected 
+    });
   }
 
   render() {
@@ -134,13 +137,13 @@ class ApplicantList extends Component {
             <Button className="sortButton" onClick={this.toggleRejected}>
                 <BsSortDown color="black" size={30}/>
             </Button>
-            <h4>{this.state.title}</h4>
+            <h4>{this.state.rejected ? "Rejected" : "Applicants"}</h4>
             <Button className="searchButton"><BsSearch color="black" size={30}/></Button>
           </Card.Header>
         
           <ListGroup>
             {this.state.applications.map((application) => (
-              this.renderApplicant(application, false)
+              this.renderApplicant(application, this.state.rejected)
             ))}
           </ListGroup>
         </Card>
