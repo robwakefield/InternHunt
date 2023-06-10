@@ -25,7 +25,6 @@ function ViewApplicants() {
   const handleClose = () => setJobListing(false);
   const handleShow = () => setJobListing(true);
 
-  const router = useRouter()
   const params = useParams()
   const postId = params.postId
 
@@ -102,17 +101,19 @@ class ApplicantList extends Component {
   selectApplicant = (n) => () => {this.props.setSelectedApplicant(n);}
 
   state = {
-    applications: this.props.post.applications,
+    applications:  this.props.post.applications.filter(function(application) {return !application.rejected}),
     rejections: this.props.post.applications.filter(function(application) {return application.rejected}),
-    rejected: false
+    // Only show the rejections at first load if everyone is rejected
+    rejected: this.props.post.applications.filter(function(application) {return !application.rejected}).length == 0 
+      && this.props.post.applications.filter(function(application) {return application.rejected}).length != 0
   };
 
   componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
-      const applicants = this.props.post.applications.filter(function(application) {return !application.rejected})
+      const applications = this.props.post.applications.filter(function(application) {return !application.rejected})
       const rejections = this.props.post.applications.filter(function(application) {return application.rejected})
       this.setState({
-        applications: applicants,
+        applications: applications,
         rejections: rejections,
         rejected: this.state.rejected
       });
@@ -120,16 +121,18 @@ class ApplicantList extends Component {
   }
 
   toggleRejected = () => {
-    this.setState({ 
-      applications: this.state.rejections, 
-      rejections: this.state.applications, 
-      rejected: !this.state.rejected 
-    });
+      this.setState({
+        rejected: !this.state.rejected
+      });
   }
 
   render() {
     this.state.applications.sort((a, b) => averageRating(b) - averageRating(a));
     this.state.rejections.sort((a, b) => averageRating(b) - averageRating(a));
+    let listToShow = this.state.rejected ? this.state.rejections : this.state.applications
+    if (listToShow.length != 0) {
+      this.selectApplicant(listToShow[0].student.id)
+    }
     return (
       <Container style={{height: "70vh"}}>
         <Card className="mt-4 h-100">
@@ -142,9 +145,9 @@ class ApplicantList extends Component {
           </Card.Header>
         
           <ListGroup>
-            {this.state.applications.map((application) => (
-              this.renderApplicant(application, this.state.rejected)
-            ))}
+            {  listToShow.map((application) => (
+                this.renderApplicant(application, this.state.rejected)))
+            }
           </ListGroup>
         </Card>
       </Container>
