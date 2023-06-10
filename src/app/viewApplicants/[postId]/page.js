@@ -116,6 +116,11 @@ class ApplicantList extends Component {
       });
     }
   }
+
+  toggleRejected = () => {
+    this.setState({ applications: this.state.rejections, rejections: this.state.applications });
+  }
+
   render() {
     this.state.applications.sort((a, b) => averageRating(b) - averageRating(a));
     this.state.rejections.sort((a, b) => averageRating(b) - averageRating(a));
@@ -123,7 +128,7 @@ class ApplicantList extends Component {
       <Container style={{height: "70vh"}}>
         <Card className="mt-4 h-100">
           <Card.Header className="d-flex justify-content-between">
-            <Button className="sortButton">
+            <Button className="sortButton" onClick={this.toggleRejected}>
                 <BsSortDown color="black" size={30}/>
             </Button>
             <h4>Applicants</h4>
@@ -133,10 +138,6 @@ class ApplicantList extends Component {
           <ListGroup>
             {this.state.applications.map((application) => (
               this.renderApplicant(application, false)
-            ))}
-            <hr/>
-            {this.state.rejections.map((application) => (
-              this.renderApplicant(application, true)
             ))}
           </ListGroup>
         </Card>
