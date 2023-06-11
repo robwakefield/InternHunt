@@ -145,9 +145,9 @@ class SkillList extends Component {
             </Modal>
             <Container fluid style={{ cursor: "pointer" }}>
               <Row className="applicantListRow">
-                <Col sm={2}><Button style={{float: "left"}} variant="primary" onClick={this.handleDocsShow}>View Documents</Button></Col>
-                <Col sm={9} className="studentNameCol"><p className="text-center studentName"><h3>Your Application</h3></p></Col>
-                <Col sm={1} className="avgRatingCol"><p className="text-right avgRating">{averageRating(this.getSelectedStudent())}</p><AiFillStar style={{alignContent: "center"}} size={30}  color="#ffc800"/></Col>
+                <Col sm={2} style={{float: "left"}}><Button  variant="primary" onClick={this.handleDocsShow}>View Documents</Button></Col>
+                <Col sm={9} className="studentNameCol"><h3 className="text-center studentName">Application Unsuccessful</h3></Col>
+                <Col sm={1} style={{float: "right"}} className="avgRatingCol" ><p className="text-right avgRating">{averageRating(this.getSelectedStudent())}</p><AiFillStar style={{alignContent: "center"}} size={30}  color="#ffc800"/></Col>
               </Row>
             </Container>
           </Card.Header>

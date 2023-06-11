@@ -16,6 +16,8 @@ import 'react-vertical-timeline-component/style.min.css';
 import StudentNavbar from "../studentNavbar";
 
 function StudentDashboard() {
+  const selectedPostId = 1;
+  const studentId = 1;
 
   const handleClick = () => {
     window.location.href = "./studentApplication";
@@ -114,7 +116,7 @@ function StudentDashboard() {
               iconStyle={{ background: 'red', color: '#fff' }}
             >
                 <h6 className="vertical-timeline-element-title">Applpication Unsuccessful <br></br>
-                  <a className="feedback" href="./studentApplication">View Feedback</a> </h6>
+                  <a className="feedback" href={"./studentViewFeedback/" + studentId +'/' + selectedPostId}>View Feedback</a> </h6>
             </VerticalTimelineElement>
           </VerticalTimeline></Card></Container></Col>
         </Row>
