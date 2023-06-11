@@ -94,7 +94,7 @@ function StudentDashboard() {
               date="10 Mar 2023"
               iconStyle={{ background: 'grey', color: '#fff' }}
             >
-              <h6 className="vertical-timeline-element-title">Applpication Submitted</h6>
+              <h6 className="vertical-timeline-element-title">Application Submitted</h6>
             </VerticalTimelineElement>
             <VerticalTimelineElement
               className="vertical-timeline-element--work"
@@ -115,7 +115,7 @@ function StudentDashboard() {
               date="10 Mar 2023"
               iconStyle={{ background: 'red', color: '#fff' }}
             >
-                <h6 className="vertical-timeline-element-title">Applpication Unsuccessful <br></br>
+                <h6 className="vertical-timeline-element-title">Application Unsuccessful <br></br>
                   <a className="feedback" href={"./studentViewFeedback/" + studentId +'/' + selectedPostId}>View Feedback</a> </h6>
             </VerticalTimelineElement>
           </VerticalTimeline></Card></Container></Col>
