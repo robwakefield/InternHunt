@@ -7,6 +7,7 @@ import ProgressBar from "react-bootstrap/ProgressBar";
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
 import StudentNavbar from "../studentNavbar";
+import { BsPen } from "react-icons/bs";
 
 function StudentDashboard() {
   const selectedPostId = 1;
@@ -81,12 +82,13 @@ class ApplicationListItem extends Component {
   render() {
     return (
       <ListGroupItem className="applicationEntry">
-        <Container fluid="md" style={{ cursor: "pointer" }} onClick={this.handleClick}>
-          <Row>
-            <Col><p className="text-left">{this.state.title}</p></Col>
-            <Col><p className={"deadline text-" + this.statusColor()}>{this.state.status}</p></Col>
-            <Col><ProgressBar variant={this.statusColor()} now={this.state.progress}/></Col>
-          </Row>
+        <Container className="d-flex justify-content-between">
+          <p className="text-left">{this.state.title}</p>
+          <p className={"deadline text-" + this.statusColor()}>{this.state.status}</p>
+          <ProgressBar variant={this.statusColor()} now={this.state.progress}/>
+          <Button onClick={this.handleClick}>
+            <BsPen></BsPen>
+          </Button>
         </Container>
       </ListGroupItem>
     )
