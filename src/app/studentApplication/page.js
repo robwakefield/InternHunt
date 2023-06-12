@@ -10,11 +10,18 @@ import StudentNavbar from "../studentNavbar";
 import { Card } from "react-bootstrap";
 import {BsSortDown} from 'react-icons/bs'
 import '../globals.css'
+import DocxExtractor from "./DocxExtractor";
+import Modal from 'react-bootstrap/Modal';
 
 function StudentApplication() {
   const [postID, setPostID] = useState(-1);
   const [studentID, setStudentID] = useState(-1);
   const [application, setApplication] = useState({ evidences: [] });
+  const [extractedCV, setExtractedCV] = useState("")
+  const [showUploader, setShowUploader] = useState(false);
+
+  const handleUploaderClose = () => setShowUploader(false);
+  const handleUploaderShow = () => setShowUploader(true);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -46,9 +53,25 @@ function StudentApplication() {
           <Card.Header className="d-flex justify-content-between">
             <Button className="sortButton"><BsSortDown color="black" size={30}/></Button>
             <h4>IT Intern</h4>
-            <Button>Upload CV</Button>
+            <Button onClick={handleUploaderShow}>Upload CV</Button>
+            <Modal show={showUploader} onHide={handleUploaderClose}>
+              <Modal.Header closeButton>
+                <Modal.Title>Upload CV</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <p>CV must be in (.doc, .docx)</p>
+                <DocxExtractor extractedCV={extractedCV} setExtractedCV={setExtractedCV}></DocxExtractor></Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={handleUploaderClose}>
+                  Close
+                </Button>
+                <Button variant="primary" onClick={handleUploaderClose}>
+                  Save Changes
+                </Button>
+              </Modal.Footer>
+            </Modal>
           </Card.Header>
-      
+
           <Form onSubmit={handleSubmit}>
             <EvidenceEntryList application={application} postID={postID} studentID={studentID}/>
           </Form>
