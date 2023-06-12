@@ -132,8 +132,8 @@ class ApplicantList extends Component {
     let listToShow = this.state.rejected ? this.state.rejections : []
 
     let icon = this.state.rejected ? <BsEyeSlash color="black" size={30}/> : <BsEye color="black" size={30}/>
-    let tooltip = (
-      <Tooltip id="tooltip">
+    let viewTooltip = (
+      <Tooltip id="viewTooltip">
         {(this.state.rejected ? "Hide" : "Show") + " rejected applicants"}
       </Tooltip>
     );
@@ -142,7 +142,7 @@ class ApplicantList extends Component {
       <Container style={{height: "70vh"}}>
         <Card className="mt-4 h-100">
           <Card.Header className="d-flex justify-content-between">
-            <OverlayTrigger placement="top" overlay={tooltip}>
+            <OverlayTrigger placement="top" overlay={viewTooltip}>
               <Button className="sortButton" onClick={this.toggleRejected}>
                   {icon}
               </Button>
