@@ -2,15 +2,15 @@
 import "bootstrap/dist/css/bootstrap.min.css"
 import starStyle from './Star.module.css';
 import './viewApplicants.css'
-import { Accordion, Button, Card, Col, Container, ListGroup, ListGroupItem, Nav, PageItem, Pagination, Row, Modal, Form} from "react-bootstrap";
-import { Component, useEffect, useState, useRef} from "react";
+import { Accordion, Button, Card, Col, Container, ListGroup, ListGroupItem, Nav, PageItem, Pagination, Row, Modal, Form, Tooltip} from "react-bootstrap";
+import { Component, useEffect, useState} from "react";
 import RecruiterNavbar from "../../recruiterNavbar";
-import { BsEye, BsEyeSlash, BsSearch, BsSortDown } from 'react-icons/bs';
+import { BsEye, BsEyeSlash, BsSearch } from 'react-icons/bs';
 import { AiFillStar } from 'react-icons/ai'
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
 import '../../globals.css'
-import { useParams, useRouter, notFound } from "next/navigation";
+import { useParams, notFound } from "next/navigation";
 
 function averageRating(application) {
   if (application.evidences.length == 0) return 0;
@@ -130,15 +130,23 @@ class ApplicantList extends Component {
     this.state.applications.sort((a, b) => averageRating(b) - averageRating(a));
     this.state.rejections.sort((a, b) => averageRating(b) - averageRating(a));
     let listToShow = this.state.rejected ? this.state.rejections : []
+
     let icon = this.state.rejected ? <BsEyeSlash color="black" size={30}/> : <BsEye color="black" size={30}/>
+    let tooltip = (
+      <Tooltip id="tooltip">
+        {(this.state.rejected ? "Hide" : "Show") + " rejected applicants"}
+      </Tooltip>
+    );
 
     return (
       <Container style={{height: "70vh"}}>
         <Card className="mt-4 h-100">
           <Card.Header className="d-flex justify-content-between">
-            <Button className="sortButton" onClick={this.toggleRejected}>
-                {icon}
-            </Button>
+            <OverlayTrigger placement="top" overlay={tooltip}>
+              <Button className="sortButton" onClick={this.toggleRejected}>
+                  {icon}
+              </Button>
+            </OverlayTrigger>
             <h4>Applicants</h4>
             <Button className="searchButton"><BsSearch color="black" size={30}/></Button>
           </Card.Header>
