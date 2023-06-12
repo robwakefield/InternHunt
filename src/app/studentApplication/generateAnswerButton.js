@@ -79,6 +79,7 @@ function GenerateAnswerButton(props) {
         
     return (
         <Button
+            className = {props.submitted? "invisible" : "visible"}
             disabled={(props.extractedCV == "" || loadingAnswer)}
             variant="primary"
             onClick={() => generateAnswer(createQuestion(props.requirement))}>
