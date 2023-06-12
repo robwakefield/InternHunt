@@ -161,7 +161,7 @@ class ApplicantList extends Component {
   }
 
   renderApplicant(application, rejected) {
-    return <ListGroupItem className={(application.student.id == this.props.selectedApplicant)? "selectedApplicantListItem" : (rejected ? "rejectedApplicantListItem" : "applicantListItem")} key={application.student.name}>
+    return <ListGroupItem className={(application.student.id == this.props.selectedApplicant) ? (rejected ? "selectedRejectedListItem" : "selectedApplicantListItem") : (rejected ? "rejectedApplicantListItem" : "applicantListItem")} key={application.student.name}>
       <Container fluid style={{ cursor: "pointer" }} onClick={this.selectApplicant(application.student.id)}>
         <Row className="applicantListRow">
           <Col sm={9} className="studentNameCol"><p className="text-left studentName">{application.student.name} </p></Col>
