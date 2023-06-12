@@ -5,7 +5,7 @@ import './viewApplicants.css'
 import { Accordion, Button, Card, Col, Container, ListGroup, ListGroupItem, Nav, PageItem, Pagination, Row, Modal, Form} from "react-bootstrap";
 import { Component, useEffect, useState, useRef} from "react";
 import RecruiterNavbar from "../../recruiterNavbar";
-import { BsSearch, BsSortDown } from 'react-icons/bs';
+import { BsEye, BsEyeSlash, BsSearch, BsSortDown } from 'react-icons/bs';
 import { AiFillStar } from 'react-icons/ai'
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
@@ -129,25 +129,23 @@ class ApplicantList extends Component {
   render() {
     this.state.applications.sort((a, b) => averageRating(b) - averageRating(a));
     this.state.rejections.sort((a, b) => averageRating(b) - averageRating(a));
-    let listToShow = this.state.rejected ? this.state.rejections : this.state.applications
-    if (listToShow.length != 0) {
-      this.selectApplicant(listToShow[0].student.id)
-    }
+    let listToShow = this.state.rejected ? this.state.rejections : []
+    let icon = this.state.rejected ? <BsEyeSlash color="black" size={30}/> : <BsEye color="black" size={30}/>
+
     return (
       <Container style={{height: "70vh"}}>
         <Card className="mt-4 h-100">
           <Card.Header className="d-flex justify-content-between">
             <Button className="sortButton" onClick={this.toggleRejected}>
-                <BsSortDown color="black" size={30}/>
+                {icon}
             </Button>
-            <h4>{this.state.rejected ? "Rejected" : "Applicants"}</h4>
+            <h4>Applicants</h4>
             <Button className="searchButton"><BsSearch color="black" size={30}/></Button>
           </Card.Header>
         
           <ListGroup>
-            {  listToShow.map((application) => (
-                this.renderApplicant(application, this.state.rejected)))
-            }
+            {this.state.applications.map((application) => (this.renderApplicant(application, false)))}
+            {listToShow.map((application) => (this.renderApplicant(application, true)))}
           </ListGroup>
         </Card>
       </Container>
