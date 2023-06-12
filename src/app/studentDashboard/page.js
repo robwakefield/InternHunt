@@ -20,7 +20,6 @@ function StudentDashboard() {
     <main className="studentDashboard">
       <StudentNavbar></StudentNavbar>
 
-
       <Container fluid="md" className="dashboardContainer">
         <Row>
           <Col>
@@ -31,40 +30,7 @@ function StudentDashboard() {
                   <h4>My Applications</h4>
                   <Button>New Post</Button>
                 </Card.Header>
-
-                <ListGroup>
-
-                  <ListGroupItem className="applicationEntry">
-                    <Container fluid="md" style={{ cursor: "pointer" }} onClick={handleClick}>
-                      <Row>
-                        <Col><p className="text-left">IT Intern</p></Col>
-                          <Col><p className="deadline"  style={{color:'darkgreen'}}>Deadline: 08/10/23</p></Col>
-                          <Col><ProgressBar variant='success' now={50} /></Col>
-                        </Row>
-                    </Container>
-                  </ListGroupItem>
-
-                  <ListGroupItem className="applicationEntry">
-                  <Container fluid="md" style={{ cursor: "pointer" }} onClick={handleClick}>
-                      <Row>
-                        <Col><p className="text-left">Softare Engineer Intern</p></Col>
-                          <Col><p className="deadline" style={{color:'orange'}}>Deadline: 08/10/23</p></Col>
-                          <Col><ProgressBar variant='warning' now={20} /></Col>
-                        </Row>
-                    </Container>
-                  </ListGroupItem>
-
-                  <ListGroupItem className="applicationEntry">
-                  <Container fluid="md" style={{ cursor: "pointer" }} onClick={handleClick}>
-                      <Row>
-                        <Col><p className="text-left">Management Intern</p></Col>
-                          <Col><p className="deadline" style={{color:'red'}} >Application Closed</p></Col>
-                          <Col><ProgressBar variant='danger' now={100} /></Col>
-                        </Row>
-                    </Container>
-                  </ListGroupItem>
-
-                </ListGroup>
+                <ApplicationList/>
               </Card>
             </Container>
           </Col>
@@ -76,6 +42,55 @@ function StudentDashboard() {
       </Container>
     </main>
   );
+}
+
+class ApplicationList extends Component {
+  render() {
+    return (
+      <ListGroup>
+        <ApplicationListItem title="Software Engineer Intern" status="Applications Open" progress="70"/>
+        <ApplicationListItem title="Software Engineer Intern" status="Applications Closed" progress="90"/>
+        <ApplicationListItem title="Software Engineer Intern" status="Draft" progress="20"/>
+      </ListGroup>
+    )
+  }
+}
+
+class ApplicationListItem extends Component {
+
+  state = {
+    title: this.props.title,
+    status: this.props.status,
+    progress: this.props.progress
+  }
+
+  handleClick = () => {
+    window.location.href = "./studentApplication?studentID=1&postID=1";
+  }
+
+  statusColor() {
+    if (this.props.status == "Applications Open") {
+      return "success"
+    } else if (this.props.status == "Applications Closed") {
+      return "danger"
+    } else if (this.props.status == "Draft") {
+      return "muted"
+    }
+  }
+
+  render() {
+    return (
+      <ListGroupItem className="applicationEntry">
+        <Container fluid="md" style={{ cursor: "pointer" }} onClick={this.handleClick}>
+          <Row>
+            <Col><p className="text-left">{this.state.title}</p></Col>
+            <Col><p className={"deadline text-" + this.statusColor()}>{this.state.status}</p></Col>
+            <Col><ProgressBar variant={this.statusColor()} now={this.state.progress}/></Col>
+          </Row>
+        </Container>
+      </ListGroupItem>
+    )
+  }
 }
 
 class Timeline extends Component {
