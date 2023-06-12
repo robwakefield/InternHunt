@@ -14,20 +14,17 @@ function StudentDashboard() {
   const selectedPostId = 1;
   const studentId = 1;
 
-  const handleClick = () => {
-    window.location.href = "./studentApplication?studentID=1&postID=1";
-  }
-
   useEffect(() => {
-    fetch('/api/studentApplication/'+studentId).then((response) => response.json())
-      .then((data) => setApplications(data));
+    fetch('/api/studentApplication/'+studentId)
+      .then((response) => response.json())
+      .then((data) => {console.log(data); setApplications(data)});
   }, []);
 
   return (
     <main className="studentDashboard">
       <StudentNavbar></StudentNavbar>
 
-      <Container fluid="md" className="dashboardContainer">
+      <Container className="dashboardContainer">
         <Row>
           <Col>
             <Container style={{ height: "80vh" }}>
@@ -42,7 +39,7 @@ function StudentDashboard() {
             </Container>
           </Col>
           <Col xs={5}>
-            <Timeline/>
+            <Timeline applications={applications} selectedPostID={selectedPostId}/>
           </Col>
 
         </Row>
@@ -55,6 +52,14 @@ class ApplicationList extends Component {
 
   state = {
     applications: this.props.applications
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps !== this.props) {
+      this.setState({ 
+        applications: this.props.applications
+      });
+    }
   }
 
   render() {
@@ -78,8 +83,20 @@ class ApplicationListItem extends Component {
     studentID: this.props.application.studentID
   }
 
-  handleClick = () => {
-    window.location.href = "./studentApplication?studentID=1&postID=1";
+  componentDidUpdate(prevProps) {
+    if (prevProps !== this.props) {
+      this.setState({ 
+        title: this.props.application.post.name,
+        status: "Applications Open",//this.props.application.status,
+        progress: this.props.progress,
+        postID: this.props.application.post.id,
+        studentID: this.props.application.studentID
+      });
+    }
+  }
+
+  editPost = () => {
+    window.location.href = "./studentApplication?studentID=" + this.state.studentID + "&postID=" + this.state.postID;
   }
 
   statusColor() {
@@ -99,7 +116,7 @@ class ApplicationListItem extends Component {
           <p className="text-left">{this.state.title}</p>
           <p className={"deadline text-" + this.statusColor()}>{this.state.status}</p>
           <ProgressBar variant={this.statusColor()} now={this.state.progress}/>
-          <Button onClick={this.handleClick}>
+          <Button onClick={this.editPost}>
             <BsPen></BsPen>
           </Button>
         </Container>
