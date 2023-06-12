@@ -22,23 +22,13 @@ export async function GET() {
 }
 
 export async function PUT(request) {
-  const { description, requirements } = await request.json();
+  const body = await request.json();
   await prisma.post.update({
     where: {
       id: 1
     },
     data: {
-      description: description,
-      requirements: {
-        updateMany: requirements.map((requirement) => ({
-          where: {
-            id: requirement.id
-          },
-          data: {
-            requirementText: requirement.requirementText
-          }
-        }))
-      }
+      description: body.description
     }
   });
   return NextResponse.json({});
