@@ -10,11 +10,20 @@ import StudentNavbar from "../studentNavbar";
 import { Card } from "react-bootstrap";
 import {BsSortDown} from 'react-icons/bs'
 import '../globals.css'
+import DocxExtractor from "./DocxExtractor";
+import Modal from 'react-bootstrap/Modal';
+import GenerateAnswerButton from "./generateAnswerButton";
 
 function StudentApplication() {
   const [postID, setPostID] = useState(-1);
   const [studentID, setStudentID] = useState(-1);
-  const [application, setApplication] = useState({ evidences: [] });
+  const [application, setApplication] = useState({ evidences: [], post: {}});
+  const [CV, setCV] = useState("")
+  const [extractedCV, setExtractedCV] = useState("")
+  const [showUploader, setShowUploader] = useState(false);
+
+  const handleUploaderClose = () => setShowUploader(false);
+  const handleUploaderShow = () => setShowUploader(true);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -31,7 +40,7 @@ function StudentApplication() {
         postID: queryPostID
       })
     }).then((response) => response.json())
-      .then((data) => {setApplication(data)});
+      .then((data) => { setApplication(data);  console.log(data)});
   }, []);
 
   const handleSubmit = (event) => {
@@ -45,12 +54,26 @@ function StudentApplication() {
         <Card className="mt-4 h-100">
           <Card.Header className="d-flex justify-content-between">
             <Button className="sortButton"><BsSortDown color="black" size={30}/></Button>
-            <h4>IT Intern</h4>
-            <Button>Upload CV</Button>
+            <h4>{application.post.name}</h4>
+            <Button variant={(extractedCV != "") ? "success" : "danger"} onClick={handleUploaderShow}>Upload CV</Button>
+            <Modal show={showUploader} onHide={handleUploaderClose}>
+              <Modal.Header closeButton>
+                <Modal.Title>Upload CV</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <p>CV must be in (.doc, .docx)</p>
+                <p>Uploaded file: {CV.name}</p>
+                <DocxExtractor setExtractedCV={setExtractedCV} setCV={setCV}></DocxExtractor></Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={handleUploaderClose}>
+                  Close
+                </Button>
+              </Modal.Footer>
+            </Modal>
           </Card.Header>
-      
+
           <Form onSubmit={handleSubmit}>
-            <EvidenceEntryList application={application} postID={postID} studentID={studentID}/>
+            <EvidenceEntryList extractedCV={extractedCV} application={application} postID={postID} studentID={studentID}/>
           </Form>
         </Card>
       </Container>
@@ -63,12 +86,14 @@ export default StudentApplication;
 class EvidenceEntryList extends Component {
   constructor(props) {
     super(props);
+    this.changeEntryValues.bind(this);
     this.state = {
+      extractedCV: props.extractedCV,
       evidences: props.application.evidences,
       entryValues: props.application.evidences.map((evidence) => evidence.evidenceText)
     }
   }
-  handleSubmit = () => {
+  handleAutoSave = () => {
     this.state.evidences.forEach((evidence, i) => {
       fetch("/api/studentApplication", {
         method: "PUT",
@@ -84,11 +109,25 @@ class EvidenceEntryList extends Component {
   componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
       this.setState({
+        extractedCV: this.props.extractedCV,
         evidences: this.props.application.evidences,
         entryValues: this.props.application.evidences.map((evidence) => evidence.evidenceText)
       });
     }
   }
+
+  // Change by text input
+  updateEntryValue(i, value) {
+    const updatedEntryValues = [...this.state.entryValues];
+    updatedEntryValues[i] = value;
+    this.setState({ entryValues: updatedEntryValues }, () => {this.handleAutoSave();});
+  }
+
+  // Change by generateAnswerButton component
+  changeEntryValues = (newValue) => {
+    this.setState({ entryValues: newValue }, () => {this.handleAutoSave();});
+  };
+
   render() {
     return (
       <div className="evidenceEntryList">
@@ -98,27 +137,33 @@ class EvidenceEntryList extends Component {
               <Accordion.Item eventKey={i} key={i}>
                 <Accordion.Header>{evidence.requirement.requirementText}</Accordion.Header>
                 <Accordion.Body>
-                <Form.Group className="mb-3" controlId={"formGroupEvidence"+i}>
+                  <Form.Group className="mb-3" controlId={"formGroupEvidence" + i}>
                   <Form.Control
                     as="textarea"
                     rows={3}
                     placeholder="Enter your evidence of the skill"
                     defaultValue={evidence.evidenceText}
+                    value={this.state.entryValues[i]}
                     onChange={(event) => {
-                      const updatedEntryValues = [...this.state.entryValues];
-                      updatedEntryValues[i] = event.target.value;
-                      this.setState({ entryValues: updatedEntryValues });
+                      this.updateEntryValue(i, event.target.value)
                     }}
                   />
-                </Form.Group>
+                  </Form.Group>
+                  <GenerateAnswerButton
+                    jobName = {this.props.application.post.name}
+                    extractedCV={this.state.extractedCV}
+                    requirement = {evidence.requirement.requirementText}
+                    evidence={i}
+                    entryValues={this.state.entryValues} 
+                    changeEntryValues={this.changeEntryValues} />
                 </Accordion.Body>
               </Accordion.Item>
             );
           })
         }
         </Accordion>
-        <Button variant="primary" type="submit" onClick={this.handleSubmit}>
-          Submit
+        <Button variant="primary" type="submit" onClick={this.handleAutoSave}>
+          Submit application
         </Button>
       </div>
     );
