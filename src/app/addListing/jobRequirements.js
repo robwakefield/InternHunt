@@ -7,7 +7,6 @@ import { Component, useEffect, useRef, useState } from "react";
 import RecruiterNavbar from "../recruiterNavbar";
 
 function JobRequirementsList() {
-  const reqRef = useRef();
 
   const [post, setPost] = useState({description: "", requirements: []});
   useEffect(() => {
@@ -16,20 +15,6 @@ function JobRequirementsList() {
       .then((data) => setPost(data));
   }, []);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    fetch('/api/listingEdit', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        description: post.description,
-        requirements: post.requirements
-      }),
-    });
-  }
-
   return (
     <Form>
       <Card className="my-2 mx-3">
@@ -37,12 +22,12 @@ function JobRequirementsList() {
         <p>Requirements</p>
         <ButtonGroup>
           {/* <Button>Add</Button> */}
-          <Button onClick={handleSubmit}>Save</Button>
           {/* <Button>Remove</Button> */}
         </ButtonGroup>
         </Card.Header>
           {post.requirements.map((requirement) =>
-            <JobRequirementsItem key={requirement.id} requirement={requirement} reqRef={reqRef} />)}
+            <JobRequirementsItem key={requirement.id} postid={post.id}
+            id={requirement.id} requirement={requirement} />)}
       </Card>
     </Form>
   )
@@ -50,12 +35,32 @@ function JobRequirementsList() {
 
 export default JobRequirementsList;
 
-function JobRequirementsItem({ requirement, reqRef }) {
+function JobRequirementsItem({ postid, id, requirement }) {
+  const reqRef = useRef();
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    fetch('/api/requirements', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        postid: postid,
+        id: id,
+        requirementText: reqRef.current.value
+      }),
+    });
+  }
+
   return (
     <Form.Group className="mb-3" controlId="formJobReq">
-      <Form.Control as="textarea" rows={1}
-        placeholder="Enter your Requirements" defaultValue={requirement.requirementText}
-        ref={reqRef} />
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <Form.Control as="textarea" rows={1}
+          placeholder="Enter your Requirements" defaultValue={requirement.requirementText}
+          ref={reqRef} />
+          <Button onClick={handleSubmit}>Save</Button>
+      </div>
     </Form.Group>
   )
 }

@@ -2,20 +2,11 @@ import { prisma } from '../../db/client'
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  const listings = await prisma.post.findFirst({
-    where: {
-      status: "Draft"
-    },
+  const listings = await prisma.requirement.findMany({
     select: {
+      postid: true,
       id: true,
-      name: true,
-      description: true,
-      requirements: {
-        select: {
-          id: true,
-          requirementText: true
-        }
-      }
+      requirementText: true
     }
   })
   return NextResponse.json(listings)
@@ -23,12 +14,12 @@ export async function GET() {
 
 export async function PUT(request) {
   const body = await request.json();
-  await prisma.post.update({
+  await prisma.requirement.update({
     where: {
-      id: 1
+      postID_id: { postID: body.postid, id: body.id }
     },
     data: {
-      description: body.description
+      requirementText: body.requirementText
     }
   });
   return NextResponse.json({});

@@ -9,7 +9,7 @@ import JobDescription from "./jobDescription";
 import JobRequirementsList from "./jobRequirements";
 
 function AddListing() {
-  const [listing, setListing] = useState({description: "", requirements: []});
+  const [listing, setListing] = useState({});
 
   useEffect(() => {
     fetch('/api/listingEdit')
