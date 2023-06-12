@@ -121,9 +121,17 @@ class ApplicantList extends Component {
   }
 
   toggleRejected = () => {
-      this.setState({
-        rejected: !this.state.rejected
-      });
+    // Select first non-rejected student when hiding rejected students
+    if (this.state.rejected && this.state.rejections.map(
+      (application) => application.student.id).includes(this.props.selectedApplicant)) {
+      if (this.state.applications.length != 0) {
+        this.selectApplicant(this.state.applications[0].student.id)()
+      }
+    }
+    // Update the state
+    this.setState({
+      rejected: !this.state.rejected
+    });
   }
 
   render() {
