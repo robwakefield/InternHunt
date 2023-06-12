@@ -39,6 +39,8 @@ model Application {
   studentID   Int
   evidences   Evidence[]
   cv          Bytes?
+  rejected    Boolean @default(false)
+  accepted    Boolean @default(false)
 
   @@id([postID, studentID])
 }

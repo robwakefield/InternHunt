@@ -2,15 +2,15 @@
 import "bootstrap/dist/css/bootstrap.min.css"
 import starStyle from './Star.module.css';
 import './viewApplicants.css'
-import { Accordion, Button, Card, Col, Container, ListGroup, ListGroupItem, Nav, PageItem, Pagination, Row, Modal, Form} from "react-bootstrap";
-import { Component, useEffect, useState, useRef} from "react";
+import { Accordion, Button, Card, Col, Container, ListGroup, ListGroupItem, Nav, PageItem, Pagination, Row, Modal, Form, Tooltip} from "react-bootstrap";
+import { Component, useEffect, useState} from "react";
 import RecruiterNavbar from "../../recruiterNavbar";
-import { BsSearch, BsSortDown } from 'react-icons/bs';
+import { BsEye, BsEyeSlash, BsSearch } from 'react-icons/bs';
 import { AiFillStar } from 'react-icons/ai'
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
 import '../../globals.css'
-import { useParams, useRouter, notFound } from "next/navigation";
+import { useParams, notFound } from "next/navigation";
 
 function averageRating(application) {
   if (application.evidences.length == 0) return 0;
@@ -25,7 +25,6 @@ function ViewApplicants() {
   const handleClose = () => setJobListing(false);
   const handleShow = () => setJobListing(true);
 
-  const router = useRouter()
   const params = useParams()
   const postId = params.postId
 
@@ -100,45 +99,91 @@ export default ViewApplicants;
 
 class ApplicantList extends Component {
   selectApplicant = (n) => () => {this.props.setSelectedApplicant(n);}
-  state = { applications: this.props.post.applications };
+
+  state = {
+    applications:  this.props.post.applications.filter(function(application) {return !application.rejected}),
+    rejections: this.props.post.applications.filter(function(application) {return application.rejected}),
+    // Only show the rejections at first load if everyone is rejected
+    rejected: this.props.post.applications.filter(function(application) {return !application.rejected}).length == 0 
+      && this.props.post.applications.filter(function(application) {return application.rejected}).length != 0
+  };
 
   componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
-      this.setState({ applications: this.props.post.applications });
+      const applications = this.props.post.applications.filter(function(application) {return !application.rejected})
+      const rejections = this.props.post.applications.filter(function(application) {return application.rejected})
+      this.setState({
+        applications: applications,
+        rejections: rejections,
+        rejected: this.state.rejected || (applications.length == 0 && rejections.length != 0)
+      });
     }
   }
+
+  toggleRejected = () => {
+    // Select first non-rejected student when hiding rejected students
+    if (this.state.rejected && this.state.rejections.map(
+      (application) => application.student.id).includes(this.props.selectedApplicant)) {
+      if (this.state.applications.length != 0) {
+        this.selectApplicant(this.state.applications[0].student.id)()
+      }
+    }
+    // Update the state
+    this.setState({
+      rejected: !this.state.rejected
+    });
+  }
+
   render() {
     this.state.applications.sort((a, b) => averageRating(b) - averageRating(a));
+    this.state.rejections.sort((a, b) => averageRating(b) - averageRating(a));
+    let listToShow = this.state.rejected ? this.state.rejections : []
+
+    let icon = this.state.rejected ? <BsEyeSlash color="black" size={30}/> : <BsEye color="black" size={30}/>
+    let viewTooltip = (
+      <Tooltip id="viewTooltip">
+        {(this.state.rejected ? "Hide" : "Show") + " rejected applicants"}
+      </Tooltip>
+    );
+
     return (
       <Container style={{height: "70vh"}}>
         <Card className="mt-4 h-100">
           <Card.Header className="d-flex justify-content-between">
-            <Button className="sortButton"><BsSortDown color="black" size={30}/></Button>
+            <OverlayTrigger placement="top" overlay={viewTooltip}>
+              <Button className="sortButton" onClick={this.toggleRejected}>
+                  {icon}
+              </Button>
+            </OverlayTrigger>
             <h4>Applicants</h4>
             <Button className="searchButton"><BsSearch color="black" size={30}/></Button>
           </Card.Header>
         
-          <ListGroup> {
-            this.state.applications.map((application) => (
-              <ListGroupItem className={(application.student.id == this.props.selectedApplicant)? "selectedApplicantListItem" : "applicantListItem"} key={application.student.name}>
-                <Container fluid style={{ cursor: "pointer" }} onClick={this.selectApplicant(application.student.id)}>
-                  <Row className="applicantListRow">
-                    <Col sm={9} className="studentNameCol"><p className="text-left studentName">{application.student.name} </p></Col>
-                    <Col sm={3} className="avgRatingCol"><p className="text-center avgRating">{averageRating(application)}</p><AiFillStar style={{alignContent: "center"}} size={30}  color="#ffc800"/></Col>
-                  </Row>
-                </Container>
-              </ListGroupItem>
-            ))}
+          <ListGroup>
+            {this.state.applications.map((application) => (this.renderApplicant(application, false)))}
+            {listToShow.map((application) => (this.renderApplicant(application, true)))}
           </ListGroup>
         </Card>
       </Container>
     )
   }
+
+  renderApplicant(application, rejected) {
+    return <ListGroupItem className={(application.student.id == this.props.selectedApplicant) ? (rejected ? "selectedRejectedListItem" : "selectedApplicantListItem") : (rejected ? "rejectedApplicantListItem" : "applicantListItem")} key={application.student.name}>
+      <Container fluid style={{ cursor: "pointer" }} onClick={this.selectApplicant(application.student.id)}>
+        <Row className="applicantListRow">
+          <Col sm={9} className="studentNameCol"><p className="text-left studentName">{application.student.name} </p></Col>
+          <Col sm={3} className="avgRatingCol"><p className="text-center avgRating">{averageRating(application)}</p><AiFillStar style={{alignContent: "center"}} size={30}  color="#ffc800"/></Col>
+        </Row>
+      </Container>
+    </ListGroupItem>
+  }
 }
 
 class SkillList extends Component {
   state = { skills: [], name: "", showDocs: false}
-  getSelectedStudent = () => this.props.post.applications.filter(app => app.student.id == this.props.selectedApplicant)[0];
+  getSelectedStudent = () => this.props.post.applications.filter(
+    app => app.student.id == this.props.selectedApplicant)[0];
 
   handleDocsShow = () => {
     this.setState({ showDocs: true });
@@ -146,6 +191,16 @@ class SkillList extends Component {
 
   handleDocsClose = () => {
     this.setState({ showDocs: false });
+  }
+
+  rejectApplicant = () => {
+    fetch('/api/reject', {
+      method: 'PUT',
+      body: JSON.stringify({
+        postID: this.props.post.id,
+        studentID: this.props.selectedApplicant
+      })
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -156,6 +211,7 @@ class SkillList extends Component {
       });
     }
   }
+
   render() {
     this.state.skills.sort((a, b) => a.requirement.requirementText >= b.requirement.requirementText ? 1 : -1)
     return (
@@ -191,7 +247,7 @@ class SkillList extends Component {
                 </Modal.Footer>
               </Modal>
             <h4>{this.state.name}</h4>
-            <Button>Accept</Button>
+            <Button onClick={this.rejectApplicant}>Reject</Button>
           </Card.Header>
           
           <Accordion>{
@@ -368,12 +424,11 @@ class StarRating extends Component {
                 </Popover>
               }>
                 <span><Modal
-                show={this.state.modalShow}
-                onHide={this.handleModalClose}
-                backdrop="static"
+                  show={this.state.modalShow}
+                  onHide={this.handleModalClose}
+                  backdrop="static"
                     keyboard={false}
-                    centered
-                >
+                    centered>
                   <Form onSubmit={this.updateRatingScheme}>
                     <Modal.Header closeButton>
                       <Modal.Title>Edit Rating Scheme</Modal.Title>
