@@ -66,7 +66,7 @@ class ApplicationList extends Component {
     return (
       <ListGroup>
         {this.state.applications.map((application) => {
-          return <ApplicationListItem application={application}/>
+          return <ApplicationListItem application={application} progress={80}/>
         })}
       </ListGroup>
     )
@@ -77,7 +77,7 @@ class ApplicationListItem extends Component {
 
   state = {
     title: this.props.application.post.name,
-    status: "Applications Open",//this.props.application.status,
+    deadline: "09/12/24",//this.props.application.post.deadline,
     progress: this.props.progress,
     postID: this.props.application.post.id,
     studentID: this.props.application.studentID
@@ -87,7 +87,7 @@ class ApplicationListItem extends Component {
     if (prevProps !== this.props) {
       this.setState({ 
         title: this.props.application.post.name,
-        status: "Applications Open",//this.props.application.status,
+        deadline: "09/12/24",//this.props.application.post.deadline,
         progress: this.props.progress,
         postID: this.props.application.post.id,
         studentID: this.props.application.studentID
@@ -100,21 +100,15 @@ class ApplicationListItem extends Component {
   }
 
   statusColor() {
-    if (this.props.status == "Applications Open") {
-      return "success"
-    } else if (this.props.status == "Applications Closed") {
-      return "danger"
-    } else if (this.props.status == "Draft") {
-      return "muted"
-    }
+    return "danger"
   }
 
   render() {
     return (
       <ListGroupItem className="applicationEntry">
-        <Container className="d-flex justify-content-between">
-          <p className="text-left">{this.state.title}</p>
-          <p className={"deadline text-" + this.statusColor()}>{this.state.status}</p>
+        <Container className="d-flex justify-content-end">
+          <p className="flex-fill text-left">{this.state.title}</p>
+          <p className={"mx-4 deadline text-" + this.statusColor()}>{"Deadline " + this.state.deadline}</p>
           <ProgressBar variant={this.statusColor()} now={this.state.progress}/>
           <Button onClick={this.editPost}>
             <BsPen></BsPen>
