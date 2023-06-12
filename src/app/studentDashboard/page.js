@@ -77,7 +77,7 @@ class ApplicationListItem extends Component {
 
   state = {
     title: this.props.application.post.name,
-    deadline: "09/12/24",//this.props.application.post.deadline,
+    deadline: this.props.application.post.deadline,
     progress: this.props.progress,
     postID: this.props.application.post.id,
     studentID: this.props.application.studentID
@@ -87,7 +87,7 @@ class ApplicationListItem extends Component {
     if (prevProps !== this.props) {
       this.setState({ 
         title: this.props.application.post.name,
-        deadline: "09/12/24",//this.props.application.post.deadline,
+        deadline: this.props.application.post.deadline,
         progress: this.props.progress,
         postID: this.props.application.post.id,
         studentID: this.props.application.studentID
