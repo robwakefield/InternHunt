@@ -1,21 +1,27 @@
 'use client'
 import "bootstrap/dist/css/bootstrap.min.css"
 import "./studentDashboard.css"
-import { Card, Container, ListGroupItem, Row, Col, Button, ListGroup } from "react-bootstrap";
-import { Component } from "react";
-import ProgressBar from "react-bootstrap/ProgressBar";
+import { Card, Container, ListGroupItem, Row, Col, Button, ListGroup, ProgressBar } from "react-bootstrap";
+import { Component, useEffect, useState } from "react";
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
 import StudentNavbar from "../studentNavbar";
 import { BsPen } from "react-icons/bs";
 
 function StudentDashboard() {
+  const [applications, setApplications] = useState([]);
+
   const selectedPostId = 1;
   const studentId = 1;
 
   const handleClick = () => {
     window.location.href = "./studentApplication?studentID=1&postID=1";
   }
+
+  useEffect(() => {
+    fetch('/api/studentApplication/'+studentId).then((response) => response.json())
+      .then((data) => setApplications(data));
+  }, []);
 
   return (
     <main className="studentDashboard">
@@ -31,7 +37,7 @@ function StudentDashboard() {
                   <h4>My Applications</h4>
                   <Button>New Post</Button>
                 </Card.Header>
-                <ApplicationList/>
+                <ApplicationList applications={applications}/>
               </Card>
             </Container>
           </Col>
@@ -46,12 +52,17 @@ function StudentDashboard() {
 }
 
 class ApplicationList extends Component {
+
+  state = {
+    applications: this.props.applications
+  }
+
   render() {
     return (
       <ListGroup>
-        <ApplicationListItem title="Software Engineer Intern" status="Applications Open" progress="70"/>
-        <ApplicationListItem title="Software Engineer Intern" status="Applications Closed" progress="90"/>
-        <ApplicationListItem title="Software Engineer Intern" status="Draft" progress="20"/>
+        {this.state.applications.map((application) => {
+          return <ApplicationListItem application={application}/>
+        })}
       </ListGroup>
     )
   }
@@ -60,9 +71,11 @@ class ApplicationList extends Component {
 class ApplicationListItem extends Component {
 
   state = {
-    title: this.props.title,
-    status: this.props.status,
-    progress: this.props.progress
+    title: this.props.application.post.name,
+    status: "Applications Open",//this.props.application.status,
+    progress: this.props.progress,
+    postID: this.props.application.post.id,
+    studentID: this.props.application.studentID
   }
 
   handleClick = () => {
