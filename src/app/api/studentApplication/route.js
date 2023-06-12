@@ -19,6 +19,11 @@ export async function POST(request) {
           },
           evidenceText: true
         }
+      },
+      post: {
+        select: {
+          name: true,
+        }
       }
     }
   });

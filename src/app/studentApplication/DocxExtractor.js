@@ -37,6 +37,7 @@ const DocxExtractor = (props) => {
   const onFileUpload = (event) => {
     const reader = new FileReader();
     let file = event.target.files[0];
+    props.setCV(file);
 
     reader.onload = (e) => {
       const content = e.target.result;
