@@ -47,7 +47,7 @@ function GenerateAnswerButton(props) {
 
         const systemMessage = {
             role: "system",
-            content: "Help me to fill in an application form"
+            content: "Help me to fill in an application form, Here is my CV: \n" + props.extractedCV + "\n I am applying for " + props.jobName
         }
 
         const apiRequestBody = {
@@ -73,16 +73,15 @@ function GenerateAnswerButton(props) {
             )
     }
 
-    function createQuestion(jobName, requirement, CV) {
-        return "Here is my CV: \n" + CV + "\n I am applying for " + jobName
-            + "By using my CV, write out a paragraph within 100 words to fill in a form to show evidences I have skills in" + requirement;
+    function createQuestion(requirement) {
+        return "By using my CV, write out a paragraph within 100 words to fill in a form to show evidences I have skills in" + requirement;
     }
         
     return (
         <Button
             disabled={(props.extractedCV == "" || loadingAnswer)}
             variant="primary"
-            onClick={() => generateAnswer(createQuestion(props.jobName, props.requirement, props.extractedCV))}>
+            onClick={() => generateAnswer(createQuestion(props.requirement))}>
             {loadingAnswer? "Loading..." : "Generate Answer from CV"}</Button>
     );
 }
