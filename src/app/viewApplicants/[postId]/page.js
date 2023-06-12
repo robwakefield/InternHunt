@@ -115,7 +115,7 @@ class ApplicantList extends Component {
       this.setState({
         applications: applications,
         rejections: rejections,
-        rejected: this.state.rejected
+        rejected: this.state.rejected || (applications.length == 0 && rejections.length != 0)
       });
     }
   }
