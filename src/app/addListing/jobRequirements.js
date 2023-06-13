@@ -15,15 +15,25 @@ function JobRequirementsList() {
       .then((data) => setPost(data));
   }, []);
 
+  const handleAdd = (event) => {
+    event.preventDefault();
+    fetch('/api/requirements', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        postID: post.id
+      }),
+    });
+  }
+
   return (
     <Form>
       <Card className="my-2 mx-3">
         <Card.Header className="d-flex justify-content-between">
         <p>Requirements</p>
-        <ButtonGroup>
-          {/* <Button>Add</Button> */}
-          {/* <Button>Remove</Button> */}
-        </ButtonGroup>
+        <Button onClick={handleAdd}>Add</Button>
         </Card.Header>
           {post.requirements.map((requirement) =>
             <JobRequirementsItem key={requirement.id} postid={post.id}

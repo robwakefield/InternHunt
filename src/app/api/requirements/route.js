@@ -24,3 +24,19 @@ export async function PUT(request) {
   });
   return NextResponse.json({});
 }
+
+export async function POST(request) {
+  const body = await request.json();
+  await prisma.requirement.create({
+    data: {
+      requirementText: "",
+      post: {
+        connect: {
+          id: body.postID
+        }
+      }
+    }
+  });
+  return NextResponse.json({});
+}
+
