@@ -130,23 +130,35 @@ class ApplicationListItem extends Component {
 class Timeline extends Component {
 
   state = {
-    stages: this.props.application.stages,
-    stages: [1, 2, 3, 4, 5],
-    currentStage: 2
+    stages: this.props.application ? this.props.application.stages : []
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
       this.setState({ 
-        application: this.props.application.stages,
-        stages: [1, 2, 3, 4, 5],
-        currentStage: 2
+        stages: this.props.application ? this.props.application.stages : []
       });
     }
   }
 
+  formatDate(date) {
+    return date.toString().slice(8, 10) + " " + date.toString().slice(4, 7) + " " + date.toString().slice(11, 15)
+  }
+  
+
+  isCurrentStage(stage) {
+    const stageIndex = this.state.stages.findIndex(s => s == stage)
+    if (stage.completed && stageIndex == this.state.stages.length - 1) {
+      // all stages complete
+      return true
+    } else if (stage.completed) {
+      return false
+    }
+    const currentStageIndex = this.state.stages.map((s) => {return s.completed}).findIndex(b => b == false)
+    return currentStageIndex == stageIndex
+  }
+
   render() {
-    console.log(this.state.stages)
     return (
       <Container style={{ height: "80vh" }} >
         <Card className="mt-4 h-100 progressTimeline">
@@ -154,11 +166,11 @@ class Timeline extends Component {
             {this.state.stages.map((stage) => {
               return <VerticalTimelineElement key={this.currentStage}
                 className="vertical-timeline-element--work"
-                contentStyle={stage == this.state.currentStage ? { background: 'rgb(33, 150, 243)', color: '#fff' } : {}}
-                date="10 Mar 2023"
-                iconStyle={{ background: stage <= this.state.currentStage ? 'rgb(33, 150, 243)' : 'grey', color: '#fff' }}
+                contentStyle={this.isCurrentStage(stage) ? { background: 'rgb(33, 150, 243)', color: '#fff' } : {}}
+                date={stage.date ? this.formatDate(new Date(stage.date)) : ""}//"10 Mar 2023"
+                iconStyle={{ background: stage.completed || this.isCurrentStage(stage) ? 'rgb(33, 150, 243)' : 'grey', color: '#fff' }}
               >
-                <h6 className="vertical-timeline-element-title">Application Submitted</h6>
+                <h6 className="vertical-timeline-element-title">{stage.stageText}</h6>
               </VerticalTimelineElement>
             })}
           </VerticalTimeline>
