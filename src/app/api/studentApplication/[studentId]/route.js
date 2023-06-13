@@ -10,6 +10,7 @@ export async function GET(request, {params,}) {
             postID: true,
             rejected: true,
             accepted: true,
+            submitted: true,
             post: {
                 select: {
                     id: true,
