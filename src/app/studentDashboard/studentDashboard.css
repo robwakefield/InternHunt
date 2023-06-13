@@ -59,7 +59,12 @@ studentDashboard {
   border: 1px solid lightgrey !important;
 }
 
+.selectedApplicationEntry{
+  border: 1px solid grey !important;
+  background-color: lightgrey !important;
+}
+
 .applicationEntry:hover{
-  background-color: lightgrey;
   border: 1px solid grey;
+  cursor: pointer;
 }

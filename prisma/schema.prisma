@@ -39,6 +39,7 @@ model Application {
   student     Student @relation(fields: [studentID], references: [id])
   studentID   Int
   evidences   Evidence[]
+  stages      Stage[]
   cv          Bytes?
   rejected    Boolean @default(false)
   accepted    Boolean @default(false)
@@ -55,6 +56,18 @@ model Requirement {
   evidences   Evidence[]
 
   @@id([postID, id])
+}
+
+model Stage {
+  app           Application @relation(fields: [postID, studentID], references: [postID, studentID])  
+  postID        Int
+  studentID     Int
+  id            Int         @default(autoincrement())  
+  stageText     String
+  date          DateTime?
+  completed     Boolean     @default(false)
+
+  @@id([postID, studentID, id])
 }
 
 model Evidence {
