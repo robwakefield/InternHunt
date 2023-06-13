@@ -43,6 +43,7 @@ model Application {
   cv          Bytes?
   rejected    Boolean @default(false)
   accepted    Boolean @default(false)
+  submitted   Boolean @default(false)
 
   @@id([postID, studentID])
 }
@@ -77,7 +78,7 @@ model Evidence {
   requirement     Requirement @relation(fields: [postID, requirementID], references: [postID, id])
   requirementID   Int
   rating          Int? @default(0)
-  evidenceText    String
+  evidenceText    String?
 
   @@id([postID, requirementID, studentID])
 }
