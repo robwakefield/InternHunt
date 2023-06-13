@@ -19,6 +19,7 @@ function StudentDashboard() {
       .then((response) => response.json())
       .then((data) => {
         setApplications(data)
+        setSelectedApplication(data ? data.length > 0 ? data[0] : null : null)
       });
   }, []);
 
@@ -36,7 +37,7 @@ function StudentDashboard() {
                   <h4>My Applications</h4>
                   <Button>New Post</Button>
                 </Card.Header>
-                <ApplicationList applications={applications} setSelectedApplication={setSelectedApplication}/>
+                <ApplicationList applications={applications} setSelectedApplication={setSelectedApplication} selectedApplication={selectedApplication}/>
               </Card>
             </Container>
           </Col>
@@ -67,7 +68,7 @@ class ApplicationList extends Component {
     return (
       <ListGroup>
         {this.state.applications.map((application) => {
-          return <ApplicationListItem application={application} progress={80} setSelectedApplication={this.props.setSelectedApplication} key={application.postID}/>
+          return <ApplicationListItem application={application} progress={80} selected={this.props.selectedApplication == application} setSelectedApplication={this.props.setSelectedApplication} key={application.postID}/>
         })}
       </ListGroup>
     )
@@ -78,7 +79,7 @@ class ApplicationListItem extends Component {
 
   state = {
     title: this.props.application.post.name,
-    deadline: this.props.application.post.deadline.slice(0, 10).replace("-", "/").replace("-", "/"),
+    deadline: this.formatDate(this.props.application.post.deadline),
     progress: this.props.progress,
     postID: this.props.application.post.id,
     studentID: this.props.application.studentID
@@ -88,12 +89,17 @@ class ApplicationListItem extends Component {
     if (prevProps !== this.props) {
       this.setState({ 
         title: this.props.application.post.name,
-        deadline: this.props.application.post.deadline.slice(0, 10).replace("-", "/").replace("-", "/"),
+        deadline: this.formatDate(this.props.application.post.deadline),
         progress: this.props.progress,
         postID: this.props.application.post.id,
         studentID: this.props.application.studentID
       });
     }
+  }
+
+  formatDate(strDate) {
+    const date = new Date(strDate)
+    return date.toString().slice(8, 10) + " " + date.toString().slice(4, 7) + " " + date.toString().slice(11, 15)
   }
 
   editPost = () => {
@@ -112,8 +118,9 @@ class ApplicationListItem extends Component {
   }
 
   render() {
+    console.log(this.props.selected)
     return (
-      <ListGroupItem className="applicationEntry" onClick={() => {this.props.setSelectedApplication(this.props.application)}} key={this.state.postID.toString() + "s" + this.state.studentID}>
+      <ListGroupItem className={this.props.selected ? "selectedApplicationEntry" : "applicationEntry"} onClick={() => {this.props.setSelectedApplication(this.props.application)}} key={this.state.postID.toString() + "s" + this.state.studentID}>
         <Container className="d-flex justify-content-end">
           <p className="flex-fill text-left">{this.state.title}</p>
           <p className={"mx-4 deadline text-" + this.statusColor()}>{"Deadline " + this.state.deadline}</p>
@@ -141,11 +148,11 @@ class Timeline extends Component {
     }
   }
 
-  formatDate(date) {
+  formatDate(strDate) {
+    const date = new Date(strDate)
     return date.toString().slice(8, 10) + " " + date.toString().slice(4, 7) + " " + date.toString().slice(11, 15)
   }
   
-
   isCurrentStage(stage) {
     const stageIndex = this.state.stages.findIndex(s => s == stage)
     if (stage.completed) {
@@ -168,7 +175,7 @@ class Timeline extends Component {
               return <VerticalTimelineElement key={this.currentStage}
                 className="vertical-timeline-element--work"
                 contentStyle={this.isCurrentStage(stage) ? { background: 'rgb(33, 150, 243)', color: '#fff' } : {}}
-                date={stage.date ? this.formatDate(new Date(stage.date)) : ""}//"10 Mar 2023"
+                date={stage.date ? this.formatDate(stage.date) : ""}
                 iconStyle={{ background: stage.completed || this.isCurrentStage(stage) ? 'rgb(33, 150, 243)' : 'grey', color: '#fff' }}
               >
                 <h6 className="vertical-timeline-element-title">{stage.stageText}</h6>
