@@ -25,7 +25,15 @@ function JobRequirementsList() {
       body: JSON.stringify({
         postID: post.id
       }),
-    });
+    })
+      .then((response) => response.json())
+      .then((newRequirement) => {
+        // Update the state with the new requirement added to the post
+        setPost((prevPost) => ({
+          ...prevPost,
+          requirements: [...prevPost.requirements, newRequirement]
+        }));
+      });
   }
 
   return (
