@@ -148,14 +148,15 @@ class Timeline extends Component {
 
   isCurrentStage(stage) {
     const stageIndex = this.state.stages.findIndex(s => s == stage)
-    if (stage.completed && stageIndex == this.state.stages.length - 1) {
-      // all stages complete
-      return true
-    } else if (stage.completed) {
-      return false
+    if (stage.completed) {
+      if (stageIndex == this.state.stages.length - 1) {
+        return true
+      } else {
+        const currentStageIndex = this.state.stages.map((s) => {return s.completed}).findIndex(b => b == false)
+        return currentStageIndex == stageIndex + 1
+      }
     }
-    const currentStageIndex = this.state.stages.map((s) => {return s.completed}).findIndex(b => b == false)
-    return currentStageIndex == stageIndex
+    return false
   }
 
   render() {
