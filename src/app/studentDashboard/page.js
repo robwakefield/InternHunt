@@ -66,7 +66,7 @@ class ApplicationList extends Component {
     return (
       <ListGroup>
         {this.state.applications.map((application) => {
-          return <ApplicationListItem application={application} progress={80}/>
+          return <ApplicationListItem application={application} progress={80} key={application.postID}/>
         })}
       </ListGroup>
     )
@@ -101,7 +101,6 @@ class ApplicationListItem extends Component {
 
   statusColor() {
     const daysLeft = Math.ceil((Date.parse(this.state.deadline) - Date.now()) / (1000 * 60 * 60 * 24))
-    console.log(daysLeft)
     if (daysLeft < 2) {
       return "danger"
     } else if (daysLeft < 7) {
@@ -113,7 +112,7 @@ class ApplicationListItem extends Component {
 
   render() {
     return (
-      <ListGroupItem className="applicationEntry">
+      <ListGroupItem className="applicationEntry" key={this.state.postID.toString() + "s" + this.state.studentID}>
         <Container className="d-flex justify-content-end">
           <p className="flex-fill text-left">{this.state.title}</p>
           <p className={"mx-4 deadline text-" + this.statusColor()}>{"Deadline " + this.state.deadline}</p>
