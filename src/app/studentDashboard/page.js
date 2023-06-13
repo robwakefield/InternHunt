@@ -77,7 +77,7 @@ class ApplicationListItem extends Component {
 
   state = {
     title: this.props.application.post.name,
-    deadline: this.props.application.post.deadline,
+    deadline: this.props.application.post.deadline.slice(0, 10).replace("-", "/").replace("-", "/"),
     progress: this.props.progress,
     postID: this.props.application.post.id,
     studentID: this.props.application.studentID
@@ -87,7 +87,7 @@ class ApplicationListItem extends Component {
     if (prevProps !== this.props) {
       this.setState({ 
         title: this.props.application.post.name,
-        deadline: this.props.application.post.deadline,
+        deadline: this.props.application.post.deadline.slice(0, 10).replace("-", "/").replace("-", "/"),
         progress: this.props.progress,
         postID: this.props.application.post.id,
         studentID: this.props.application.studentID
@@ -100,7 +100,15 @@ class ApplicationListItem extends Component {
   }
 
   statusColor() {
-    return "danger"
+    const daysLeft = Math.ceil((Date.parse(this.state.deadline) - Date.now()) / (1000 * 60 * 60 * 24))
+    console.log(daysLeft)
+    if (daysLeft < 2) {
+      return "danger"
+    } else if (daysLeft < 7) {
+      return "warning"
+    } else {
+      return "success"
+    }
   }
 
   render() {
