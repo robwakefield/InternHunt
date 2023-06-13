@@ -10,14 +10,16 @@ import { BsPen } from "react-icons/bs";
 
 function StudentDashboard() {
   const [applications, setApplications] = useState([]);
+  const [selectedApplication, setSelectedApplication] = useState();
 
-  const selectedPostId = 1;
   const studentId = 1;
 
   useEffect(() => {
     fetch('/api/studentApplication/'+studentId)
       .then((response) => response.json())
-      .then((data) => {console.log(data); setApplications(data)});
+      .then((data) => {
+        setApplications(data)
+      });
   }, []);
 
   return (
@@ -34,14 +36,13 @@ function StudentDashboard() {
                   <h4>My Applications</h4>
                   <Button>New Post</Button>
                 </Card.Header>
-                <ApplicationList applications={applications}/>
+                <ApplicationList applications={applications} setSelectedApplication={setSelectedApplication}/>
               </Card>
             </Container>
           </Col>
           <Col xs={5}>
-            <Timeline applications={applications} selectedPostID={selectedPostId}/>
+            <Timeline application={selectedApplication}/>
           </Col>
-
         </Row>
       </Container>
     </main>
@@ -66,7 +67,7 @@ class ApplicationList extends Component {
     return (
       <ListGroup>
         {this.state.applications.map((application) => {
-          return <ApplicationListItem application={application} progress={80} key={application.postID}/>
+          return <ApplicationListItem application={application} progress={80} setSelectedApplication={this.props.setSelectedApplication} key={application.postID}/>
         })}
       </ListGroup>
     )
@@ -112,7 +113,7 @@ class ApplicationListItem extends Component {
 
   render() {
     return (
-      <ListGroupItem className="applicationEntry" key={this.state.postID.toString() + "s" + this.state.studentID}>
+      <ListGroupItem className="applicationEntry" onClick={() => {this.props.setSelectedApplication(this.props.application)}} key={this.state.postID.toString() + "s" + this.state.studentID}>
         <Container className="d-flex justify-content-end">
           <p className="flex-fill text-left">{this.state.title}</p>
           <p className={"mx-4 deadline text-" + this.statusColor()}>{"Deadline " + this.state.deadline}</p>
@@ -129,8 +130,19 @@ class ApplicationListItem extends Component {
 class Timeline extends Component {
 
   state = {
-    studentID: 1,
-    selectedPostID: 1
+    application: this.props.application,
+    stages: [1, 2, 3, 4, 5],
+    currentStage: 2
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps !== this.props) {
+      this.setState({ 
+        application: this.props.application,
+        stages: [1, 2, 3, 4, 5],
+        currentStage: 2
+      });
+    }
   }
 
   render() {
@@ -138,44 +150,17 @@ class Timeline extends Component {
       <Container style={{ height: "80vh" }} >
         <Card className="mt-4 h-100 progressTimeline">
           <VerticalTimeline style={{ height: "80vh" }} layout={{ default: '1-column-left' }}>
-          <VerticalTimelineElement
-            className="vertical-timeline-element--work"
-            contentStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
-            date="10 Mar 2023"
-            iconStyle={{ background: 'rgb(33, 150, 243)', color: '#fff'}}
-          >
-            <h6 className="vertical-timeline-element-title">Upload CV</h6>
-          </VerticalTimelineElement>
-          <VerticalTimelineElement
-            className="vertical-timeline-element--work"
-            date="10 Mar 2023"
-            iconStyle={{ background: 'grey', color: '#fff' }}
-          >
-            <h6 className="vertical-timeline-element-title">Application Submitted</h6>
-          </VerticalTimelineElement>
-          <VerticalTimelineElement
-            className="vertical-timeline-element--work"
-            date="10 Mar 2023"
-            iconStyle={{ background: 'grey', color: '#fff' }}
-          >
-            <h6 className="vertical-timeline-element-title">CV Viewed</h6>
-            </VerticalTimelineElement>
-            <VerticalTimelineElement
-            className="vertical-timeline-element--work"
-            date="10 Mar 2023"
-            iconStyle={{ background: 'grey', color: '#fff' }}
-          >
-            <h6 className="vertical-timeline-element-title">Interview</h6>
-            </VerticalTimelineElement>
-            <VerticalTimelineElement
-            className="vertical-timeline-element--work"
-            date="10 Mar 2023"
-            iconStyle={{ background: 'red', color: '#fff' }}
-          >
-              <h6 className="vertical-timeline-element-title">Application Unsuccessful <br></br>
-              <a className="feedback" href={"./studentViewFeedback/" + this.state.studentID +'/' + this.state.selectedPostID}>View Feedback</a> </h6>
-          </VerticalTimelineElement>
-        </VerticalTimeline>
+            {this.state.stages.map((stage) => {
+              return <VerticalTimelineElement
+                className="vertical-timeline-element--work"
+                contentStyle={stage == this.state.currentStage ? { background: 'rgb(33, 150, 243)', color: '#fff' } : {}}
+                date="10 Mar 2023"
+                iconStyle={{ background: stage <= this.state.currentStage ? 'rgb(33, 150, 243)' : 'grey', color: '#fff' }}
+              >
+                <h6 className="vertical-timeline-element-title">Application Submitted</h6>
+              </VerticalTimelineElement>
+            })}
+          </VerticalTimeline>
         </Card>
       </Container>
     )
