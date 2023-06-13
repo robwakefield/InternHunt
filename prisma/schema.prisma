@@ -25,6 +25,7 @@ model Post {
   description  String
   applications Application[]
   requirements Requirement[]
+  deadline     DateTime     @default(now())
   rating1Text  String       @default("Just Mentioning")
   rating2Text  String       @default("Minimal Evidence")
   rating3Text  String       @default("Decent Evidence")
