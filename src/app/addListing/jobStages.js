@@ -8,26 +8,43 @@ import RecruiterNavbar from "../recruiterNavbar";
 
 function JobStagesList() {
 
-  const [post, setPost] = useState({description: "", requirements: []});
+  const [application, setApplication] = useState({stages: []});
   useEffect(() => {
-    fetch('/api/stage')
+    fetch('/api/stages')
       .then((response) => response.json())
-      .then((data) => setPost(data));
+      .then((data) => setApplication(data));
   }, []);
+
+  const handleAdd = (event) => {
+    event.preventDefault();
+    fetch('/api/stages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        postID: post.id
+      }),
+    })
+      .then((response) => response.json())
+      .then((newRequirement) => {
+        setPost((prevPost) => ({
+          ...prevPost,
+          requirements: [...prevPost.requirements, newRequirement]
+        }));
+      });
+  }
 
   return (
     <Form>
       <Card className="my-2 mx-3">
         <Card.Header className="d-flex justify-content-between">
-        <p>Requirements</p>
-        <ButtonGroup>
-          {/* <Button>Add</Button> */}
-          {/* <Button>Remove</Button> */}
-        </ButtonGroup>
+        <p>Stages</p>
+        <Button onClick={handleAdd}>Add</Button>
         </Card.Header>
-          {post.requirements.map((requirement) =>
-            <JobRequirementsItem key={requirement.id} postid={post.id}
-            id={requirement.id} requirement={requirement} />)}
+          {application.stages.sort((a, b) => a.id - b.id).map((stage) =>
+            <JobStagesItem key={stage.id} postid={stage.postID}
+            id={stage.id} stage={stage} setPost={setPost} />)}
       </Card>
     </Form>
   )
@@ -35,12 +52,12 @@ function JobStagesList() {
 
 export default JobStagesList;
 
-function JobStagesItem({ postid, id, requirement }) {
+function JobStagesItem({ postid, id, stage }) {
   const reqRef = useRef();
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    fetch('/api/requirements', {
+    fetch('/api/stages', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -53,13 +70,37 @@ function JobStagesItem({ postid, id, requirement }) {
     });
   }
 
+  const handleRemove = (event) => {
+    event.preventDefault();
+    fetch('/api/stageRemoval', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        postid: postid,
+        id: id
+      }),
+    })
+      .then((response) => response.clone())
+      .then(() => {
+        setPost((prevPost) => ({
+          ...prevPost,
+          requirements: prevPost.requirements.filter((requirement) => requirement.id !== id)
+        }));
+      });
+  }
+
   return (
     <Form.Group className="mb-3" controlId="formJobReq">
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <Form.Control as="textarea" rows={1}
-          placeholder="Enter your Requirements" defaultValue={requirement.requirementText}
+          placeholder="Enter your Stages" defaultValue={stage.stageText}
           ref={reqRef} />
-          <Button onClick={handleSubmit}>Save</Button>
+          <ButtonGroup>
+            <Button onClick={handleSubmit}>Save</Button>
+            <Button onClick={handleRemove}>Remove</Button>
+          </ButtonGroup>
       </div>
     </Form.Group>
   )
