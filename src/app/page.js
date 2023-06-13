@@ -2,6 +2,7 @@
 
 import "bootstrap/dist/css/bootstrap.min.css"
 import {Nav, Navbar, Container, Button} from 'react-bootstrap/'
+import LinkedInLogin from "./linkedInLogin"
 
 
 export default function Home() {
@@ -31,6 +32,8 @@ export default function Home() {
           <Button className="mx-4" href="./recruiterDashboard">Recruiter Dashboard</Button>
         </Container>
       </Container>
+
+      <LinkedInLogin />
     </main>
   )
 }
