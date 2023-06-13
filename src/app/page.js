@@ -32,8 +32,6 @@ export default function Home() {
           <Button className="mx-4" href="./recruiterDashboard">Recruiter Dashboard</Button>
         </Container>
       </Container>
-
-      <LinkedInLogin />
     </main>
   )
 }
