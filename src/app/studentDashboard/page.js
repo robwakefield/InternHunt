@@ -205,22 +205,23 @@ class Timeline extends Component {
   renderRejectedElement() {
     return <VerticalTimelineElement key={"rejected-element"}
         className="vertical-timeline-element--work"
+        contentStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
         date="" //TODO add rejected date
         iconStyle={{ background: 'red', color: '#fff' }}
       >
       <h6 className="vertical-timeline-element-title">Application Unsuccessful <br></br>
-      <a className="feedback" href={"./studentViewFeedback/" + this.state.studentID +'/' + this.state.postID}>View Feedback</a> </h6>
+      <a className="feedback text-white" href={"./studentViewFeedback/" + this.state.studentID +'/' + this.state.postID}>View Feedback</a> </h6>
       </VerticalTimelineElement>
   }
 
   renderAcceptedElement() {
     return <VerticalTimelineElement key={"accepted-element"}
         className="vertical-timeline-element--work"
+        contentStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
         date="" //TODO add accepted date
         iconStyle={{ background: 'green', color: '#fff' }}
       >
-      <h6 className="vertical-timeline-element-title">Application Successful <br></br>
-      <a className="feedback" href={"./studentViewFeedback/" + this.state.studentID +'/' + this.state.postID}>View Feedback</a> </h6>
+      <h6 className="vertical-timeline-element-title">Application Successful</h6>
       </VerticalTimelineElement>
   }
 }
