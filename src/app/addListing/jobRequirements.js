@@ -28,7 +28,6 @@ function JobRequirementsList() {
     })
       .then((response) => response.json())
       .then((newRequirement) => {
-        // Update the state with the new requirement added to the post
         setPost((prevPost) => ({
           ...prevPost,
           requirements: [...prevPost.requirements, newRequirement]
@@ -71,13 +70,30 @@ function JobRequirementsItem({ postid, id, requirement }) {
     });
   }
 
+  const handleRemove = (event) => {
+    event.preventDefault();
+    fetch('/api/requirements', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        postid: postid,
+        id: id
+      }),
+    });
+  }
+
   return (
     <Form.Group className="mb-3" controlId="formJobReq">
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <Form.Control as="textarea" rows={1}
           placeholder="Enter your Requirements" defaultValue={requirement.requirementText}
           ref={reqRef} />
-          <Button onClick={handleSubmit}>Save</Button>
+          <ButtonGroup>
+            <Button onClick={handleSubmit}>Save</Button>
+            <Button onClick={handleRemove}>Remove</Button>
+          </ButtonGroup>
       </div>
     </Form.Group>
   )
