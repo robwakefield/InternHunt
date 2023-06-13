@@ -130,7 +130,7 @@ class ApplicationListItem extends Component {
 class Timeline extends Component {
 
   state = {
-    application: this.props.application,
+    stages: this.props.application.stages,
     stages: [1, 2, 3, 4, 5],
     currentStage: 2
   }
@@ -138,7 +138,7 @@ class Timeline extends Component {
   componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
       this.setState({ 
-        application: this.props.application,
+        application: this.props.application.stages,
         stages: [1, 2, 3, 4, 5],
         currentStage: 2
       });
@@ -146,6 +146,7 @@ class Timeline extends Component {
   }
 
   render() {
+    console.log(this.state.stages)
     return (
       <Container style={{ height: "80vh" }} >
         <Card className="mt-4 h-100 progressTimeline">

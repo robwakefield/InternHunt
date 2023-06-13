@@ -13,6 +13,13 @@ export async function GET(request, {params,}) {
                     name: true,
                     deadline: true
                 }
+            },
+            stages: {
+                select: {
+                    stageText: true,
+                    date: true,
+                    completed: true
+                }
             }
         },
         where: {
