@@ -42,7 +42,7 @@ function JobRequirementsList() {
         <p>Requirements</p>
         <Button onClick={handleAdd}>Add</Button>
         </Card.Header>
-          {post.requirements.map((requirement) =>
+          {post.requirements.sort((a, b) => a.id - b.id).map((requirement) =>
             <JobRequirementsItem key={requirement.id} postid={post.id}
             id={requirement.id} requirement={requirement} setPost={setPost} />)}
       </Card>
