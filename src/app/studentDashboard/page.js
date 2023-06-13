@@ -177,7 +177,7 @@ class Timeline extends Component {
   }
 
   render() {
-    let feedback = this.state.rejected ? this.renderRejectedElement() : this.state.accepted ? null : null
+    let feedback = this.state.rejected ? this.renderRejectedElement() : this.state.accepted ? this.renderAcceptedElement() : null
     return (
       <Container style={{ height: "80vh" }} >
         <Card className="mt-4 h-100 progressTimeline">
@@ -209,6 +209,17 @@ class Timeline extends Component {
         iconStyle={{ background: 'red', color: '#fff' }}
       >
       <h6 className="vertical-timeline-element-title">Application Unsuccessful <br></br>
+      <a className="feedback" href={"./studentViewFeedback/" + this.state.studentID +'/' + this.state.postID}>View Feedback</a> </h6>
+      </VerticalTimelineElement>
+  }
+
+  renderAcceptedElement() {
+    return <VerticalTimelineElement key={"accepted-element"}
+        className="vertical-timeline-element--work"
+        date="" //TODO add accepted date
+        iconStyle={{ background: 'green', color: '#fff' }}
+      >
+      <h6 className="vertical-timeline-element-title">Application Successful <br></br>
       <a className="feedback" href={"./studentViewFeedback/" + this.state.studentID +'/' + this.state.postID}>View Feedback</a> </h6>
       </VerticalTimelineElement>
   }
