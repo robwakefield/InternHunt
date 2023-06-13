@@ -151,7 +151,7 @@ class Timeline extends Component {
         <Card className="mt-4 h-100 progressTimeline">
           <VerticalTimeline style={{ height: "80vh" }} layout={{ default: '1-column-left' }}>
             {this.state.stages.map((stage) => {
-              return <VerticalTimelineElement
+              return <VerticalTimelineElement key={this.currentStage}
                 className="vertical-timeline-element--work"
                 contentStyle={stage == this.state.currentStage ? { background: 'rgb(33, 150, 243)', color: '#fff' } : {}}
                 date="10 Mar 2023"
