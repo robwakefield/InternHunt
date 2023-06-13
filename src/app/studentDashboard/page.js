@@ -118,7 +118,6 @@ class ApplicationListItem extends Component {
   }
 
   render() {
-    console.log(this.props.selected)
     return (
       <ListGroupItem className={this.props.selected ? "selectedApplicationEntry" : "applicationEntry"} onClick={() => {this.props.setSelectedApplication(this.props.application)}} key={this.state.postID.toString() + "s" + this.state.studentID}>
         <Container className="d-flex justify-content-end">
@@ -137,13 +136,17 @@ class ApplicationListItem extends Component {
 class Timeline extends Component {
 
   state = {
-    stages: this.props.application ? this.props.application.stages : []
+    stages: this.props.application ? this.props.application.stages : [],
+    rejected: this.props.application ? this.props.application.rejected : false,
+    accepted: this.props.application ? this.props.application.accepted : false
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
       this.setState({ 
-        stages: this.props.application ? this.props.application.stages : []
+        stages: this.props.application ? this.props.application.stages : [],
+        rejected: this.props.application ? this.props.application.rejected : false,
+        accepted: this.props.application ? this.props.application.accepted : false
       });
     }
   }
@@ -155,6 +158,9 @@ class Timeline extends Component {
   
   isCurrentStage(stage) {
     const stageIndex = this.state.stages.findIndex(s => s == stage)
+    if (this.state.rejected || this.state.accepted) {
+      return false
+    }
     if (stage.completed) {
       if (stageIndex == this.state.stages.length - 1) {
         return true
@@ -167,11 +173,16 @@ class Timeline extends Component {
   }
 
   render() {
+    console.log(this.props.application)
+    let feedback = this.state.rejected ? this.renderRejectedElement() : null
     return (
       <Container style={{ height: "80vh" }} >
         <Card className="mt-4 h-100 progressTimeline">
           <VerticalTimeline style={{ height: "80vh" }} layout={{ default: '1-column-left' }}>
-            {this.state.stages.map((stage) => {
+            {this.state.stages.filter(
+              // filter out incomplete stages if the application is already finished
+              stage => stage.completed || (!stage.completed && !this.state.rejected && !this.state.accepted)
+              ).map((stage) => {
               return <VerticalTimelineElement key={this.currentStage}
                 className="vertical-timeline-element--work"
                 contentStyle={this.isCurrentStage(stage) ? { background: 'rgb(33, 150, 243)', color: '#fff' } : {}}
@@ -181,10 +192,22 @@ class Timeline extends Component {
                 <h6 className="vertical-timeline-element-title">{stage.stageText}</h6>
               </VerticalTimelineElement>
             })}
+            {feedback}
           </VerticalTimeline>
         </Card>
       </Container>
     )
+  }
+
+  renderRejectedElement() {
+    return <VerticalTimelineElement key={"rejected-element"}
+                className="vertical-timeline-element--work"
+                contentStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
+                date={""}
+                iconStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
+              >
+                <h6 className="vertical-timeline-element-title">{"Application Unsuccessful"}</h6>
+              </VerticalTimelineElement>
   }
 }
 
