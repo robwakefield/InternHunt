@@ -58,14 +58,15 @@ model Requirement {
 }
 
 model Stage {
-  application   Application @relation(fields: [applicationID], references: [id])
-  applicationID Int
+  app           Application @relation(fields: [postID, studentID], references: [postID, studentID])  
+  postID        Int
+  studentID     Int
   id            Int         @default(autoincrement())  
   stageText     String
   date          DateTime?
   completed     Boolean     @default(false)
 
-  @@id([applicationID, id])
+  @@id([postID, studentID, id])
 }
 
 model Evidence {
