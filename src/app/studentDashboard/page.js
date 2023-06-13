@@ -7,6 +7,7 @@ import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeli
 import 'react-vertical-timeline-component/style.min.css';
 import StudentNavbar from "../studentNavbar";
 import { BsPen } from "react-icons/bs";
+import { AiOutlineEye } from "react-icons/ai"
 
 function StudentDashboard() {
   const [applications, setApplications] = useState([]);
@@ -118,7 +119,7 @@ class ApplicationListItem extends Component {
           <p className={"mx-4 deadline text-" + this.statusColor()}>{"Deadline " + this.state.deadline}</p>
           <ProgressBar variant={this.statusColor()} now={this.state.progress}/>
           <Button onClick={this.editPost}>
-            <BsPen></BsPen>
+            {this.props.application.submitted ? <AiOutlineEye style={{ color: 'white'}} /> : <BsPen/>}
           </Button>
         </Container>
       </ListGroupItem>

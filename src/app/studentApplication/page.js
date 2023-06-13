@@ -2,13 +2,11 @@
 import "bootstrap/dist/css/bootstrap.min.css"
 import Accordion from 'react-bootstrap/Accordion';
 import Form from 'react-bootstrap/Form';
-import Nav from 'react-bootstrap/Nav';
 import Button from 'react-bootstrap/Button';
 import Container from "react-bootstrap/Container";
 import { Component, useEffect, useState, useRef } from 'react';
 import StudentNavbar from "../studentNavbar";
 import { Card } from "react-bootstrap";
-import {BsSortDown} from 'react-icons/bs'
 import '../globals.css'
 import DocxExtractor from "./DocxExtractor";
 import Modal from 'react-bootstrap/Modal';
@@ -17,7 +15,7 @@ import GenerateAnswerButton from "./generateAnswerButton";
 function StudentApplication() {
   const [postID, setPostID] = useState(-1);
   const [studentID, setStudentID] = useState(-1);
-  const [application, setApplication] = useState({ evidences: [], post: {}});
+  const [application, setApplication] = useState({submitted: false, evidences: [], post: {}});
   const [CV, setCV] = useState("")
   const [extractedCV, setExtractedCV] = useState("")
   const [showUploader, setShowUploader] = useState(false);
@@ -53,9 +51,9 @@ function StudentApplication() {
       <Container style={{ height: "80vh" }}>
         <Card className="mt-4 h-100">
           <Card.Header className="d-flex justify-content-between">
-            <Button className="sortButton"><BsSortDown color="black" size={30}/></Button>
+            <h4>{application.submitted? "Submitted" : ""}</h4>
             <h4>{application.post.name}</h4>
-            <Button variant={(extractedCV != "") ? "success" : "danger"} onClick={handleUploaderShow}>Upload CV</Button>
+            <Button variant={(extractedCV != "") ? "success" : "danger"} disabled={application.submitted} onClick={handleUploaderShow}>Upload CV</Button>
             <Modal show={showUploader} onHide={handleUploaderClose}>
               <Modal.Header closeButton>
                 <Modal.Title>Upload CV</Modal.Title>
@@ -140,6 +138,7 @@ class EvidenceEntryList extends Component {
                   <Form.Group className="mb-3" controlId={"formGroupEvidence" + i}>
                   <Form.Control
                     as="textarea"
+                    disabled={this.props.application.submitted}
                     rows={3}
                     placeholder="Enter your evidence of the skill"
                     defaultValue={evidence.evidenceText}
@@ -150,6 +149,7 @@ class EvidenceEntryList extends Component {
                   />
                   </Form.Group>
                   <GenerateAnswerButton
+                    submitted={this.props.application.submitted}
                     jobName = {this.props.application.post.name}
                     extractedCV={this.state.extractedCV}
                     requirement = {evidence.requirement.requirementText}
@@ -162,7 +162,7 @@ class EvidenceEntryList extends Component {
           })
         }
         </Accordion>
-        <Button variant="primary" type="submit" onClick={this.handleAutoSave}>
+        <Button className = {this.props.application.submitted? "invisible" : "visible"} variant="primary" type="submit" onClick={this.handleAutoSave}>
           Submit application
         </Button>
       </div>

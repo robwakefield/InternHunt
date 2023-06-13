@@ -7,6 +7,7 @@ export async function GET(request, {params,}) {
     const applications = await prisma.application.findMany({
         select: {
             studentID: true,
+            submitted: true,
             post: {
                 select: {
                     id: true,
