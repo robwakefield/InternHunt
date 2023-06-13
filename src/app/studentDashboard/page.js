@@ -138,7 +138,9 @@ class Timeline extends Component {
   state = {
     stages: this.props.application ? this.props.application.stages : [],
     rejected: this.props.application ? this.props.application.rejected : false,
-    accepted: this.props.application ? this.props.application.accepted : false
+    accepted: this.props.application ? this.props.application.accepted : false,
+    postID: this.props.application ? this.props.application.postID : null,
+    studentID: this.props.application ? this.props.application.studentID : null,
   }
 
   componentDidUpdate(prevProps) {
@@ -146,7 +148,9 @@ class Timeline extends Component {
       this.setState({ 
         stages: this.props.application ? this.props.application.stages : [],
         rejected: this.props.application ? this.props.application.rejected : false,
-        accepted: this.props.application ? this.props.application.accepted : false
+        accepted: this.props.application ? this.props.application.accepted : false,
+        postID: this.props.application ? this.props.application.postID : null,
+        studentID: this.props.application ? this.props.application.studentID : null,
       });
     }
   }
@@ -173,8 +177,7 @@ class Timeline extends Component {
   }
 
   render() {
-    console.log(this.props.application)
-    let feedback = this.state.rejected ? this.renderRejectedElement() : null
+    let feedback = this.state.rejected ? this.renderRejectedElement() : this.state.accepted ? null : null
     return (
       <Container style={{ height: "80vh" }} >
         <Card className="mt-4 h-100 progressTimeline">
@@ -201,13 +204,13 @@ class Timeline extends Component {
 
   renderRejectedElement() {
     return <VerticalTimelineElement key={"rejected-element"}
-                className="vertical-timeline-element--work"
-                contentStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
-                date={""}
-                iconStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
-              >
-                <h6 className="vertical-timeline-element-title">{"Application Unsuccessful"}</h6>
-              </VerticalTimelineElement>
+        className="vertical-timeline-element--work"
+        date="" //TODO add rejected date
+        iconStyle={{ background: 'red', color: '#fff' }}
+      >
+      <h6 className="vertical-timeline-element-title">Application Unsuccessful <br></br>
+      <a className="feedback" href={"./studentViewFeedback/" + this.state.studentID +'/' + this.state.postID}>View Feedback</a> </h6>
+      </VerticalTimelineElement>
   }
 }
 
