@@ -7,6 +7,7 @@ import { Component, useEffect, useRef, useState } from "react";
 import RecruiterNavbar from "../recruiterNavbar";
 import JobDescription from "./jobDescription";
 import JobRequirementsList from "./jobRequirements";
+import JobStagesList from "./jobStages";
 
 function AddListing() {
   const [listing, setListing] = useState({});
@@ -44,6 +45,7 @@ function AddListing() {
               </Container>
               <Button type='submit'>Publish</Button>
             </Card.Header>
+            <JobStagesList listing={listing} />
             <JobDescription listing={listing} />
             <JobRequirementsList listing={listing} />
             <SavedBox/>
