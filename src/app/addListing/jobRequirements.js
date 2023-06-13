@@ -44,7 +44,7 @@ function JobRequirementsList() {
         </Card.Header>
           {post.requirements.map((requirement) =>
             <JobRequirementsItem key={requirement.id} postid={post.id}
-            id={requirement.id} requirement={requirement} />)}
+            id={requirement.id} requirement={requirement} setPost={setPost} />)}
       </Card>
     </Form>
   )
@@ -52,7 +52,7 @@ function JobRequirementsList() {
 
 export default JobRequirementsList;
 
-function JobRequirementsItem({ postid, id, requirement }) {
+function JobRequirementsItem({ postid, id, requirement, setPost }) {
   const reqRef = useRef();
 
   const handleSubmit = (event) => {
@@ -81,7 +81,14 @@ function JobRequirementsItem({ postid, id, requirement }) {
         postid: postid,
         id: id
       }),
-    });
+    })
+      .then((response) => response.clone())
+      .then(() => {
+        setPost((prevPost) => ({
+          ...prevPost,
+          requirements: prevPost.requirements.filter((requirement) => requirement.id !== id)
+        }));
+      });
   }
 
   return (
