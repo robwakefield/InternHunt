@@ -39,13 +39,3 @@ export async function POST(request) {
   });
   return NextResponse.json({});
 }
-
-export async function DELETE(request) {
-  const body = await request.json();
-  await prisma.requirement.delete({
-    where: {
-      postID_id: { postID: body.postid, id: body.id }
-    }
-  });
-  return NextResponse.json({});
-}

@@ -72,8 +72,8 @@ function JobRequirementsItem({ postid, id, requirement, setPost }) {
 
   const handleRemove = (event) => {
     event.preventDefault();
-    fetch('/api/requirements', {
-      method: 'DELETE',
+    fetch('/api/requirementRemoval', {
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
