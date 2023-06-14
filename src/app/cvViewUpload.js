@@ -8,8 +8,8 @@ function CVViewUpload({ studentID, postID }) {
     method: "POST",
     body: JSON.stringify({
       requestType: "getCV",
-      studentID: queryStudentID,
-      postID: queryPostID
+      studentID: studentID,
+      postID: postID
     })
   }).then((response) => response.json())
     .then((data) => { setBase64String(data.cv) });
@@ -22,7 +22,7 @@ function CVViewUpload({ studentID, postID }) {
   const convertToBase64 = (file) => {
     const reader = new FileReader();
 
-    reader.onload = () => {
+    reader.onload = (event) => {
       const buffer = reader.result;
       const base64String = btoa(String.fromCharCode.apply(null, new Uint8Array(buffer)));
       fetch("/api/cv", {
@@ -34,6 +34,9 @@ function CVViewUpload({ studentID, postID }) {
         })
       });
       setBase64String(base64String);
+
+      const json = AsposePdfExtractText(event.target.result, e.target.files[0].name);
+      console.log(json.extractText);
     };
 
     reader.onerror = () => {
