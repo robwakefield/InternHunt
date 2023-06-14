@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 import Container from "react-bootstrap/Container";
 import { Component, useEffect, useState, useRef } from 'react';
 import StudentNavbar from "../studentNavbar";
-import { Card } from "react-bootstrap";
+import { Card, Col, Row } from "react-bootstrap";
 import '../globals.css'
 import DocxExtractor from "./DocxExtractor";
 import Modal from 'react-bootstrap/Modal';
@@ -19,6 +19,10 @@ function StudentApplication() {
   const [CV, setCV] = useState("")
   const [extractedCV, setExtractedCV] = useState("")
   const [showUploader, setShowUploader] = useState(false);
+  const [showJobListing, setJobListing] = useState(false);
+
+  const handleCloseJobListing = () => setJobListing(false);
+  const handleShowJobListing = () => setJobListing(true);
 
   const handleUploaderClose = () => setShowUploader(false);
   const handleUploaderShow = () => setShowUploader(true);
@@ -27,6 +31,7 @@ function StudentApplication() {
     const urlParams = new URLSearchParams(window.location.search);
     const queryStudentID = parseInt(urlParams.get('studentID'));
     const queryPostID = parseInt(urlParams.get('postID'));
+    
     if (isNaN(queryStudentID) || isNaN(queryPostID)) window.location.replace("/studentDashboard");
     setStudentID(queryStudentID);
     setPostID(queryPostID);
@@ -47,8 +52,37 @@ function StudentApplication() {
       <Container style={{ height: "80vh" }}>
         <Card className="mt-4 h-100">
           <Card.Header className="d-flex justify-content-between">
-            <h4>{application.submitted? "Submitted" : ""}</h4>
+            
+            <Row>
+              {application.submitted ? <Col xs={7}><h4>Submitted</h4></Col> : null}
+              <Col xs={5}><Button  style={{float: "left"}} variant="primary" onClick={handleShowJobListing}>
+                  ViewListing
+                </Button>
+
+              <Modal show={showJobListing} onHide={handleCloseJobListing}>
+                <Modal.Header closeButton>
+                  <Modal.Title>{application.post.name}</Modal.Title>
+                </Modal.Header>
+                    <Modal.Body>
+                      <strong>Description:</strong><br></br>
+                      {application.post.description}<br></br><br></br>
+                      <strong>Requirements:</strong>
+                      {application.evidences.map((evidence, index) => (
+                        <p key={index}>- {evidence.requirement.requirementText}</p>
+                      ))}
+                    </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleCloseJobListing}>
+                    Close
+                  </Button>
+                </Modal.Footer>
+            </Modal></Col>
+            </Row>
+            
+            
+            
             <h4>{application.post.name}</h4>
+            
             <Button variant={(extractedCV != "") ? "success" : "danger"} disabled={application.submitted} onClick={handleUploaderShow}>Upload CV</Button>
             <Modal show={showUploader} onHide={handleUploaderClose}>
               <Modal.Header closeButton>
