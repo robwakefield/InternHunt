@@ -41,10 +41,6 @@ function StudentApplication() {
       .then((data) => { setApplication(data);  console.log(data)});
   }, []);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-  }
-
   return (
     <main className="studentApplication">
       <StudentNavbar></StudentNavbar>
@@ -70,7 +66,7 @@ function StudentApplication() {
             </Modal>
           </Card.Header>
 
-          <Form onSubmit={handleSubmit}>
+          <Form>
             <EvidenceEntryList extractedCV={extractedCV} application={application} postID={postID} studentID={studentID}/>
           </Form>
         </Card>
@@ -104,6 +100,18 @@ class EvidenceEntryList extends Component {
       })
     });
   }
+
+  handleSubmitApplication = () => {
+      fetch("/api/submitApplication", {
+        method: "PUT",
+        body: JSON.stringify({
+          studentID: this.props.studentID,
+          postID: this.props.postID,
+        })
+      });
+      window.location.reload(false);
+  }
+
   componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
       this.setState({
@@ -162,7 +170,7 @@ class EvidenceEntryList extends Component {
           })
         }
         </Accordion>
-        <Button className = {this.props.application.submitted? "invisible" : "visible"} variant="primary" type="submit" onClick={this.handleAutoSave}>
+        <Button className = {this.props.application.submitted? "invisible" : "visible"} variant="primary" onClick={this.handleSubmitApplication}>
           Submit application
         </Button>
       </div>
