@@ -1,0 +1,23 @@
+import { prisma } from '../../../db/client'
+import { NextResponse } from 'next/server';
+
+export async function GET(request, {params,}) {
+  const listingId = parseInt(params.listingId)
+  const listings = await prisma.post.findUnique({
+    where: {
+      id: listingId
+    },
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      requirements: {
+        select: {
+          id: true,
+          requirementText: true
+        }
+      }
+    }
+  })
+  return NextResponse.json(listings)
+}

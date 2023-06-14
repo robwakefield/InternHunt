@@ -78,7 +78,7 @@ function RecruiterDashboard() {
               {/* href="./addListing" */}
             </Card.Header>
           </Form>  
-          <ApplicantList listings={listings}/>          
+          <ApplicantList listings={listings}/>
         </Card>
       </Container>
     </main>
@@ -114,6 +114,11 @@ class ApplicantList extends Component {
 
 const handleClick = (postId) => {
   window.location.href = "/viewApplicants/" + postId;
+}
+
+const handleEdit = (postId, event) => {
+  event.stopPropagation();
+  window.location.href = "/addListing/" + postId;
 }
 
 class ListingItem extends Component {
@@ -180,7 +185,7 @@ class ListingItem extends Component {
 
     let rhs = <p className={ratio_class}>{places_filled}/{total_places} Applications</p>
     if (this.state.status == "Draft") {
-      rhs = <Button href="./addListing">Click to Edit</Button>
+      rhs = <Button onClick={(event) => {handleEdit(this.state.id, event)}}>Click to Edit</Button>
     }
     
     return (

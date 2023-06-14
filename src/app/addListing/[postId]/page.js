@@ -1,21 +1,29 @@
 'use client'
 
-import './addListing.css'
+import '../addListing.css'
 import "bootstrap/dist/css/bootstrap.min.css"
 import { Pagination, FormCheck, Nav, Button, PageItem, Container, Card, Form } from "react-bootstrap";
 import { Component, useEffect, useRef, useState } from "react";
-import RecruiterNavbar from "../recruiterNavbar";
-import JobDescription from "./jobDescription";
-import JobRequirementsList from "./jobRequirements";
+import RecruiterNavbar from "../../recruiterNavbar";
+import JobDescription from "../jobDescription";
+import JobRequirementsList from "../jobRequirements";
+import { useParams, notFound } from "next/navigation";
 
 function AddListing() {
   const [listing, setListing] = useState({});
 
+  const params = useParams()
+  const listingId = params.listingId
+
   useEffect(() => {
-    fetch('/api/listingEdit')
+    fetch('/api/listingEdit/' + listingId)
       .then((response) => response.json())
       .then((data) => setListing(data));
   }, []);
+
+  if (listing == undefined) {
+    notFound();
+  }
 
   const handleSubmit = (event) => {
     event.preventDefault();
