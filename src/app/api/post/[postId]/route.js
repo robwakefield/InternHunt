@@ -38,6 +38,7 @@ export async function GET(request, {params,}) {
           },
           accepted: true,
           rejected: true,
+          submitted: true
         }
       },
       requirements: {

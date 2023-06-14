@@ -24,6 +24,7 @@ export async function POST(request) {
       post: {
         select: {
           name: true,
+          description: true
         }
       }
     }

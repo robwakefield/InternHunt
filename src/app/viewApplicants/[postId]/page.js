@@ -101,8 +101,8 @@ class ApplicantList extends Component {
   selectApplicant = (n) => () => {this.props.setSelectedApplicant(n);}
 
   state = {
-    applications:  this.props.post.applications.filter(function(application) {return !application.rejected}),
-    rejections: this.props.post.applications.filter(function(application) {return application.rejected}),
+    applications:  this.props.post.applications.filter(function(application) {return !application.rejected && application.submitted}),
+    rejections: this.props.post.applications.filter(function(application) {return application.rejected && application.submitted}),
     // Only show the rejections at first load if everyone is rejected
     rejected: this.props.post.applications.filter(function(application) {return !application.rejected}).length == 0 
       && this.props.post.applications.filter(function(application) {return application.rejected}).length != 0
@@ -110,8 +110,8 @@ class ApplicantList extends Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
-      const applications = this.props.post.applications.filter(function(application) {return !application.rejected})
-      const rejections = this.props.post.applications.filter(function(application) {return application.rejected})
+      const applications = this.props.post.applications.filter(function(application) {return !application.rejected && application.submitted})
+      const rejections = this.props.post.applications.filter(function(application) {return application.rejected && application.submitted})
       this.setState({
         applications: applications,
         rejections: rejections,

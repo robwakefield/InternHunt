@@ -188,13 +188,24 @@ class ListingItem extends Component {
       rhs = <Button onClick={(event) => {handleEdit(this.state.id, event)}}>Click to Edit</Button>
     }
     
-    return (
-      <ListGroupItem className="listing">
-        <Container className="d-flex justify-content-between" style={{cursor: "pointer"}} onClick={() => {handleClick(this.state.id)}}>
+    let tab = 
+      <Container className="d-flex justify-content-between" style={{cursor: "pointer"}} onClick={() => {handleClick(this.state.id)}}>
+        <p className={status_class}>{this.state.status}</p>
+        <p className="text-center">{this.state.title}</p>
+        {rhs}
+      </Container>
+    if (this.state.status == "Draft") {
+      tab =
+        <Container className="d-flex justify-content-between">
           <p className={status_class}>{this.state.status}</p>
           <p className="text-center">{this.state.title}</p>
           {rhs}
         </Container>
+    }
+    
+    return (
+      <ListGroupItem className="listing">
+        {tab}
       </ListGroupItem>
     )
   }
