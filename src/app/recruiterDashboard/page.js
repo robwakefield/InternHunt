@@ -3,12 +3,14 @@
 import './recruiterDashboard.css'
 import "bootstrap/dist/css/bootstrap.min.css"
 import { Button, ListGroup, Container, Card, ListGroupItem, Modal, Form } from "react-bootstrap";
-import { Component, useEffect, useState } from "react";
+import { Component, useEffect, useRef, useState } from "react";
 import RecruiterNavbar from '../recruiterNavbar';
 import '../globals.css'
 import {BsSortDown} from 'react-icons/bs'
 
 function RecruiterDashboard() {
+  const titleRef = useRef();
+  const placesRef = useRef();
 
   const [listings, setListings] = useState([]);
   const [showJobListing, setJobListing] = useState(false);
@@ -30,7 +32,8 @@ function RecruiterDashboard() {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        
+        name: titleRef.current.value,
+        totalPlaces: parseInt(placesRef.current.value)
       }),
     })
   }
@@ -52,14 +55,20 @@ function RecruiterDashboard() {
                   <Modal.Title>New Listing</Modal.Title>
                 </Modal.Header>
                   <Modal.Body>
-                    <strong>Title</strong><br></br>Form<br></br>
-                    <strong>Places</strong><br></br>Form<br></br>
+                    <strong>Title</strong>
+                    <Form.Group className="mb-3" controlId="formJob">
+                      <Form.Control as="textarea" rows={1}
+                        placeholder="Enter your Job Title" ref={titleRef} />
+                      <strong>Places</strong>
+                      <Form.Control as="textarea" rows={1}
+                        placeholder="Enter your Job Places" ref={placesRef} />
+                    </Form.Group>
                   </Modal.Body>
                 <Modal.Footer>
                   <Button variant="secondary" onClick={handleClose}>
                     Cancel
                   </Button>
-                  <Button variant="primary" type='submit'>
+                  <Button variant="primary" onClick={handleAdd}>
                     Create Listing
                   </Button>
                 </Modal.Footer>
