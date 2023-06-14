@@ -73,8 +73,8 @@ function ApplyPage() {
                         <strong>Description:</strong>
                         <p>{post.description}</p>
                         <strong>Requirements:</strong>
-                        {post.requirements.map((requirement) =>
-                            (<p>- {requirement.requirementText}</p>))}
+                        {post.requirements.map((requirement,index) =>
+                            (<p key={index}>- {requirement.requirementText}</p>))}
                     <Button onClick={handleApply}> Apply now </Button>
                 </Card.Body>
             </Card>
