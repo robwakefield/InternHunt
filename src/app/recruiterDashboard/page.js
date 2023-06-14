@@ -2,7 +2,7 @@
 
 import './recruiterDashboard.css'
 import "bootstrap/dist/css/bootstrap.min.css"
-import { Button, ListGroup, Container, Card, ListGroupItem, Modal } from "react-bootstrap";
+import { Button, ListGroup, Container, Card, ListGroupItem, Modal, Form } from "react-bootstrap";
 import { Component, useEffect, useState } from "react";
 import RecruiterNavbar from '../recruiterNavbar';
 import '../globals.css'
@@ -42,32 +42,33 @@ function RecruiterDashboard() {
       {/* Job Listings List */}
       <Container  style={{height: "80vh"}}>
         <Card className="mt-4 h-100">
-          <Card.Header className="d-flex justify-content-between">
-            <Button className="sortButton"><BsSortDown color="black" size={30}/></Button>
-            <h4>My Listings</h4>
-            <Button onClick={handleShow}>New Listing</Button>
+          <Form>
+            <Card.Header className="d-flex justify-content-between">
+              <Button className="sortButton"><BsSortDown color="black" size={30}/></Button>
+              <h4>My Listings</h4>
 
-            <Modal show={showJobListing} onHide={handleClose}>
+              <Modal show={showJobListing} onHide={handleClose}>
                 <Modal.Header closeButton>
                   <Modal.Title>New Listing</Modal.Title>
                 </Modal.Header>
-                    <Modal.Body>
-                    <strong>Title</strong><br></br>
-                      Form<br></br>
-                      <strong>Places</strong><br></br>
-                      Form<br></br>
-                    </Modal.Body>
+                  <Modal.Body>
+                    <strong>Title</strong><br></br>Form<br></br>
+                    <strong>Places</strong><br></br>Form<br></br>
+                  </Modal.Body>
                 <Modal.Footer>
                   <Button variant="secondary" onClick={handleClose}>
                     Cancel
                   </Button>
-                  <Button variant="primary">
+                  <Button variant="primary" type='submit'>
                     Create Listing
                   </Button>
                 </Modal.Footer>
               </Modal>
-            {/* href="./addListing" */}
-          </Card.Header>
+
+              <Button onClick={handleShow}>New Listing</Button>
+              {/* href="./addListing" */}
+            </Card.Header>
+          </Form>  
           <ApplicantList listings={listings}/>          
         </Card>
       </Container>
