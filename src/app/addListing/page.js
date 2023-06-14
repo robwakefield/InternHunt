@@ -17,6 +17,19 @@ function AddListing() {
       .then((data) => setListing(data));
   }, []);
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    fetch('/api/listingEdit', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: listing.id
+      }),
+    })
+  }
+
   return (
     <main className="addListing">
       <RecruiterNavbar/>
@@ -29,7 +42,7 @@ function AddListing() {
           </Pagination>
         </Nav>
         <h1 className="text-center">{listing.name}</h1>
-        {/* <Form onSubmit={handleSubmit}> */}
+        <Form onSubmit={handleSubmit}>
           <Card className="mt-4 h-100">
             <Card.Header className="d-flex justify-content-between">
               <Container className="d-flex justify-content-start">
@@ -48,7 +61,7 @@ function AddListing() {
             <JobRequirementsList listing={listing} />
             <SavedBox/>
           </Card>
-        {/* </Form> */}
+        </Form>
       </Container>
     </main>
     

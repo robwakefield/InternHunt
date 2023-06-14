@@ -21,11 +21,25 @@ export async function GET() {
   return NextResponse.json(listings)
 }
 
+export async function POST(request) {
+  const body = await request.json();
+  await prisma.post.update({
+    where: {
+      id: body.id
+    },
+    data: {
+      status: "Applications Open"
+    }
+  });
+  return NextResponse.json({});
+}
+
 export async function PUT(request) {
   const body = await request.json();
   await prisma.post.update({
     where: {
-      id: 1
+      id: body.id,
+      status: "Draft"
     },
     data: {
       description: body.description
