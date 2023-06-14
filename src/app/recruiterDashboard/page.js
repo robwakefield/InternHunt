@@ -105,7 +105,8 @@ class ApplicantList extends Component {
   render() {
     return (
       <ListGroup>
-        {this.state.listings.map((listing) => <ListingItem key={listing.title} post={listing}></ListingItem>)}
+        {this.state.listings.sort((a, b) => a.id - b.id)
+          .map((listing) => <ListingItem key={listing.title} post={listing}></ListingItem>)}
       </ListGroup>
     )
   }
