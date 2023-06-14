@@ -9,7 +9,7 @@ import RecruiterNavbar from "../recruiterNavbar";
 function JobDescription() {
   const descRef = useRef();
 
-  const [post, setPost] = useState({});
+  const [post, setPost] = useState({description: ""});
   useEffect(() => {
     fetch('/api/listingEdit')
       .then((response) => response.json())
@@ -25,7 +25,8 @@ function JobDescription() {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        description : descRef.current.value
+        id: post.id,
+        description: descRef.current.value
       }),
     });
   }

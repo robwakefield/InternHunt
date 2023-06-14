@@ -8,7 +8,7 @@ import RecruiterNavbar from "../recruiterNavbar";
 
 function JobRequirementsList() {
 
-  const [post, setPost] = useState({description: "", requirements: []});
+  const [post, setPost] = useState({requirements: []});
   useEffect(() => {
     fetch('/api/listingEdit')
       .then((response) => response.json())
