@@ -2,12 +2,28 @@
 import "bootstrap/dist/css/bootstrap.min.css"
 import "./studentDashboard.css"
 import { Card, Container, ListGroupItem, Row, Col, Button, ListGroup, ProgressBar } from "react-bootstrap";
-import { Component, useEffect, useState } from "react";
+import { Component, useEffect, useState, useRef } from "react";
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
 import StudentNavbar from "../studentNavbar";
 import { BsPen } from "react-icons/bs";
 import { AiOutlineEye } from "react-icons/ai"
+
+function useInterval(callback, delay) {
+  const intervalRef = useRef(null);
+  const savedCallback = useRef(callback);
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+  useEffect(() => {
+    const tick = () => savedCallback.current();
+    if (typeof delay === 'number') {
+      intervalRef.current = window.setInterval(tick, delay);
+      return () => window.clearInterval(intervalRef.current);
+    }
+  }, [delay]);
+  return intervalRef;
+}
 
 function StudentDashboard() {
   const [applications, setApplications] = useState([]);
@@ -23,6 +39,15 @@ function StudentDashboard() {
         setSelectedApplication(data ? data.length > 0 ? data[0] : null : null)
       });
   }, []);
+
+  useInterval(() => {
+    fetch('/api/studentApplication/'+studentId)
+      .then((response) => response.json())
+      .then((data) => {
+        setApplications(data)
+        setSelectedApplication(data[applications.findIndex(app => app.postID == selectedApplication.postID)])
+      });
+  }, 4000); // x second interval
 
   return (
     <main className="studentDashboard">
