@@ -18,6 +18,18 @@ function RecruiterDashboard() {
       .then((data) => setListings(data));
   }, []);
 
+  const handleAdd = (event) => {
+    event.preventDefault();
+    fetch('/api/listings', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        
+      }),
+    })
+  }
 
   return (
     <main className="recruiterDashboard">
@@ -29,7 +41,7 @@ function RecruiterDashboard() {
           <Card.Header className="d-flex justify-content-between">
             <Button className="sortButton"><BsSortDown color="black" size={30}/></Button>
             <h4>My Listings</h4>
-            <Button href="./addListing">New Post</Button>
+            <Button onClick={handleAdd} href="./addListing">New Post</Button>
           </Card.Header>
           <ApplicantList listings={listings}/>          
         </Card>
