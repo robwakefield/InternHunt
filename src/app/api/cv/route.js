@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 export async function POST(request) {
   const body = await request.json()
   if (body.requestType == "hasCV") {
-    const hasCV = prisma.application.findFirst({
+    const hasCV = await prisma.application.findFirst({
       where: {
         postID_studentID: { postID: body.postID, studentID: body.studentID }
       },
@@ -17,14 +17,16 @@ export async function POST(request) {
     return NextResponse.json(hasCV)
 
   } else if (body.requestType == "getCV") {
-    const cv = prisma.application.findFirst({
+    const cv = await prisma.application.findFirst({
       where: {
-        postID_studentID: { postID: body.postID, studentID: body.studentID }
+        postID: body.postID,
+        studentID: body.studentID
       },
       select: {
         cv: true
       }
     })
+    console.log(cv)
     return NextResponse.json(cv)
   }
 
@@ -38,7 +40,7 @@ export async function PUT(request) {
       postID_studentID: { postID: body.postID, studentID: body.studentID }
     },
     data: {
-      cv: Buffer.from(body.cv, 'base64')
+      cv: body.cv
     }
   })
   return NextResponse.json({})

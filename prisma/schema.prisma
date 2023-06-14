@@ -40,7 +40,7 @@ model Application {
   studentID   Int
   evidences   Evidence[]
   stages      Stage[]
-  cv          Bytes?
+  cv          String?
   rejected    Boolean @default(false)
   accepted    Boolean @default(false)
   submitted   Boolean @default(false)
