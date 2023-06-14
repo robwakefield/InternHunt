@@ -2,7 +2,7 @@
 
 import './recruiterDashboard.css'
 import "bootstrap/dist/css/bootstrap.min.css"
-import { Button, ListGroup, Container, Card, ListGroupItem } from "react-bootstrap";
+import { Button, ListGroup, Container, Card, ListGroupItem, Modal } from "react-bootstrap";
 import { Component, useEffect, useState } from "react";
 import RecruiterNavbar from '../recruiterNavbar';
 import '../globals.css'
@@ -11,6 +11,10 @@ import {BsSortDown} from 'react-icons/bs'
 function RecruiterDashboard() {
 
   const [listings, setListings] = useState([]);
+  const [showJobListing, setJobListing] = useState(false);
+
+  const handleClose = () => setJobListing(false);
+  const handleShow = () => setJobListing(true);
 
   useEffect(() => {
     fetch('/api/listings')
@@ -41,7 +45,28 @@ function RecruiterDashboard() {
           <Card.Header className="d-flex justify-content-between">
             <Button className="sortButton"><BsSortDown color="black" size={30}/></Button>
             <h4>My Listings</h4>
-            <Button onClick={handleAdd} href="./addListing">New Post</Button>
+            <Button onClick={handleShow}>New Listing</Button>
+
+            <Modal show={showJobListing} onHide={handleClose}>
+                <Modal.Header closeButton>
+                  <Modal.Title>New Listing</Modal.Title>
+                </Modal.Header>
+                    <Modal.Body>
+                    <strong>Title</strong><br></br>
+                      Form<br></br>
+                      <strong>Places</strong><br></br>
+                      Form<br></br>
+                    </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleClose}>
+                    Cancel
+                  </Button>
+                  <Button variant="primary">
+                    Create Listing
+                  </Button>
+                </Modal.Footer>
+              </Modal>
+            {/* href="./addListing" */}
           </Card.Header>
           <ApplicantList listings={listings}/>          
         </Card>
