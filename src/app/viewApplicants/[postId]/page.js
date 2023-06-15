@@ -122,6 +122,21 @@ class ApplicantList extends Component {
     }
   }
 
+  viewApplication = (application) => () => {
+    this.selectApplicant(application.student.id)()
+    // Set "Viewed Application" stage in application
+      fetch('/api/stage', {
+        method: 'PUT',
+        body: JSON.stringify({
+          postID: application.postID,
+          studentID: application.studentID,
+          stageID: 3, // Viewed Application
+          completed: true,
+          date: new Date(Date.now())
+        })
+      });
+  }
+
   toggleRejected = () => {
     // Select first non-rejected student when hiding rejected students
     if (this.state.rejected && this.state.rejections.map(
@@ -172,7 +187,7 @@ class ApplicantList extends Component {
 
   renderApplicant(application, rejected) {
     return <ListGroupItem className={(application.student.id == this.props.selectedApplicant) ? (rejected ? "selectedRejectedListItem" : "selectedApplicantListItem") : (rejected ? "rejectedApplicantListItem" : "applicantListItem")} key={application.student.name}>
-      <Container fluid style={{ cursor: "pointer" }} onClick={this.selectApplicant(application.student.id)}>
+      <Container fluid style={{ cursor: "pointer" }} onClick={this.viewApplication(application)}>
         <Row className="applicantListRow">
           <Col sm={9} className="studentNameCol"><p className="text-left studentName">{application.student.name} </p></Col>
           <Col sm={3} className="avgRatingCol"><p className="text-center avgRating">{averageRating(application)}</p><AiFillStar style={{alignContent: "center"}} size={30}  color="#ffc800"/></Col>
