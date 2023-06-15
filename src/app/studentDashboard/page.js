@@ -163,6 +163,7 @@ class Timeline extends Component {
 
   state = {
     stages: this.props.application ? this.props.application.stages : [],
+    interview: this.props.application ? this.props.application.interview : null,
     rejected: this.props.application ? this.props.application.rejected : false,
     accepted: this.props.application ? this.props.application.accepted : false,
     postID: this.props.application ? this.props.application.postID : null,
@@ -173,6 +174,7 @@ class Timeline extends Component {
     if (prevProps !== this.props) {
       this.setState({ 
         stages: this.props.application ? this.props.application.stages : [],
+        interview: this.props.application ? this.props.application.interview : null,
         rejected: this.props.application ? this.props.application.rejected : false,
         accepted: this.props.application ? this.props.application.accepted : false,
         postID: this.props.application ? this.props.application.postID : null,
@@ -183,7 +185,7 @@ class Timeline extends Component {
 
   formatDate(strDate) {
     const date = new Date(strDate)
-    return date.toString().slice(8, 10) + " " + date.toString().slice(4, 7) + " " + date.toString().slice(11, 15)
+    return date.toString().slice(8, 10) + " " + date.toString().slice(4, 7) + " " + date.toString().slice(11, 15) + " " + date.toString().slice(15, 21)
   }
   
   isCurrentStage(stage) {
@@ -212,20 +214,36 @@ class Timeline extends Component {
               // filter out incomplete stages if the application is already finished
               stage => stage.completed || (!stage.completed && !this.state.rejected && !this.state.accepted)
               ).map((stage) => {
-              return <VerticalTimelineElement key={this.currentStage}
-                className="vertical-timeline-element--work"
-                contentStyle={this.isCurrentStage(stage) ? { background: 'rgb(33, 150, 243)', color: '#fff' } : {}}
-                date={stage.date ? this.formatDate(stage.date) : ""}
-                iconStyle={{ background: stage.completed || this.isCurrentStage(stage) ? 'rgb(33, 150, 243)' : 'grey', color: '#fff' }}
-              >
-                <h6 className="vertical-timeline-element-title">{stage.stageText}</h6>
-              </VerticalTimelineElement>
+                if (this.state.interview && stage.stageText == "Interview") {
+                  return this.renderInterview(stage)
+                }
+                return <VerticalTimelineElement key={stage}
+                  className="vertical-timeline-element--work"
+                  contentStyle={this.isCurrentStage(stage) ? { background: 'rgb(33, 150, 243)', color: '#fff' } : {}}
+                  date={stage.date ? this.formatDate(stage.date) : ""}
+                  iconStyle={{ background: stage.completed || this.isCurrentStage(stage) ? 'rgb(33, 150, 243)' : 'grey', color: '#fff' }}
+                >
+                  <h6 className="vertical-timeline-element-title">{stage.stageText}</h6>
+                </VerticalTimelineElement>
             })}
             {feedback}
           </VerticalTimeline>
         </Card>
       </Container>
     )
+  }
+
+  renderInterview(stage) {
+    return  <VerticalTimelineElement key={stage}
+              className="vertical-timeline-element--work"
+              contentStyle={this.isCurrentStage(stage) ? { background: 'rgb(33, 150, 243)', color: '#fff' } : {}}
+              date={this.state.interview ? this.formatDate(this.state.interview.date) : ""}
+              iconStyle={{ background: stage.completed || this.isCurrentStage(stage) ? 'rgb(33, 150, 243)' : 'grey', color: '#fff' }}
+            >
+              <h6 className="vertical-timeline-element-title">{stage.stageText}</h6>
+              <h7 className="feedback">{this.state.interview.location} <br/></h7>
+              <h7 className="feedback">{this.state.interview.description}</h7>
+            </VerticalTimelineElement>
   }
 
   renderRejectedElement() {

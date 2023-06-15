@@ -24,6 +24,13 @@ export async function GET(request, {params,}) {
                     date: true,
                     completed: true
                 }
+            },
+            interview: {
+                select: {
+                    date: true,
+                    description: true,
+                    location: true
+                }
             }
         },
         where: {
