@@ -102,7 +102,7 @@ function AddListing() {
             </PageItem>
           </Pagination>
         </Nav>
-        <Form onSubmit={handleSubmit}>
+        {/* <Form onSubmit={handleSubmit}> */}
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <Form.Control as="textarea" rows={1} className="text-center" style={{ fontSize: '36px' }}
               defaultValue={listing.name} ref={nameRef} />
@@ -131,7 +131,7 @@ function AddListing() {
             <JobRequirementsList id={listing.id} listing={listing} setListing={setListing} />
             <SavedBox/>
           </Card>
-        </Form>
+        {/* </Form> */}
       </Container>
     </main>
     
