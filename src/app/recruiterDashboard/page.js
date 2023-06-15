@@ -36,6 +36,10 @@ function RecruiterDashboard() {
         totalPlaces: parseInt(placesRef.current.value)
       }),
     })
+      .then((response) => response.json())
+      .then(() => {
+        window.location.reload();
+      });
   }
 
   return (
@@ -57,10 +61,10 @@ function RecruiterDashboard() {
                   <Modal.Body>
                     <strong>Title</strong>
                     <Form.Group className="mb-3" controlId="formJob">
-                      <Form.Control as="textarea" rows={1}
+                      <Form.Control as="textarea" rows={1} type="text"
                         placeholder="Enter your Job Title" ref={titleRef} />
                       <strong>Places</strong>
-                      <Form.Control as="textarea" rows={1}
+                      <Form.Control as="textarea" rows={1} type="number"
                         placeholder="Enter your Job Places" ref={placesRef} />
                     </Form.Group>
                   </Modal.Body>

@@ -26,11 +26,8 @@ function JobRequirementsList({ id, listing, setListing }) {
       }),
     })
       .then((response) => response.json())
-      .then((newRequirement) => {
-        setListing((prevListing) => ({
-          ...prevListing,
-          requirements: [...prevListing.requirements, newRequirement]
-        }));
+      .then(() => {
+        window.location.reload();
       });
   }
 
