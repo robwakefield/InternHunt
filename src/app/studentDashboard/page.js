@@ -90,6 +90,10 @@ class ApplicationList extends Component {
   }
 
   render() {
+    console.log(this.state.applications);
+    this.state.applications.forEach((application) => {
+      application.stages.sort((a, b) => a.id - b.id);
+    });
     return (
       <ListGroup>
         {this.state.applications.map((application) => {

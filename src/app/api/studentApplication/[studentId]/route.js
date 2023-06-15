@@ -22,7 +22,8 @@ export async function GET(request, {params,}) {
                 select: {
                     stageText: true,
                     date: true,
-                    completed: true
+                    completed: true,
+                    id: true
                 }
             },
             interview: {
