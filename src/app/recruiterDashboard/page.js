@@ -51,8 +51,8 @@ function RecruiterDashboard() {
         <Card className="mt-4 h-100">
           <Form>
             <Card.Header className="d-flex justify-content-between">
-              <Button className="sortButton"><BsSortDown color="black" size={30}/></Button>
-              <h4>My Listings</h4>
+              <p className="w-25"></p>
+              <h4 className="w-50 text-center">My Listings</h4>
 
               <Modal show={showJobListing} onHide={handleClose}>
                 <Modal.Header closeButton>
@@ -78,8 +78,10 @@ function RecruiterDashboard() {
                 </Modal.Footer>
               </Modal>
 
-              <Button onClick={handleShow}>New Listing</Button>
-              {/* href="./addListing" */}
+              <Container className="w-25 d-flex">
+                <p className="flex-fill"></p>
+                <Button onClick={handleShow}>New Listing</Button>
+              </Container>
             </Card.Header>
           </Form>  
           <ApplicantList listings={listings}/>
@@ -172,22 +174,30 @@ class ListingItem extends Component {
     }
     
 
-    let rhs = <p className={"text-muted"}>{places_filled} Applications</p>
+    let rhs = <Container className="w-25 d-flex">
+                <p className="flex-fill"></p>
+                <p className={"text-muted text-right"}>{places_filled} Applications</p>
+              </Container>
     if (this.state.status == "Draft") {
-      rhs = <Button onClick={(event) => {handleEdit(this.state.id, event)}}>Click to Edit</Button>
+      rhs = <Container className="w-25 d-flex">
+              <p className="flex-fill"></p>
+              <Button 
+                onClick={(event) => {handleEdit(this.state.id, event)}}
+              >Click to Edit</Button>
+            </Container>
     }
     
     let tab = 
       <Container className="d-flex justify-content-between" style={{cursor: "pointer"}} onClick={() => {handleClick(this.state.id)}}>
-        <p className={status_class}>{this.state.status}</p>
-        <p className="text-center">{this.state.title}</p>
+        <p className={status_class + " w-25"}>{this.state.status}</p>
+        <p className="text-center w-50">{this.state.title}</p>
         {rhs}
       </Container>
     if (this.state.status == "Draft") {
       tab =
         <Container className="d-flex justify-content-between">
-          <p className={status_class}>{this.state.status}</p>
-          <p className="text-center">{this.state.title}</p>
+          <p className={status_class + " w-25"}>{this.state.status}</p>
+          <p className="text-center w-50">{this.state.title}</p>
           {rhs}
         </Container>
     }
