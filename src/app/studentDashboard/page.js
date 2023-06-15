@@ -217,7 +217,7 @@ class Timeline extends Component {
                 if (this.state.interview && stage.stageText == "Interview") {
                   return this.renderInterview(stage)
                 }
-                return <VerticalTimelineElement key={stage}
+                return <VerticalTimelineElement key={stage.stageText}
                   className="vertical-timeline-element--work"
                   contentStyle={this.isCurrentStage(stage) ? { background: 'rgb(33, 150, 243)', color: '#fff' } : {}}
                   date={stage.date ? this.formatDate(stage.date) : ""}
@@ -241,8 +241,8 @@ class Timeline extends Component {
               iconStyle={{ background: stage.completed || this.isCurrentStage(stage) ? 'rgb(33, 150, 243)' : 'grey', color: '#fff' }}
             >
               <h6 className="vertical-timeline-element-title">{stage.stageText}</h6>
-              <h7 className="feedback">{this.state.interview.location} <br/></h7>
-              <h7 className="feedback">{this.state.interview.description}</h7>
+              <h6 className="feedback">{this.state.interview.location} <br/></h6>
+              <h6 className="feedback">{this.state.interview.description}</h6>
             </VerticalTimelineElement>
   }
 
