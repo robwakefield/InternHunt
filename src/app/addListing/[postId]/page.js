@@ -57,7 +57,6 @@ function AddListing() {
       },
       body: JSON.stringify({
         id: listing.id,
-        totalPlaces: listing.totalPlaces,
         name: nameRef.current.value
       }),
     })
