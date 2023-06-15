@@ -100,7 +100,7 @@ class ApplicationList extends Component {
               application.stages.length == 0 ? 0 :
                 (application.stages.filter((stage) => {
                   return stage.completed
-                }).length / application.stages.length) * 100
+                }).length / (application.stages.length + 1)) * 100
             } 
             selected={this.props.selectedApplication == application} 
             setSelectedApplication={this.props.setSelectedApplication} 
@@ -230,7 +230,6 @@ class Timeline extends Component {
   }
 
   render() {
-    let feedback = this.state.rejected ? this.renderRejectedElement() : this.state.accepted ? this.renderAcceptedElement() : null
     return (
       <Container style={{ height: "80vh" }} >
         <Card className="mt-4 h-100 progressTimeline">
@@ -251,7 +250,7 @@ class Timeline extends Component {
                   <h6 className="vertical-timeline-element-title">{stage.stageText}</h6>
                 </VerticalTimelineElement>
             })}
-            {feedback}
+            {this.state.rejected ? this.renderRejectedElement() : this.state.accepted ? this.renderAcceptedElement() : null}
           </VerticalTimeline>
         </Card>
       </Container>
