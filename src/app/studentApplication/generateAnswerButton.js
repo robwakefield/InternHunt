@@ -89,6 +89,7 @@ function GenerateAnswerButton(props) {
                         class="form-control input-sm"
                         id="inputsm"
                         type="text"
+                        className = {props.submitted? "invisible" : "visible"}
                         placeholder='Optional: Tell the AI more information (I have worked in ...)'
                         ref={addtionalInformation}/>
                 </Col>
