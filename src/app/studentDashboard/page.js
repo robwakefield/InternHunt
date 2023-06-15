@@ -9,6 +9,7 @@ import StudentNavbar from "../studentNavbar";
 import { BsPen } from "react-icons/bs";
 import { AiOutlineEye } from "react-icons/ai"
 import "../globals.css"
+import { useSearchParams } from "next/navigation";
 
 function useInterval(callback, delay) {
   const intervalRef = useRef(null);
@@ -29,7 +30,7 @@ function useInterval(callback, delay) {
 function StudentDashboard() {
   const [applications, setApplications] = useState([]);
   const [selectedApplication, setSelectedApplication] = useState();
-  const urlParams = new URLSearchParams(window.location.search);
+  const urlParams = useSearchParams()
   const queryStudentID = parseInt(urlParams.get('studentID'));
 
   if (isNaN(queryStudentID)) window.location.replace("/");
