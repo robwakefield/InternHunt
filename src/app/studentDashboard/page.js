@@ -8,6 +8,7 @@ import 'react-vertical-timeline-component/style.min.css';
 import StudentNavbar from "../studentNavbar";
 import { BsPen } from "react-icons/bs";
 import { AiOutlineEye } from "react-icons/ai"
+import "../globals.css"
 
 function useInterval(callback, delay) {
   const intervalRef = useRef(null);
@@ -32,7 +33,7 @@ function StudentDashboard() {
   const studentId = 1;
 
   useEffect(() => {
-    fetch('/api/studentApplication/'+studentId)
+    fetch('/api/studentApplication/' + studentId)
       .then((response) => response.json())
       .then((data) => {
         setApplications(data)
