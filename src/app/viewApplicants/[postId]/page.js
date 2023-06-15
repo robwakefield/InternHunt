@@ -203,6 +203,10 @@ class SkillList extends Component {
     });
   }
 
+  scheduleInterview = () => {
+    console.log("Schedule Interview")
+  }
+
   handleNotesChange = (event, id) => {
     fetch('/api/updateNotes', {
       method: 'PUT',
@@ -259,6 +263,7 @@ class SkillList extends Component {
                 </Modal.Footer>
               </Modal>
             <h4>{this.state.name}</h4>
+            <Button onClick={this.scheduleInterview}>Interview</Button>
             <Button onClick={this.rejectApplicant}>Reject</Button>
           </Card.Header>
           
