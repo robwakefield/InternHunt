@@ -44,6 +44,7 @@ model Application {
   rejected    Boolean @default(false)
   accepted    Boolean @default(false)
   submitted   Boolean @default(false)
+  interview   Interview?
 
   @@id([postID, studentID])
 }
@@ -78,7 +79,21 @@ model Evidence {
   requirement     Requirement @relation(fields: [postID, requirementID], references: [postID, id])
   requirementID   Int
   rating          Int? @default(0)
-  evidenceText    String?
+  evidenceText    String @default("")
+  notes           String @default("")
 
   @@id([postID, requirementID, studentID])
+}
+
+model Interview {
+  app           Application @relation(fields: [postID, studentID], references: [postID, studentID])
+  postID        Int
+  studentID     Int
+
+  location      String      @default("")
+  description   String      @default("")
+  date          DateTime
+  completed     Boolean     @default(false)
+
+  @@id([postID, studentID])
 }

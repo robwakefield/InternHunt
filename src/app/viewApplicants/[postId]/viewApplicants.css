@@ -71,3 +71,12 @@ p {
 .docModal {
   --bs-modal-width: 1500px !important;
 }
+
+.notesSkill{
+  align-self: center !important;
+}
+
+.starRating{
+  display: flex !important;
+  justify-content: flex-end !important;
+}

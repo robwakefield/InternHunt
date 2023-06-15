@@ -58,10 +58,8 @@ function StudentDashboard() {
           <Col>
             <Container style={{ height: "80vh" }}>
               <Card className="mt-4 h-100">
-                <Card.Header className="d-flex justify-content-between">
-                  <Button>Sort</Button>
+                <Card.Header className="d-flex justify-content-center">
                   <h4>My Applications</h4>
-                  <Button>New Post</Button>
                 </Card.Header>
                 <ApplicationList applications={applications} setSelectedApplication={setSelectedApplication} selectedApplication={selectedApplication}/>
               </Card>
@@ -94,7 +92,17 @@ class ApplicationList extends Component {
     return (
       <ListGroup>
         {this.state.applications.map((application) => {
-          return <ApplicationListItem application={application} progress={80} selected={this.props.selectedApplication == application} setSelectedApplication={this.props.setSelectedApplication} key={application.postID}/>
+          return <ApplicationListItem 
+            application={application} 
+            progress={
+              application.stages.length == 0 ? 0 :
+                (application.stages.filter((stage) => {
+                  return stage.completed
+                }).length / application.stages.length) * 100
+            } 
+            selected={this.props.selectedApplication == application} 
+            setSelectedApplication={this.props.setSelectedApplication} 
+            key={application.postID}/>
         })}
       </ListGroup>
     )
@@ -149,7 +157,7 @@ class ApplicationListItem extends Component {
         <Container className="d-flex justify-content-end">
           <p className="flex-fill text-left">{this.state.title}</p>
           <p className={"mx-4 deadline text-" + (this.props.application.submitted ? "muted" : this.statusColor())}>{this.props.application.submitted ? "Submitted" : "Deadline " + this.state.deadline}</p>
-          <ProgressBar variant={this.statusColor()} now={this.state.progress}/>
+          <ProgressBar variant="primary" now={this.state.progress}/>
           <Button onClick={this.editPost}>
             {this.props.application.submitted ? <AiOutlineEye style={{ color: 'white'}} /> : <BsPen/>}
           </Button>
@@ -163,6 +171,7 @@ class Timeline extends Component {
 
   state = {
     stages: this.props.application ? this.props.application.stages : [],
+    interview: this.props.application ? this.props.application.interview : null,
     rejected: this.props.application ? this.props.application.rejected : false,
     accepted: this.props.application ? this.props.application.accepted : false,
     postID: this.props.application ? this.props.application.postID : null,
@@ -173,6 +182,7 @@ class Timeline extends Component {
     if (prevProps !== this.props) {
       this.setState({ 
         stages: this.props.application ? this.props.application.stages : [],
+        interview: this.props.application ? this.props.application.interview : null,
         rejected: this.props.application ? this.props.application.rejected : false,
         accepted: this.props.application ? this.props.application.accepted : false,
         postID: this.props.application ? this.props.application.postID : null,
@@ -183,14 +193,14 @@ class Timeline extends Component {
 
   formatDate(strDate) {
     const date = new Date(strDate)
-    return date.toString().slice(8, 10) + " " + date.toString().slice(4, 7) + " " + date.toString().slice(11, 15)
+    return date.toString().slice(8, 10) + " " + date.toString().slice(4, 7) + " " + date.toString().slice(11, 15) + " " + date.toString().slice(15, 21)
   }
   
   isCurrentStage(stage) {
-    const stageIndex = this.state.stages.findIndex(s => s == stage)
     if (this.state.rejected || this.state.accepted) {
       return false
     }
+    const stageIndex = this.state.stages.findIndex(s => s == stage)
     if (stage.completed) {
       if (stageIndex == this.state.stages.length - 1) {
         return true
@@ -204,6 +214,15 @@ class Timeline extends Component {
 
   render() {
     let feedback = this.state.rejected ? this.renderRejectedElement() : this.state.accepted ? this.renderAcceptedElement() : null
+    if (this.state.interview && Date.parse(this.state.interview.date) - Date.now() < 0) {
+      // Interview date has passed
+      this.setState({ interview: {
+        date: this.state.interview.date,
+        location: this.state.interview.location,
+        description: this.state.interview.description,
+        completed: true
+      } })
+    }
     return (
       <Container style={{ height: "80vh" }} >
         <Card className="mt-4 h-100 progressTimeline">
@@ -212,20 +231,36 @@ class Timeline extends Component {
               // filter out incomplete stages if the application is already finished
               stage => stage.completed || (!stage.completed && !this.state.rejected && !this.state.accepted)
               ).map((stage) => {
-              return <VerticalTimelineElement key={this.currentStage}
-                className="vertical-timeline-element--work"
-                contentStyle={this.isCurrentStage(stage) ? { background: 'rgb(33, 150, 243)', color: '#fff' } : {}}
-                date={stage.date ? this.formatDate(stage.date) : ""}
-                iconStyle={{ background: stage.completed || this.isCurrentStage(stage) ? 'rgb(33, 150, 243)' : 'grey', color: '#fff' }}
-              >
-                <h6 className="vertical-timeline-element-title">{stage.stageText}</h6>
-              </VerticalTimelineElement>
+                if (this.state.interview && stage.stageText == "Interview") {
+                  return this.renderInterview(stage)
+                }
+                return <VerticalTimelineElement key={stage.stageText}
+                  className="vertical-timeline-element--work"
+                  contentStyle={this.isCurrentStage(stage) ? { background: 'rgb(33, 150, 243)', color: '#fff' } : {}}
+                  date={stage.date ? this.formatDate(stage.date) : ""}
+                  iconStyle={{ background: stage.completed || this.isCurrentStage(stage) ? 'rgb(33, 150, 243)' : 'grey', color: '#fff' }}
+                >
+                  <h6 className="vertical-timeline-element-title">{stage.stageText}</h6>
+                </VerticalTimelineElement>
             })}
             {feedback}
           </VerticalTimeline>
         </Card>
       </Container>
     )
+  }
+
+  renderInterview(stage) {
+    return  <VerticalTimelineElement key={stage}
+              className="vertical-timeline-element--work"
+              contentStyle={this.isCurrentStage(stage) ? { background: 'rgb(33, 150, 243)', color: '#fff' } : {}}
+              date={this.state.interview ? this.formatDate(this.state.interview.date) : ""}
+              iconStyle={{ background: (this.state.interview && this.state.interview.completed) || this.isCurrentStage(stage) ? 'rgb(33, 150, 243)' : 'grey', color: '#fff' }}
+            >
+              <h6 className="vertical-timeline-element-title">{stage.stageText}</h6>
+              <h6 className="feedback">{this.state.interview.location} <br/></h6>
+              <h6 className="feedback">{this.state.interview.description}</h6>
+            </VerticalTimelineElement>
   }
 
   renderRejectedElement() {

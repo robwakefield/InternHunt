@@ -18,6 +18,7 @@ export async function GET(request, {params,}) {
       rating5Text: true,
       applications: {
         select: {
+          cv: true,
           student: {
             select: {
               id: true,
@@ -28,6 +29,7 @@ export async function GET(request, {params,}) {
             select: {
               evidenceText: true,
               rating: true,
+              notes: true,
               requirement: {
                 select: {
                   id: true,
