@@ -97,43 +97,29 @@ function AddListing() {
     <main className="addListing">
       <RecruiterNavbar/>
       <Container  style={{height: "80vh"}}>
-      <Nav className="mt-2">
+        <Nav className="mt-2" style={{ display: 'flex', justifyContent: 'space-between' }}>
           <Pagination>
             <PageItem href="/recruiterDashboard">
               Back to Dashboard
             </PageItem>
           </Pagination>
+          {modal}
+          <Pagination>
+            <ButtonGroup>
+              <Button type='submit' onClick={handleSubmit}>Publish</Button>
+              <Button variant="danger" onClick={handleShow}>Remove</Button>
+            </ButtonGroup>
+          </Pagination>
         </Nav>
-        {/* <Form onSubmit={handleSubmit}> */}
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <Form.Control as="textarea" rows={1} className="text-center" style={{ fontSize: '36px' }}
               defaultValue={listing.name} ref={nameRef} />
             <Button onClick={handleNameChange}>Save</Button>
           </div>
-          <Card className="mt-4 h-100">
-            <Card.Header className="d-flex justify-content-between">
-              <Container className="d-flex justify-content-start">
-                {/* <FormCheck className="align-middle">
-                  <FormCheck.Input/>
-                  <FormCheck.Label>Ask for Cover Letter</FormCheck.Label>
-                </FormCheck>
-                <FormCheck className="mx-2">
-                  <FormCheck.Input/>
-                  <FormCheck.Label>Ask for Academic Results</FormCheck.Label>
-                </FormCheck> */}
-              </Container>
-              {modal}
-              <ButtonGroup>
-                <Button type='submit' onClick={handleSubmit}>Publish</Button>
-                <Button variant="danger" onClick={handleShow}>Remove</Button>
-              </ButtonGroup>
-            </Card.Header>
-            <JobPlaces listing={listing} />
-            <JobDescription listing={listing} />
-            <JobRequirementsList id={listing.id} listing={listing} setListing={setListing} />
-            <SavedBox/>
-          </Card>
-        {/* </Form> */}
+          <JobPlaces listing={listing} />
+          <JobDescription listing={listing} />
+          <JobRequirementsList id={listing.id} listing={listing} setListing={setListing} />
+          <SavedBox/>
       </Container>
     </main>
     
