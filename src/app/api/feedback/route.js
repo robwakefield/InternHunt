@@ -13,8 +13,8 @@ export async function GET() {
       rating4Text: true,
       rating5Text: true,
       applications: {
-        cv: true,
         select: {
+          cv: true,
           student: {
             select: {
               id: true,
