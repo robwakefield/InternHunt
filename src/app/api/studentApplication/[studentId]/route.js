@@ -29,7 +29,8 @@ export async function GET(request, {params,}) {
                 select: {
                     date: true,
                     description: true,
-                    location: true
+                    location: true,
+                    completed: true
                 }
             }
         },

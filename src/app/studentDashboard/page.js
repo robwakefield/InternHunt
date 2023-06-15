@@ -189,10 +189,10 @@ class Timeline extends Component {
   }
   
   isCurrentStage(stage) {
-    const stageIndex = this.state.stages.findIndex(s => s == stage)
     if (this.state.rejected || this.state.accepted) {
       return false
     }
+    const stageIndex = this.state.stages.findIndex(s => s == stage)
     if (stage.completed) {
       if (stageIndex == this.state.stages.length - 1) {
         return true
@@ -206,6 +206,10 @@ class Timeline extends Component {
 
   render() {
     let feedback = this.state.rejected ? this.renderRejectedElement() : this.state.accepted ? this.renderAcceptedElement() : null
+    if (this.state.interview && Date.parse(this.state.interview.date) - Date.now() < 0) {
+      // Interview date has passed
+      this.state.interview.completed = true
+    }
     return (
       <Container style={{ height: "80vh" }} >
         <Card className="mt-4 h-100 progressTimeline">
@@ -238,7 +242,7 @@ class Timeline extends Component {
               className="vertical-timeline-element--work"
               contentStyle={this.isCurrentStage(stage) ? { background: 'rgb(33, 150, 243)', color: '#fff' } : {}}
               date={this.state.interview ? this.formatDate(this.state.interview.date) : ""}
-              iconStyle={{ background: stage.completed || this.isCurrentStage(stage) ? 'rgb(33, 150, 243)' : 'grey', color: '#fff' }}
+              iconStyle={{ background: (this.state.interview && this.state.interview.completed) || this.isCurrentStage(stage) ? 'rgb(33, 150, 243)' : 'grey', color: '#fff' }}
             >
               <h6 className="vertical-timeline-element-title">{stage.stageText}</h6>
               <h6 className="feedback">{this.state.interview.location} <br/></h6>
