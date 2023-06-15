@@ -35,9 +35,10 @@ function ApplyPage() {
 
     const handleApply = () => {
         //Redirect to LoginPage
-        if (userID == -1) {
-            window.location.replace("/login")
-        }
+        // if (userID == -1) {
+        //     window.location.replace("/login")
+        //     return
+        // }
         fetch("/api/createApplication", {
             method: "POST",
             body: JSON.stringify({
@@ -52,7 +53,7 @@ function ApplyPage() {
             method: 'PUT',
             body: JSON.stringify({
             postID: postId,
-            studentID: studentID,
+            studentID: studentId,
             stageID: 0, // Started Application
             completed: true,
             date: new Date(Date.now()),

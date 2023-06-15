@@ -29,8 +29,10 @@ function useInterval(callback, delay) {
 function StudentDashboard() {
   const [applications, setApplications] = useState([]);
   const [selectedApplication, setSelectedApplication] = useState();
-
-  const studentId = 1;
+  const urlParams = new URLSearchParams(window.location.search);
+  const queryStudentID = parseInt(urlParams.get('studentID'));
+  
+  const studentId = queryStudentID;
 
   useEffect(() => {
     fetch('/api/studentApplication/' + studentId)
