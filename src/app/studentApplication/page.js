@@ -98,7 +98,6 @@ function StudentApplication() {
                   <div>
                     <p>CV must be in (.doc, .docx)</p>
                       <DocxExtractor
-                        setExtractedCV={setExtractedCV}
                         setApplication={setApplication}
                         application={application}
                         postID={postID}
