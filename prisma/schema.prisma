@@ -34,7 +34,6 @@ model Application {
   postID      Int
   studentID   Int
   cv          String?
-<<<<<<< HEAD
   accepted    Boolean    @default(false)
   rejected    Boolean    @default(false)
   submitted   Boolean    @default(false)
@@ -42,12 +41,7 @@ model Application {
   post        Post       @relation(fields: [postID], references: [id])
   student     Student    @relation(fields: [studentID], references: [id])
   evidences   Evidence[]
-=======
   extractedCV String  @default("")
-  rejected    Boolean @default(false)
-  accepted    Boolean @default(false)
-  submitted   Boolean @default(false)
->>>>>>> origin/master
   interview   Interview?
   stages      Stage[]
 
