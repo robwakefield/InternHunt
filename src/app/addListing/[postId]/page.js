@@ -12,8 +12,9 @@ import { useParams, notFound } from "next/navigation";
 function AddListing() {
   const [listing, setListing] = useState({});
 
+  //the param is postId
   const params = useParams()
-  const listingId = params.listingId
+  const listingId = params.postId
 
   useEffect(() => {
     fetch('/api/listingEdit/' + listingId)
