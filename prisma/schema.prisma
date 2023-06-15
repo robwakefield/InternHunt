@@ -41,7 +41,6 @@ model Application {
   post        Post       @relation(fields: [postID], references: [id])
   student     Student    @relation(fields: [studentID], references: [id])
   evidences   Evidence[]
-  extractedCV String  @default("")
   interview   Interview?
   stages      Stage[]
 
