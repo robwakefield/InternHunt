@@ -1,7 +1,7 @@
 import { prisma } from '../../db/client'
 import { NextResponse } from 'next/server';
 
-// Completes and dates  a stage (if not already completed)
+// Completes and dates  a stage
 export async function PUT(request) {
     const body = await request.json()
     // body = {postID, studentID, stageID, completed, date}
@@ -17,7 +17,7 @@ export async function PUT(request) {
             }
         }
     })
-    if (!alreadyCompleted.completed) {
+    if (body.override || !alreadyCompleted.completed) {
         const stage = await prisma.stage.update({
             data: {
                 completed: body.completed,

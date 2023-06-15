@@ -171,7 +171,8 @@ class EvidenceEntryList extends Component {
           studentID: this.props.studentID,
           stageID: 0, // Application Started
           completed: true,
-          date: new Date(Date.now())
+          date: new Date(Date.now()),
+          override: false
         })
       });
       window.location.reload(false);

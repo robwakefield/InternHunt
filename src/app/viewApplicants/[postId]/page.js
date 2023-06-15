@@ -132,7 +132,8 @@ class ApplicantList extends Component {
           studentID: application.studentID,
           stageID: 3, // Viewed Application
           completed: true,
-          date: new Date(Date.now())
+          date: new Date(Date.now()),
+          override: false
         })
       });
   }
