@@ -31,7 +31,7 @@ function ViewApplicants() {
   useEffect(() => {
     fetch('/api/post/' + postId)
       .then((response) => response.json())
-      .then((data) => setPost(data));
+      .then((data) => { setPost(data); });
   }, []);
 
   if (post == undefined) {
@@ -181,7 +181,7 @@ class ApplicantList extends Component {
 }
 
 class SkillList extends Component {
-  state = { skills: [], name: "", showDocs: false}
+  state = { skills: [], name: "", showDocs: false, cv: null }
   getSelectedStudent = () => this.props.post.applications.filter(
     app => app.student.id == this.props.selectedApplicant)[0];
 
@@ -219,7 +219,8 @@ class SkillList extends Component {
     if (prevProps !== this.props) {
       this.setState({
         skills: (this.props.selectedApplicant != -1 ? this.getSelectedStudent().evidences : []),
-        name: (this.props.selectedApplicant != -1 ? this.getSelectedStudent().student.name + "'s Application" : "")
+        name: (this.props.selectedApplicant != -1 ? this.getSelectedStudent().student.name + "'s Application" : ""),
+        cv: (this.props.selectedApplicant != -1 ? this.getSelectedStudent().cv : null)
       });
     }
   }
@@ -238,20 +239,29 @@ class SkillList extends Component {
                 <Modal.Header closeButton>
                   <Modal.Title>Documents</Modal.Title>
                 </Modal.Header>
-              <Modal.Body >
-              <Nav variant="tabs" defaultActiveKey="/home">
-                <Nav.Item>
-                  <Nav.Link eventKey="doc-1">CV</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                  <Nav.Link eventKey="doc-2" >Cover Letter</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                  <Nav.Link eventKey="doc-3" >Transcript</Nav.Link>
-                </Nav.Item>
-              </Nav>
-                    <iframe src="http://docs.google.com/gview?url=http://infolab.stanford.edu/pub/papers/google.pdf&embedded=true" style={{width: "60vw", height:"30vw"}} frameborder="0"></iframe>
-                    </Modal.Body>
+                <Modal.Body>
+                  <Nav variant="tabs" defaultActiveKey="/home">
+                    <Nav.Item>
+                      <Nav.Link eventKey="doc-1">CV</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                      <Nav.Link eventKey="doc-2" >Cover Letter</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                      <Nav.Link eventKey="doc-3" >Transcript</Nav.Link>
+                    </Nav.Item>
+                  </Nav>
+
+                  {this.state.cv && (
+                    <embed
+                      src={`${this.state.cv}`}
+                      type="application/pdf"
+                      width="100%"
+                      height="600px"
+                    />
+                  )}
+
+                </Modal.Body>
                 <Modal.Footer>
                   <Button variant="secondary" onClick={this.handleDocsClose}>
                     Close

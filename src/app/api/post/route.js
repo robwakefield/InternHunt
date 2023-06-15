@@ -14,6 +14,7 @@ export async function GET() {
       rating5Text: true,
       applications: {
         select: {
+          cv: true,
           student: {
             select: {
               id: true,
@@ -42,5 +43,6 @@ export async function GET() {
       }
     }
   });
+  console.log(post);
   return NextResponse.json(post);
 }
