@@ -58,10 +58,8 @@ function StudentDashboard() {
           <Col>
             <Container style={{ height: "80vh" }}>
               <Card className="mt-4 h-100">
-                <Card.Header className="d-flex justify-content-between">
-                  <Button>Sort</Button>
+                <Card.Header className="d-flex justify-content-center">
                   <h4>My Applications</h4>
-                  <Button>New Post</Button>
                 </Card.Header>
                 <ApplicationList applications={applications} setSelectedApplication={setSelectedApplication} selectedApplication={selectedApplication}/>
               </Card>
