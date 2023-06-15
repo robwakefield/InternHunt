@@ -18,6 +18,7 @@ function JobDescription({ listing }) {
       },
       body: JSON.stringify({
         id: listing.id,
+        totalPlaces: listing.totalPlaces,
         description: descRef.current.value
       }),
     });

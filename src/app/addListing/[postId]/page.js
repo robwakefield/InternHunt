@@ -57,6 +57,7 @@ function AddListing() {
       },
       body: JSON.stringify({
         id: listing.id,
+        totalPlaces: listing.totalPlaces,
         name: nameRef.current.value
       }),
     })
@@ -111,11 +112,11 @@ function AddListing() {
             </ButtonGroup>
           </Pagination>
         </Nav>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Form style={{ display: 'flex', alignItems: 'center' }}>
             <Form.Control as="textarea" rows={1} className="text-center" style={{ fontSize: '36px' }}
               defaultValue={listing.name} ref={nameRef} />
             <Button onClick={handleNameChange}>Save</Button>
-          </div>
+          </Form>
           <JobPlaces listing={listing} />
           <JobDescription listing={listing} />
           <JobRequirementsList id={listing.id} listing={listing} setListing={setListing} />
