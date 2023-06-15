@@ -29,7 +29,7 @@ function Login() {
     }
 
     const switchColor = () => {
-        if (bgColor === "blue") {
+        if (bgColor === "#034687") {
             return "#E10032";
         }
         return "#034687";
