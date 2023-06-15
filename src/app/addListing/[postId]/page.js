@@ -10,7 +10,7 @@ import JobRequirementsList from "../jobRequirements";
 import { useParams, notFound } from "next/navigation";
 
 function AddListing() {
-  const [listing, setListing] = useState({});
+  const [listing, setListing] = useState({requirements: []});
 
   //the param is postId
   const params = useParams()
@@ -67,7 +67,7 @@ function AddListing() {
               <Button type='submit'>Publish</Button>
             </Card.Header>
             <JobDescription listing={listing} />
-            <JobRequirementsList listing={listing} />
+            <JobRequirementsList id={listing.id} listing={listing} setListing={setListing} />
             <SavedBox/>
           </Card>
         </Form>

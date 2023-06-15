@@ -6,13 +6,12 @@ import { Pagination, FormCheck, Nav, Button, PageItem, Container, Card, Form, Bu
 import { Component, useEffect, useRef, useState } from "react";
 import RecruiterNavbar from "../recruiterNavbar";
 
-function JobRequirementsList() {
+function JobRequirementsList({ id, listing, setListing }) {
 
-  const [post, setPost] = useState({requirements: []});
   useEffect(() => {
-    fetch('/api/listingEdit')
+    fetch('/api/listingEdit' + id)
       .then((response) => response.json())
-      .then((data) => setPost(data));
+      .then((data) => setListing(data));
   }, []);
 
   const handleAdd = (event) => {
@@ -23,14 +22,14 @@ function JobRequirementsList() {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        postID: post.id
+        postID: listing.id
       }),
     })
       .then((response) => response.json())
       .then((newRequirement) => {
-        setPost((prevPost) => ({
-          ...prevPost,
-          requirements: [...prevPost.requirements, newRequirement]
+        setListing((prevListing) => ({
+          ...prevListing,
+          requirements: [...prevListing.requirements, newRequirement]
         }));
       });
   }
@@ -42,9 +41,9 @@ function JobRequirementsList() {
         <p>Requirements</p>
         <Button onClick={handleAdd}>Add</Button>
         </Card.Header>
-          {post.requirements.sort((a, b) => a.id - b.id).map((requirement) =>
-            <JobRequirementsItem key={requirement.id} postid={post.id}
-            id={requirement.id} requirement={requirement} setPost={setPost} />)}
+          {listing.requirements.sort((a, b) => a.id - b.id).map((requirement) =>
+            <JobRequirementsItem key={requirement.id} listingid={listing.id}
+            id={requirement.id} requirement={requirement} setListing={setListing} />)}
       </Card>
     </Form>
   )
@@ -52,7 +51,7 @@ function JobRequirementsList() {
 
 export default JobRequirementsList;
 
-function JobRequirementsItem({ postid, id, requirement, setPost }) {
+function JobRequirementsItem({ listingid, id, requirement, setListing }) {
   const reqRef = useRef();
 
   const handleSubmit = (event) => {
@@ -63,7 +62,7 @@ function JobRequirementsItem({ postid, id, requirement, setPost }) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        postid: postid,
+        postid: listingid,
         id: id,
         requirementText: reqRef.current.value
       }),
@@ -78,15 +77,15 @@ function JobRequirementsItem({ postid, id, requirement, setPost }) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        postid: postid,
+        postid: listingid,
         id: id
       }),
     })
       .then((response) => response.clone())
       .then(() => {
-        setPost((prevPost) => ({
-          ...prevPost,
-          requirements: prevPost.requirements.filter((requirement) => requirement.id !== id)
+        setListing((prevListing) => ({
+          ...prevListing,
+          requirements: prevListing.requirements.filter((requirement) => requirement.id !== id)
         }));
       });
   }
