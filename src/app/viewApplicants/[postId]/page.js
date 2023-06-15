@@ -14,7 +14,7 @@ import { useParams, notFound } from "next/navigation";
 
 function averageRating(application) {
   if (application.evidences.length == 0) return 0;
-  return application.evidences.map(ev => ev.rating).reduce((a, b) => a + b, 0) / application.evidences.length;
+  return (application.evidences.map(ev => ev.rating).reduce((a, b) => a + b, 0) / application.evidences.length).toFixed(1);
 }
 
 function ViewApplicants() {
@@ -106,8 +106,7 @@ class ApplicantList extends Component {
     applications:  this.props.post.applications.filter(function(application) {return !application.rejected && application.submitted}),
     rejections: this.props.post.applications.filter(function(application) {return application.rejected && application.submitted}),
     // Only show the rejections at first load if everyone is rejected
-    rejected: this.props.post.applications.filter(function(application) {return !application.rejected}).length == 0 
-      && this.props.post.applications.filter(function(application) {return application.rejected}).length != 0
+    rejected: true
   };
 
   componentDidUpdate(prevProps) {
