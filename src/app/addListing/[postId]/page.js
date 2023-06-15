@@ -112,15 +112,19 @@ function AddListing() {
             </ButtonGroup>
           </Pagination>
         </Nav>
+        <Card>
+        <Card.Header>
           <Form style={{ display: 'flex', alignItems: 'center' }}>
-            <Form.Control as="textarea" rows={1} className="text-center" style={{ fontSize: '36px' }}
+            <Form.Control as="textarea" rows={2} className="text-center" style={{ fontSize: '32px' }}
               defaultValue={listing.name} ref={nameRef} />
             <Button onClick={handleNameChange}>Save</Button>
           </Form>
+        </Card.Header>
           <JobPlaces listing={listing} />
           <JobDescription listing={listing} />
           <JobRequirementsList id={listing.id} listing={listing} setListing={setListing} />
           <SavedBox/>
+        </Card>
       </Container>
     </main>
     
