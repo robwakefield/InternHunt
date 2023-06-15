@@ -11,6 +11,7 @@ export async function POST(request) {
     select: {
       cv: true,
       submitted: true,
+      extractedCV: true,
       evidences: {
         select: {
           requirementID: true,

@@ -41,6 +41,7 @@ model Application {
   evidences   Evidence[]
   stages      Stage[]
   cv          String?
+  extractedCV String  @default("")
   rejected    Boolean @default(false)
   accepted    Boolean @default(false)
   submitted   Boolean @default(false)

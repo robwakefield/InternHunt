@@ -15,8 +15,7 @@ import GenerateAnswerButton from "./generateAnswerButton";
 function StudentApplication() {
   const [postID, setPostID] = useState(-1);
   const [studentID, setStudentID] = useState(-1);
-  const [application, setApplication] = useState({submitted: false, evidences: [], post: {}, cv: null});
-  const [extractedCV, setExtractedCV] = useState("")
+  const [application, setApplication] = useState({submitted: false, evidences: [], post: {}, cv: null, extractedCV: ""});
   const [showUploader, setShowUploader] = useState(false);
   const [showJobListing, setJobListing] = useState(false);
 
@@ -87,18 +86,13 @@ function StudentApplication() {
                 <Modal.Title>Your CV</Modal.Title>
               </Modal.Header>
               <Modal.Body>
-                {!application.submitted && (
-                  <div>
-                    <p>CV must be in (.doc, .docx)</p>
-                    <DocxExtractor
-                      setExtractedCV={setExtractedCV}
-                      setApplication={setApplication}
-                      application={application}
-                      postID={postID}
-                      studentID={studentID}
-                    />
-                  </div>
-                )}
+                <p>CV must be in (.doc, .docx)</p>
+                <DocxExtractor
+                  setApplication={setApplication}
+                  application={application}
+                  postID={postID}
+                  studentID={studentID}
+                />
                 <p>
                   {application.cv && (
                     <embed
@@ -119,7 +113,7 @@ function StudentApplication() {
           </Card.Header>
 
           <Form>
-            <EvidenceEntryList extractedCV={extractedCV} application={application} postID={postID} studentID={studentID}/>
+            <EvidenceEntryList extractedCV={application.extractedCV} application={application} postID={postID} studentID={studentID}/>
           </Form>
         </Card>
       </Container>
