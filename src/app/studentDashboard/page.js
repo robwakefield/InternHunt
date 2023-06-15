@@ -17,7 +17,7 @@ function StudentDashboard() {
   const studentId = 1;
 
   useEffect(() => {
-    fetch('/api/studentApplication/'+studentId)
+    fetch('/api/studentApplication/' + studentId)
       .then((response) => response.json())
       .then((data) => {
         setApplications(data)

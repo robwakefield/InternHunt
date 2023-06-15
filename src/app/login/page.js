@@ -1,20 +1,23 @@
 
 'use client'
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, ListGroup, Nav, Container, Tab, FloatingLabel, Form, Button, InputGroup, Tabs} from 'react-bootstrap';
 import LinkedInLogin from '../linkedInLogin';
 import "bootstrap/dist/css/bootstrap.min.css"
 import "./login.css"
 import "./background.css"
 import {FcReadingEbook, FcBusinessman} from "react-icons/fc"
+import { cookies } from "next/dist/client/components/headers";
+import jwt from "jwt-decode"
+import Cookies from "universal-cookie"
 
 function Login() {
-    const [justifyActive, setJustifyActive] = useState('tab1');;
-    const [logedIn, setLogedIn] = useState(false);
+    const cookies = new Cookies();
     const [user, setUser] = useState("Student");
     const [token, setToken] = useState("");
     const [bgColor, setbgColor] = useState("blue")
+    
 
     const switchUser = () => {
         if (user === "Student") {
@@ -32,6 +35,26 @@ function Login() {
         return "#034687";
         
     }
+
+    const login = () => {
+        cookies.set("loggedIn", true)
+        cookies.set("token", token)
+        cookies.set("userType", user)
+        
+        fetch
+
+
+        window.location.href = "./" + cookies.get("userType").toLowerCase() + "Dashboard";
+    }
+
+    useEffect(() => {
+        if (token === "") {
+            return
+        }
+        login();
+    }, [token]);
+
+    
 
     return (
         <div>
@@ -73,7 +96,6 @@ function Login() {
                 <div className="text-center mb-3">
                     <LinkedInLogin setToken={setToken}/>
                 </div>
-                
                 <FloatingLabel
                     controlId="floatingInput"
                     label="Email address"
