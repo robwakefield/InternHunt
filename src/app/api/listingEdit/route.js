@@ -38,8 +38,7 @@ export async function PUT(request) {
   const body = await request.json();
   await prisma.post.update({
     where: {
-      id: body.id,
-      status: "Draft"
+      id: body.id
     },
     data: {
       description: body.description
