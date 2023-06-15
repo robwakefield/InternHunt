@@ -6,28 +6,42 @@ import { Pagination, FormCheck, Nav, Button, PageItem, Container, Card, Form, Bu
 import { Component, useEffect, useRef, useState } from "react";
 import RecruiterNavbar from "../recruiterNavbar";
 
-function JobRequirementsList() {
+function JobRequirementsList({ id, listing, setListing }) {
 
-  const [post, setPost] = useState({description: "", requirements: []});
   useEffect(() => {
-    fetch('/api/listingEdit')
+    fetch('/api/listingEdit' + id)
       .then((response) => response.json())
-      .then((data) => setPost(data));
+      .then((data) => setListing(data));
   }, []);
+
+  const handleAdd = (event) => {
+    event.preventDefault();
+    fetch('/api/requirements', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        postID: listing.id,
+        id: id
+      }),
+    })
+      .then((response) => response.json())
+      .then(() => {
+        window.location.reload();
+      });
+  }
 
   return (
     <Form>
       <Card className="my-2 mx-3">
         <Card.Header className="d-flex justify-content-between">
         <p>Requirements</p>
-        <ButtonGroup>
-          {/* <Button>Add</Button> */}
-          {/* <Button>Remove</Button> */}
-        </ButtonGroup>
+        <Button onClick={handleAdd}>Add</Button>
         </Card.Header>
-          {post.requirements.map((requirement) =>
-            <JobRequirementsItem key={requirement.id} postid={post.id}
-            id={requirement.id} requirement={requirement} />)}
+          {listing.requirements.sort((a, b) => a.id - b.id).map((requirement) =>
+            <JobRequirementsItem key={requirement.id} listingid={listing.id}
+            id={requirement.id} requirement={requirement} setListing={setListing} />)}
       </Card>
     </Form>
   )
@@ -35,7 +49,7 @@ function JobRequirementsList() {
 
 export default JobRequirementsList;
 
-function JobRequirementsItem({ postid, id, requirement }) {
+function JobRequirementsItem({ listingid, id, requirement, setListing }) {
   const reqRef = useRef();
 
   const handleSubmit = (event) => {
@@ -46,11 +60,32 @@ function JobRequirementsItem({ postid, id, requirement }) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        postid: postid,
+        postid: listingid,
         id: id,
         requirementText: reqRef.current.value
       }),
     });
+  }
+
+  const handleRemove = (event) => {
+    event.preventDefault();
+    fetch('/api/requirementRemoval', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        postid: listingid,
+        id: id
+      }),
+    })
+      .then((response) => response.clone())
+      .then(() => {
+        setListing((prevListing) => ({
+          ...prevListing,
+          requirements: prevListing.requirements.filter((requirement) => requirement.id !== id)
+        }));
+      });
   }
 
   return (
@@ -59,7 +94,10 @@ function JobRequirementsItem({ postid, id, requirement }) {
         <Form.Control as="textarea" rows={1}
           placeholder="Enter your Requirements" defaultValue={requirement.requirementText}
           ref={reqRef} />
-          <Button onClick={handleSubmit}>Save</Button>
+          <ButtonGroup>
+            <Button onClick={handleSubmit}>Save</Button>
+            <Button variant="danger" onClick={handleRemove}>Remove</Button>
+          </ButtonGroup>
       </div>
     </Form.Group>
   )

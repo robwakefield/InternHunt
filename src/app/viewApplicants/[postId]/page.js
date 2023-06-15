@@ -31,7 +31,7 @@ function ViewApplicants() {
   useEffect(() => {
     fetch('/api/post/' + postId)
       .then((response) => response.json())
-      .then((data) => setPost(data));
+      .then((data) => { setPost(data); });
   }, []);
 
   if (post == undefined) {
@@ -54,14 +54,15 @@ function ViewApplicants() {
             <Container>
               <Row>
                 <Col xs={10}>{post.name}</Col>
-                <Col xs={2}><Button style={{float: "right"}} variant="primary" onClick={handleShow}>
+                <Col xs={2}>
+                  <Button style={{float: "right"}} variant="primary" onClick={handleShow}>
                   View Job Listing
-                </Button>
+                  </Button>
 
-              <Modal show={showJobListing} onHide={handleClose}>
-                <Modal.Header closeButton>
-                  <Modal.Title>{post.name}</Modal.Title>
-                </Modal.Header>
+                  <Modal show={showJobListing} onHide={handleClose}>
+                    <Modal.Header closeButton>
+                      <Modal.Title>{post.name}</Modal.Title>
+                    </Modal.Header>
                     <Modal.Body>
                       <strong>Description:</strong><br></br>
                       {post.description}<br></br><br></br>
@@ -70,12 +71,13 @@ function ViewApplicants() {
                         <p key={index}>- {requirement.requirementText}</p>
                       ))}
                     </Modal.Body>
-                <Modal.Footer>
-                  <Button variant="secondary" onClick={handleClose}>
-                    Close
-                  </Button>
-                </Modal.Footer>
-              </Modal></Col>
+                    <Modal.Footer>
+                      <Button variant="secondary" onClick={handleClose}>
+                        Close
+                      </Button>
+                    </Modal.Footer>
+                  </Modal>
+                </Col>
               </Row>
             </Container>
           </Card.Header>
@@ -101,8 +103,8 @@ class ApplicantList extends Component {
   selectApplicant = (n) => () => {this.props.setSelectedApplicant(n);}
 
   state = {
-    applications:  this.props.post.applications.filter(function(application) {return !application.rejected}),
-    rejections: this.props.post.applications.filter(function(application) {return application.rejected}),
+    applications:  this.props.post.applications.filter(function(application) {return !application.rejected && application.submitted}),
+    rejections: this.props.post.applications.filter(function(application) {return application.rejected && application.submitted}),
     // Only show the rejections at first load if everyone is rejected
     rejected: this.props.post.applications.filter(function(application) {return !application.rejected}).length == 0 
       && this.props.post.applications.filter(function(application) {return application.rejected}).length != 0
@@ -110,8 +112,8 @@ class ApplicantList extends Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
-      const applications = this.props.post.applications.filter(function(application) {return !application.rejected})
-      const rejections = this.props.post.applications.filter(function(application) {return application.rejected})
+      const applications = this.props.post.applications.filter(function(application) {return !application.rejected && application.submitted})
+      const rejections = this.props.post.applications.filter(function(application) {return application.rejected && application.submitted})
       this.setState({
         applications: applications,
         rejections: rejections,
@@ -181,7 +183,17 @@ class ApplicantList extends Component {
 }
 
 class SkillList extends Component {
-  state = { skills: [], name: "", showDocs: false}
+  state = {
+    skills: [], 
+    name: "", 
+    showDocs: false, 
+    showInterview: false,
+    interview: {
+      date: "",
+      location: "",
+      description: ""
+    }
+  , cv: null }
   getSelectedStudent = () => this.props.post.applications.filter(
     app => app.student.id == this.props.selectedApplicant)[0];
 
@@ -193,12 +205,95 @@ class SkillList extends Component {
     this.setState({ showDocs: false });
   }
 
+  handleInterviewShow = () => {
+    if (this.props.selectedApplicant != -1) {
+      this.setState({ showInterview: true });
+    }
+  }
+
+  handleInterviewClose = () => {
+    this.setState({ 
+      showInterview: false,
+      interview: {
+        date: "",
+        location: "",
+        description: ""
+      }
+    });
+  }
+
   rejectApplicant = () => {
-    fetch('/api/reject', {
+    if (this.props.selectedApplicant != -1) {
+      fetch('/api/reject', {
+        method: 'PUT',
+        body: JSON.stringify({
+          postID: this.props.post.id,
+          studentID: this.props.selectedApplicant
+        })
+      });
+    }
+  }
+
+  defaultDate() {
+    const date = new Date(Date.now())
+    return date.getDate().toString().padStart(2, '0') + "-" + (date.getMonth() + 1).toString().padStart(2, '0') + "-" + date.getFullYear().toString() + " " + date.getHours().toString().padStart(2, '0') + ":" + date.getMinutes().toString().padStart(2, '0')
+  }
+
+  convertDate() {
+    const date = this.state.interview.date
+    const day = date.split("-")[0]
+    const month = date.split("-")[1]
+    const year = date.split("-")[2].split(" ")[0]
+    const time = date.split("-")[2].split(" ")[1]
+    const dtString = year + "-" + month + "-" + day + "T" + time
+    return new Date(dtString)
+  }
+  
+  checkInterviewForm() {
+    const date = this.state.interview.date
+    if (date.split("-").length < 3 || date.split("-")[2].split(" ") < 2) {
+      return false
+    }
+    const day = date.split("-")[0]
+    const month = date.split("-")[1]
+    const year = date.split("-")[2].split(" ")[0]
+    const time = date.split("-")[2].split(" ")[1]
+    const dtString = year + "-" + month + "-" + day + "T" + time
+    if (new Date(dtString).toString() != "Invalid Date") {
+      this.setState({interview: {
+        date: new Date(dtString),
+        location: this.state.interview.location,
+        description: this.state.interview.description
+      }})
+      return true
+    }
+    return false
+  }
+
+  scheduleInterview = () => {
+    if (this.checkInterviewForm() && this.props.selectedApplicant != -1) {
+        fetch('/api/interview', {
+        method: 'PUT',
+        body: JSON.stringify({
+          postID: this.props.post.id,
+          studentID: this.props.selectedApplicant,
+          date: this.convertDate(this.state.interview.date),
+          location: this.state.interview.location,
+          description: this.state.interview.description
+        })
+      });
+      this.handleInterviewClose()
+    }
+  }
+
+  handleNotesChange = (event, id) => {
+    fetch('/api/updateNotes', {
       method: 'PUT',
       body: JSON.stringify({
+        studentID: this.props.selectedApplicant,
         postID: this.props.post.id,
-        studentID: this.props.selectedApplicant
+        requirementID: id,
+        notes: event.target.value
       })
     });
   }
@@ -207,7 +302,8 @@ class SkillList extends Component {
     if (prevProps !== this.props) {
       this.setState({
         skills: (this.props.selectedApplicant != -1 ? this.getSelectedStudent().evidences : []),
-        name: (this.props.selectedApplicant != -1 ? this.getSelectedStudent().student.name + "'s Application" : "")
+        name: (this.props.selectedApplicant != -1 ? this.getSelectedStudent().student.name + "'s Application" : ""),
+        cv: (this.props.selectedApplicant != -1 ? this.getSelectedStudent().cv : null)
       });
     }
   }
@@ -226,20 +322,29 @@ class SkillList extends Component {
                 <Modal.Header closeButton>
                   <Modal.Title>Documents</Modal.Title>
                 </Modal.Header>
-              <Modal.Body >
-              <Nav variant="tabs" defaultActiveKey="/home">
-                <Nav.Item>
-                  <Nav.Link eventKey="doc-1">CV</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                  <Nav.Link eventKey="doc-2" >Cover Letter</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                  <Nav.Link eventKey="doc-3" >Transcript</Nav.Link>
-                </Nav.Item>
-              </Nav>
-                    <iframe src="http://docs.google.com/gview?url=http://infolab.stanford.edu/pub/papers/google.pdf&embedded=true" style={{width: "60vw", height:"30vw"}} frameborder="0"></iframe>
-                    </Modal.Body>
+                <Modal.Body>
+                  <Nav variant="tabs" defaultActiveKey="/home">
+                    <Nav.Item>
+                      <Nav.Link eventKey="doc-1">CV</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                      <Nav.Link eventKey="doc-2" >Cover Letter</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                      <Nav.Link eventKey="doc-3" >Transcript</Nav.Link>
+                    </Nav.Item>
+                  </Nav>
+
+                  {this.state.cv && (
+                    <embed
+                      src={`${this.state.cv}`}
+                      type="application/pdf"
+                      width="100%"
+                      height="600px"
+                    />
+                  )}
+
+                </Modal.Body>
                 <Modal.Footer>
                   <Button variant="secondary" onClick={this.handleDocsClose}>
                     Close
@@ -247,6 +352,58 @@ class SkillList extends Component {
                 </Modal.Footer>
               </Modal>
             <h4>{this.state.name}</h4>
+            <Button onClick={this.handleInterviewShow}>Interview</Button>
+
+            <Modal show={this.state.showInterview} onHide={this.handleInterviewClose}>
+              <Modal.Header closeButton>
+                <Modal.Title>Schedule Interview</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <Form>
+                  <Form.Text>Date</Form.Text>
+                  <Form.Control 
+                    as="textarea"
+                    rows={1}
+                    placeholder="DD-MM-YYYY HH:MM"
+                    defaultValue={this.defaultDate()}
+                    onChange={(event) => {this.setState({ interview: { 
+                      date: event.target.value,
+                      location: this.state.interview.location,
+                      description: this.state.interview.description
+                    } })}}
+                  />
+                  <Form.Text>Location</Form.Text>
+                  <Form.Control
+                    as="textarea"
+                    rows={1}
+                    onChange={(event) => {this.setState({ interview: { 
+                      date: this.state.interview.date,
+                      location: event.target.value,
+                      description: this.state.interview.description
+                    } })}}
+                  />
+                  <Form.Text>Additional Information</Form.Text>
+                  <Form.Control
+                    as="textarea"
+                    rows={2}
+                    onChange={(event) => {this.setState({ interview: { 
+                      date: this.state.interview.date,
+                      location: this.state.interview.location,
+                      description: event.target.value
+                    } })}}
+                  />
+                </Form>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={this.handleInterviewClose}>
+                  Close
+                </Button>
+                <Button variant="primary" type="submit" onClick={this.scheduleInterview}>
+                  Schedule
+                </Button>
+              </Modal.Footer>
+            </Modal>
+
             <Button onClick={this.rejectApplicant}>Reject</Button>
           </Card.Header>
           
@@ -256,15 +413,25 @@ class SkillList extends Component {
                 <Accordion.Header>{skill.requirement.requirementText}</Accordion.Header>
                 <Accordion.Body>
                   <Card><Card.Body>{skill.evidenceText}</Card.Body></Card>
-                  <Card className="ratingCard"><Card.Body style={{ alignSelf: "flex-end" }}>
-                    <StarRating 
-                      initialRating={skill.rating}
-                      post={this.props.post}
-                      setPost={this.props.setPost}
-                      studentID={this.getSelectedStudent().student.id}
-                      requirementID={skill.requirement.id}
-                    />
-                  </Card.Body></Card>
+                  <Card className="ratingCard">
+                    <Row>
+                      <Col xs={8} className="notesSkill">
+                        <Form.Control
+                          placeholder="Notes (Not shown to student)"
+                          defaultValue={skill.notes}
+                          onChange={(event) => this.handleNotesChange(event, skill.requirement.id)}></Form.Control></Col>
+                      <Col xs={4}>
+                        <Card.Body className="starRating" style={{ alignSelf: "flex-end" }}>
+                        <StarRating 
+                          initialRating={skill.rating}
+                          post={this.props.post}
+                          setPost={this.props.setPost}
+                          studentID={this.getSelectedStudent().student.id}
+                          requirementID={skill.requirement.id}
+                        />
+                  </Card.Body></Col>
+                    </Row>
+                    </Card>
                 </Accordion.Body>
               </Accordion.Item>
             ))}
@@ -372,7 +539,6 @@ class StarRating extends Component {
     newPost.rating3Text = this[`textarea_2`].value;
     newPost.rating4Text = this[`textarea_3`].value;
     newPost.rating5Text = this[`textarea_4`].value;
-    console.log(newPost);
     this.props.setPost(newPost);
   };
 

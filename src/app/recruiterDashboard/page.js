@@ -2,15 +2,21 @@
 
 import './recruiterDashboard.css'
 import "bootstrap/dist/css/bootstrap.min.css"
-import { Button, ListGroup, Container, Card, ListGroupItem } from "react-bootstrap";
-import { Component, useEffect, useState } from "react";
+import { Button, ListGroup, Container, Card, ListGroupItem, Modal, Form } from "react-bootstrap";
+import { Component, useEffect, useRef, useState } from "react";
 import RecruiterNavbar from '../recruiterNavbar';
 import '../globals.css'
 import {BsSortDown} from 'react-icons/bs'
 
 function RecruiterDashboard() {
+  const titleRef = useRef();
+  const placesRef = useRef();
 
   const [listings, setListings] = useState([]);
+  const [showJobListing, setJobListing] = useState(false);
+
+  const handleClose = () => setJobListing(false);
+  const handleShow = () => setJobListing(true);
 
   useEffect(() => {
     fetch('/api/listings')
@@ -18,6 +24,23 @@ function RecruiterDashboard() {
       .then((data) => setListings(data));
   }, []);
 
+  const handleAdd = (event) => {
+    event.preventDefault();
+    fetch('/api/listings', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: titleRef.current.value,
+        totalPlaces: parseInt(placesRef.current.value)
+      }),
+    })
+      .then((response) => response.json())
+      .then(() => {
+        window.location.reload();
+      });
+  }
 
   return (
     <main className="recruiterDashboard">
@@ -26,12 +49,40 @@ function RecruiterDashboard() {
       {/* Job Listings List */}
       <Container  style={{height: "80vh"}}>
         <Card className="mt-4 h-100">
-          <Card.Header className="d-flex justify-content-between">
-            <Button className="sortButton"><BsSortDown color="black" size={30}/></Button>
-            <h4>My Listings</h4>
-            <Button href="./addListing">New Post</Button>
-          </Card.Header>
-          <ApplicantList listings={listings}/>          
+          <Form>
+            <Card.Header className="d-flex justify-content-between">
+              <Button className="sortButton"><BsSortDown color="black" size={30}/></Button>
+              <h4>My Listings</h4>
+
+              <Modal show={showJobListing} onHide={handleClose}>
+                <Modal.Header closeButton>
+                  <Modal.Title>New Listing</Modal.Title>
+                </Modal.Header>
+                  <Modal.Body>
+                    <strong>Title</strong>
+                    <Form.Group className="mb-3" controlId="formJob">
+                      <Form.Control as="textarea" rows={1} type="text"
+                        placeholder="Enter your Job Title" ref={titleRef} />
+                      <strong>Places</strong>
+                      <Form.Control as="textarea" rows={1} type="number"
+                        placeholder="Enter your Job Places" ref={placesRef} />
+                    </Form.Group>
+                  </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleClose}>
+                    Cancel
+                  </Button>
+                  <Button variant="primary" onClick={handleAdd}>
+                    Create Listing
+                  </Button>
+                </Modal.Footer>
+              </Modal>
+
+              <Button onClick={handleShow}>New Listing</Button>
+              {/* href="./addListing" */}
+            </Card.Header>
+          </Form>  
+          <ApplicantList listings={listings}/>
         </Card>
       </Container>
     </main>
@@ -58,7 +109,8 @@ class ApplicantList extends Component {
   render() {
     return (
       <ListGroup>
-        {this.state.listings.map((listing) => <ListingItem key={listing.title} post={listing}></ListingItem>)}
+        {this.state.listings.sort((a, b) => a.id - b.id)
+          .map((listing) => <ListingItem key={listing.title} post={listing}></ListingItem>)}
       </ListGroup>
     )
   }
@@ -66,6 +118,11 @@ class ApplicantList extends Component {
 
 const handleClick = (postId) => {
   window.location.href = "/viewApplicants/" + postId;
+}
+
+const handleEdit = (postId, event) => {
+  event.stopPropagation();
+  window.location.href = "/addListing/" + postId;
 }
 
 class ListingItem extends Component {
@@ -132,16 +189,27 @@ class ListingItem extends Component {
 
     let rhs = <p className={ratio_class}>{places_filled}/{total_places} Applications</p>
     if (this.state.status == "Draft") {
-      rhs = <Button href="./addListing">Click to Edit</Button>
+      rhs = <Button onClick={(event) => {handleEdit(this.state.id, event)}}>Click to Edit</Button>
     }
     
-    return (
-      <ListGroupItem className="listing">
-        <Container className="d-flex justify-content-between" style={{cursor: "pointer"}} onClick={() => {handleClick(this.state.id)}}>
+    let tab = 
+      <Container className="d-flex justify-content-between" style={{cursor: "pointer"}} onClick={() => {handleClick(this.state.id)}}>
+        <p className={status_class}>{this.state.status}</p>
+        <p className="text-center">{this.state.title}</p>
+        {rhs}
+      </Container>
+    if (this.state.status == "Draft") {
+      tab =
+        <Container className="d-flex justify-content-between">
           <p className={status_class}>{this.state.status}</p>
           <p className="text-center">{this.state.title}</p>
           {rhs}
         </Container>
+    }
+    
+    return (
+      <ListGroupItem className="listing">
+        {tab}
       </ListGroupItem>
     )
   }

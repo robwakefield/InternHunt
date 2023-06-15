@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 import Container from "react-bootstrap/Container";
 import { Component, useEffect, useState, useRef } from 'react';
 import StudentNavbar from "../studentNavbar";
-import { Card } from "react-bootstrap";
+import { Card, Col, Row } from "react-bootstrap";
 import '../globals.css'
 import DocxExtractor from "./DocxExtractor";
 import Modal from 'react-bootstrap/Modal';
@@ -15,10 +15,12 @@ import GenerateAnswerButton from "./generateAnswerButton";
 function StudentApplication() {
   const [postID, setPostID] = useState(-1);
   const [studentID, setStudentID] = useState(-1);
-  const [application, setApplication] = useState({submitted: false, evidences: [], post: {}});
-  const [CV, setCV] = useState("")
-  const [extractedCV, setExtractedCV] = useState("")
+  const [application, setApplication] = useState({submitted: false, evidences: [], post: {}, cv: null, extractedCV: ""});
   const [showUploader, setShowUploader] = useState(false);
+  const [showJobListing, setJobListing] = useState(false);
+
+  const handleCloseJobListing = () => setJobListing(false);
+  const handleShowJobListing = () => setJobListing(true);
 
   const handleUploaderClose = () => setShowUploader(false);
   const handleUploaderShow = () => setShowUploader(true);
@@ -27,6 +29,7 @@ function StudentApplication() {
     const urlParams = new URLSearchParams(window.location.search);
     const queryStudentID = parseInt(urlParams.get('studentID'));
     const queryPostID = parseInt(urlParams.get('postID'));
+    
     if (isNaN(queryStudentID) || isNaN(queryPostID)) window.location.replace("/studentDashboard");
     setStudentID(queryStudentID);
     setPostID(queryPostID);
@@ -38,12 +41,8 @@ function StudentApplication() {
         postID: queryPostID
       })
     }).then((response) => response.json())
-      .then((data) => { setApplication(data);  console.log(data)});
+      .then((data) => { setApplication(data); });
   }, []);
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-  }
 
   return (
     <main className="studentApplication">
@@ -51,17 +50,60 @@ function StudentApplication() {
       <Container style={{ height: "80vh" }}>
         <Card className="mt-4 h-100">
           <Card.Header className="d-flex justify-content-between">
-            <h4>{application.submitted? "Submitted" : ""}</h4>
+            
+            <Row>
+              {application.submitted ? <Col xs={7}><h4>Submitted</h4></Col> : null}
+              <Col xs={5}><Button  style={{float: "left"}} variant="primary" onClick={handleShowJobListing}>
+                  ViewListing
+                </Button>
+
+              <Modal show={showJobListing} onHide={handleCloseJobListing}>
+                <Modal.Header closeButton>
+                  <Modal.Title>{application.post.name}</Modal.Title>
+                </Modal.Header>
+                    <Modal.Body>
+                      <strong>Description:</strong><br></br>
+                      {application.post.description}<br></br><br></br>
+                      <strong>Requirements:</strong>
+                      {application.evidences.map((evidence, index) => (
+                        <p key={index}>- {evidence.requirement.requirementText}</p>
+                      ))}
+                    </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleCloseJobListing}>
+                    Close
+                  </Button>
+                </Modal.Footer>
+            </Modal></Col>
+            </Row>
+            
+            
+            
             <h4>{application.post.name}</h4>
-            <Button variant={(extractedCV != "") ? "success" : "danger"} disabled={application.submitted} onClick={handleUploaderShow}>Upload CV</Button>
+            <Button variant={application.cv ? "success" : "danger"} onClick={handleUploaderShow}>Your CV</Button>
             <Modal show={showUploader} onHide={handleUploaderClose}>
               <Modal.Header closeButton>
-                <Modal.Title>Upload CV</Modal.Title>
+                <Modal.Title>Your CV</Modal.Title>
               </Modal.Header>
               <Modal.Body>
                 <p>CV must be in (.doc, .docx)</p>
-                <p>Uploaded file: {CV.name}</p>
-                <DocxExtractor setExtractedCV={setExtractedCV} setCV={setCV}></DocxExtractor></Modal.Body>
+                <DocxExtractor
+                  setApplication={setApplication}
+                  application={application}
+                  postID={postID}
+                  studentID={studentID}
+                />
+                <p>
+                  {application.cv && (
+                    <embed
+                      src={`${application.cv}`}
+                      type="application/pdf"
+                      width="100%"
+                      height="600px"
+                    />
+                  )}
+                </p>
+              </Modal.Body>
               <Modal.Footer>
                 <Button variant="secondary" onClick={handleUploaderClose}>
                   Close
@@ -70,8 +112,8 @@ function StudentApplication() {
             </Modal>
           </Card.Header>
 
-          <Form onSubmit={handleSubmit}>
-            <EvidenceEntryList extractedCV={extractedCV} application={application} postID={postID} studentID={studentID}/>
+          <Form>
+            <EvidenceEntryList extractedCV={application.extractedCV} application={application} postID={postID} studentID={studentID}/>
           </Form>
         </Card>
       </Container>
@@ -84,7 +126,6 @@ export default StudentApplication;
 class EvidenceEntryList extends Component {
   constructor(props) {
     super(props);
-    this.changeEntryValues.bind(this);
     this.state = {
       extractedCV: props.extractedCV,
       evidences: props.application.evidences,
@@ -104,6 +145,18 @@ class EvidenceEntryList extends Component {
       })
     });
   }
+
+  handleSubmitApplication = () => {
+      fetch("/api/submitApplication", {
+        method: "PUT",
+        body: JSON.stringify({
+          studentID: this.props.studentID,
+          postID: this.props.postID,
+        })
+      });
+      window.location.reload(false);
+  }
+
   componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
       this.setState({
@@ -115,16 +168,16 @@ class EvidenceEntryList extends Component {
   }
 
   // Change by text input
-  updateEntryValue(i, value) {
-    const updatedEntryValues = [...this.state.entryValues];
-    updatedEntryValues[i] = value;
-    this.setState({ entryValues: updatedEntryValues }, () => {this.handleAutoSave();});
+  updateEntryValue = (i, value) => {
+    this.setState((prev) => {
+      const updatedEntryValues = prev.entryValues;
+      updatedEntryValues[i] = value;
+      return {
+        ...prev,
+        entryValues: updatedEntryValues
+      }
+    }, () => { this.handleAutoSave(); });
   }
-
-  // Change by generateAnswerButton component
-  changeEntryValues = (newValue) => {
-    this.setState({ entryValues: newValue }, () => {this.handleAutoSave();});
-  };
 
   render() {
     return (
@@ -154,15 +207,14 @@ class EvidenceEntryList extends Component {
                     extractedCV={this.state.extractedCV}
                     requirement = {evidence.requirement.requirementText}
                     evidence={i}
-                    entryValues={this.state.entryValues} 
-                    changeEntryValues={this.changeEntryValues} />
+                    updateEntryValue={this.updateEntryValue} />
                 </Accordion.Body>
               </Accordion.Item>
             );
           })
         }
         </Accordion>
-        <Button className = {this.props.application.submitted? "invisible" : "visible"} variant="primary" type="submit" onClick={this.handleAutoSave}>
+        <Button className = {this.props.application.submitted? "invisible" : "visible"} variant="primary" onClick={this.handleSubmitApplication}>
           Submit application
         </Button>
       </div>

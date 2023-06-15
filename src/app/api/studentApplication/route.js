@@ -9,7 +9,9 @@ export async function POST(request) {
       studentID: studentID
     },
     select: {
+      cv: true,
       submitted: true,
+      extractedCV: true,
       evidences: {
         select: {
           requirementID: true,
@@ -24,6 +26,7 @@ export async function POST(request) {
       post: {
         select: {
           name: true,
+          description: true
         }
       }
     }

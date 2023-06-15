@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import PizZip from "pizzip";
 import { DOMParser } from "@xmldom/xmldom";
+import ConvertApi from 'convertapi-js';
 
 function str2xml(str) {
   if (str.charCodeAt(0) === 65279) {
@@ -37,12 +38,45 @@ const DocxExtractor = (props) => {
   const onFileUpload = (event) => {
     const reader = new FileReader();
     let file = event.target.files[0];
-    props.setCV(file);
+    var extractedCV= ""
+    
+    // Convert to PDF and send to database
+    let convertApi = ConvertApi.auth('DsS5CGKucVlsl6S7');
+    let params = convertApi.createParams();
+    params.add('File', event.target.files[0]);
+    convertApi.convert('docx', 'pdf', params).then((result) => {
+      if (result.dto.Files.length == 0) return;
+      fetch(result.dto.Files[0].Url).then((res) => res.blob()).then((blob) => {
+        var reader = new FileReader();
+        reader.readAsDataURL(blob); 
+        reader.onloadend = function() {
+          var base64data = reader.result;
+          props.setApplication({ ...props.application, cv: base64data, extractedCV: extractedCV  });
+          fetch("/api/cv", {
+            method: "PUT",
+            body: JSON.stringify({
+              postID: props.postID,
+              studentID: props.studentID,
+              cv: base64data
+            })
+          });
+        }
+      })
+    });
 
     reader.onload = (e) => {
       const content = e.target.result;
       const paragraphs = getParagraphs(content);
-      props.setExtractedCV(paragraphs);
+      extractedCV = paragraphs.join("\n")
+      props.setApplication({ ...props.application, extractedCV: extractedCV });
+      fetch("/api/updateExtractedCV", {
+        method: "PUT",
+        body: JSON.stringify({
+          postID: props.postID,
+          studentID: props.studentID,
+          extractedCV: extractedCV
+        })
+      });
     };
 
     reader.onerror = (err) => console.error(err);

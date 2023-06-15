@@ -1,7 +1,11 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import { Col, Form, Row} from 'react-bootstrap';
 import Button from 'react-bootstrap/Button'
+import "./studentApplication.css"
+
 function GenerateAnswerButton(props) {
     const [loadingAnswer, setLoadingAnswer] = useState(false);
+    const addtionalInformation = useRef();
 
     const [messages, setMessages] = useState([
         {
@@ -11,9 +15,7 @@ function GenerateAnswerButton(props) {
     ])
 
     function updateEntryValue(value) {
-        const updatedEntryValues = [...props.entryValues];
-        updatedEntryValues[props.evidence] = value;
-        props.changeEntryValues(updatedEntryValues);
+        props.updateEntryValue(props.evidence, value);
         setLoadingAnswer(false);
     }
 
@@ -73,17 +75,34 @@ function GenerateAnswerButton(props) {
             )
     }
 
-    function createQuestion(requirement) {
-        return "By using my CV, write out a paragraph within 100 words to fill in a form to show evidences I have skills in" + requirement;
+    function createQuestion(addtionalInformation, requirement) {
+        return "Given that" + addtionalInformation + "\n" + "By using my CV, write out a paragraph within 100 words to fill in a form to show evidences I have skills in" + requirement;
     }
         
     return (
-        <Button
-            className = {props.submitted? "invisible" : "visible"}
-            disabled={(props.extractedCV == "" || loadingAnswer)}
-            variant="primary"
-            onClick={() => generateAnswer(createQuestion(props.requirement))}>
-            {loadingAnswer? "Loading..." : "Generate Answer from CV"}</Button>
+        <div>
+            <Row>
+                <Col xs={9}>
+                    <Form.Control
+                        class="form-control input-sm"
+                        id="inputsm"
+                        type="text"
+                        className = {props.submitted? "invisible" : "visible"}
+                        placeholder='Optional: Tell the AI more information (I have worked in ...)'
+                        ref={addtionalInformation}/>
+                </Col>
+                <Col xs={3}>
+                <Button
+                    className = {props.submitted? "invisible" : "visible"}
+                    disabled={(props.extractedCV == "" || loadingAnswer)}
+                    variant="primary"
+                    onClick={() => generateAnswer(createQuestion(addtionalInformation.current.value, props.requirement))}>
+                        {loadingAnswer ? "Loading..." : "Generate Answer from CV"}
+                </Button>
+                </Col>
+            </Row>
+        </div>
+        
     );
 }
 
