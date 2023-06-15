@@ -34,28 +34,17 @@ function ApplyPage() {
     }
 
     const handleApply = () => {
-        // Redirect to LoginPage
-        // if (userID == -1) {
-        //     window.location.replace("/login")
-        // }
-        // fetch("/api/createApplication", {
-        //     method: "POST",
-        //     body: JSON.stringify({
-        //       studentID: studentId,
-        //       postID: postId,
-        //     })
-        // })
-        
-        // post.requirements.map((_, index) => (
-        //     fetch("/api/initEvidence", {
-        //         method: "POST",
-        //         body: JSON.stringify({
-        //             studentID: studentId,
-        //             postID: postId,
-        //             requirementID: index
-        //         })
-        //     })
-        // ))
+        //Redirect to LoginPage
+        if (userID == -1) {
+            window.location.replace("/login")
+        }
+        fetch("/api/createApplication", {
+            method: "POST",
+            body: JSON.stringify({
+              studentID: studentId,
+              postID: postId
+            })
+        })
 
         window.location.replace("/studentDashboard")
     }
