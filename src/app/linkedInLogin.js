@@ -10,16 +10,7 @@ const LinkedInLogin = (props) => {
     onSuccess: (code) => {
       console.log(code);
       setCode(code);
-      props.setToken(code)
-
-      fetch('https://www.linkedin.com/oauth/v2/accessToken', {
-        method: 'POST',
-        body: JSON.stringify({
-          postID: this.props.post.id,
-          studentID: this.props.selectedApplicant
-        })
-      });
-      
+      props.setToken(code)      
     },
     onError: (error) => {
       console.log(error);

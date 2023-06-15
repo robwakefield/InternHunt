@@ -40,9 +40,6 @@ function Login() {
         cookies.set("loggedIn", true)
         cookies.set("token", token)
         cookies.set("userType", user)
-        
-        fetch
-
 
         window.location.href = "./" + cookies.get("userType").toLowerCase() + "Dashboard";
     }
@@ -58,7 +55,7 @@ function Login() {
 
     return (
         <div>
-            <ul class="loginBackground">
+            <ul className="loginBackground">
                 <li style={{borderColor: bgColor}}></li>
                 <li style={{borderColor: bgColor}}></li>
                 <li style={{borderColor: bgColor}}></li>
@@ -74,11 +71,11 @@ function Login() {
     <Card className="loginCard" style={{ margin: '12rem', width: '30rem' }}>
     
         <Card.Header>
-            <strong class="alignleft">
+            <strong className="alignleft">
                 {(user === "Student")? <FcReadingEbook size={30} /> : <FcBusinessman size = {30} />}
                 {user} Login
             </strong>
-                    <a class="alignright" href={"#" + user} onClick={() => { setUser(switchUser());  setbgColor(switchColor())}}>I am a {switchUser(user)}</a>
+                    <a className="alignright" href={"#" + user} onClick={() => { setUser(switchUser());  setbgColor(switchColor())}}>I am a {switchUser(user)}</a>
         </Card.Header>
         <ListGroup variant="flush">
         <ListGroup.Item>
