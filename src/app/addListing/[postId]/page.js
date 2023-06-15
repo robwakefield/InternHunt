@@ -18,6 +18,7 @@ function AddListing() {
 
   const handleClose = () => setRemove(false);
   const handleShow = () => setRemove(true);
+  const handleExit = () => {window.location.href = "/recruiterDashboard"};
 
   //the param is postId
   const params = useParams()
@@ -44,6 +45,7 @@ function AddListing() {
         id: listing.id
       }),
     })
+      .then(handleExit)
   }
 
   const handleNameChange = (event) => {
@@ -71,7 +73,7 @@ function AddListing() {
         id: listing.id
       }),
     })
-      .then(() => {window.location.href = "/recruiterDashboard"})
+      .then(handleExit)
   }
 
   let modal = <Modal show={showRemove} onHide={handleClose}>
@@ -122,7 +124,7 @@ function AddListing() {
               </Container>
               {modal}
               <ButtonGroup>
-                <Button type='submit'>Publish</Button>
+                <Button type='submit' onClick={handleSubmit}>Publish</Button>
                 <Button variant="danger" onClick={handleShow}>Remove</Button>
               </ButtonGroup>
             </Card.Header>
