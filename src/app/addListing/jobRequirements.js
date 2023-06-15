@@ -98,7 +98,7 @@ function JobRequirementsItem({ listingid, id, requirement, setListing }) {
           ref={reqRef} />
           <ButtonGroup>
             <Button onClick={handleSubmit}>Save</Button>
-            <Button onClick={handleRemove}>Remove</Button>
+            <Button variant="danger" onClick={handleRemove}>Remove</Button>
           </ButtonGroup>
       </div>
     </Form.Group>

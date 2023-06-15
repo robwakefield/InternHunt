@@ -10,6 +10,8 @@ import JobRequirementsList from "../jobRequirements";
 import { useParams, notFound } from "next/navigation";
 
 function AddListing() {
+  const nameRef = useRef();
+
   const [listing, setListing] = useState({requirements: []});
 
   //the param is postId
@@ -39,6 +41,20 @@ function AddListing() {
     })
   }
 
+  const handleNameChange = (event) => {
+    event.preventDefault();
+    fetch('/api/listingEdit', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: listing.id,
+        name: nameRef.current.value
+      }),
+    })
+  }
+
   return (
     <main className="addListing">
       <RecruiterNavbar/>
@@ -50,8 +66,12 @@ function AddListing() {
             </PageItem>
           </Pagination>
         </Nav>
-        <h1 className="text-center">{listing.name}</h1>
         <Form onSubmit={handleSubmit}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <Form.Control as="textarea" rows={1} className="text-center" style={{ fontSize: '36px' }}
+              defaultValue={listing.name} ref={nameRef} />
+            <Button onClick={handleNameChange}>Save</Button>
+          </div>
           <Card className="mt-4 h-100">
             <Card.Header className="d-flex justify-content-between">
               <Container className="d-flex justify-content-start">

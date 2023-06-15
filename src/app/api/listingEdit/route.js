@@ -41,6 +41,7 @@ export async function PUT(request) {
       id: body.id
     },
     data: {
+      name: body.name,
       description: body.description
     }
   });
