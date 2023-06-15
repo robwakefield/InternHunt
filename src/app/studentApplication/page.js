@@ -155,11 +155,23 @@ class EvidenceEntryList extends Component {
   }
 
   handleSubmitApplication = () => {
+      // submit application (this should create stages)
       fetch("/api/submitApplication", {
         method: "PUT",
         body: JSON.stringify({
           studentID: this.props.studentID,
           postID: this.props.postID,
+        })
+      });
+      // Set "Started Application" stage in application
+      fetch('/api/stage', {
+        method: 'PUT',
+        body: JSON.stringify({
+          postID: this.props.postID,
+          studentID: this.props.studentID,
+          stageID: 0, // Application Started
+          completed: true,
+          date: new Date(Date.now())
         })
       });
       window.location.reload(false);
