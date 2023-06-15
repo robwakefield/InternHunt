@@ -38,6 +38,7 @@ const DocxExtractor = (props) => {
   const onFileUpload = (event) => {
     const reader = new FileReader();
     let file = event.target.files[0];
+    var extractedCV= ""
     
     // Convert to PDF and send to database
     let convertApi = ConvertApi.auth('DsS5CGKucVlsl6S7');
@@ -50,7 +51,7 @@ const DocxExtractor = (props) => {
         reader.readAsDataURL(blob); 
         reader.onloadend = function() {
           var base64data = reader.result;
-          props.setApplication({ ...props.application, cv: base64data });
+          props.setApplication({ ...props.application, cv: base64data, extractedCV: extractedCV  });
           fetch("/api/cv", {
             method: "PUT",
             body: JSON.stringify({
@@ -66,7 +67,16 @@ const DocxExtractor = (props) => {
     reader.onload = (e) => {
       const content = e.target.result;
       const paragraphs = getParagraphs(content);
-      props.setExtractedCV(paragraphs);
+      extractedCV = paragraphs.join("\n")
+      props.setApplication({ ...props.application, extractedCV: extractedCV });
+      fetch("/api/updateExtractedCV", {
+        method: "PUT",
+        body: JSON.stringify({
+          postID: props.postID,
+          studentID: props.studentID,
+          extractedCV: extractedCV
+        })
+      });
     };
 
     reader.onerror = (err) => console.error(err);

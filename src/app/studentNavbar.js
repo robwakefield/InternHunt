@@ -1,8 +1,11 @@
 import { Nav, Navbar, Image, Container } from 'react-bootstrap';
+import Background from './background';
 
 function StudentNavbar() { 
-    return (
-        <Navbar bg="light" expand="lg">
+  return (
+    <div>
+    <Background />
+        <Navbar className="globalNavbar" bg="light" expand="lg">
       <Container>
         <Navbar.Brand href="/">
           <Image
@@ -19,7 +22,8 @@ function StudentNavbar() {
           </Nav>
         </Navbar.Collapse>
       </Container>
-    </Navbar>
+      </Navbar>
+      </div>
     )
 }
 

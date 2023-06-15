@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 import Container from "react-bootstrap/Container";
 import { Component, useEffect, useState, useRef } from 'react';
 import StudentNavbar from "../studentNavbar";
-import { Card, Col, Row } from "react-bootstrap";
+import { Card, Col, Row ,Nav, Pagination, PageItem} from "react-bootstrap";
 import '../globals.css'
 import DocxExtractor from "./DocxExtractor";
 import Modal from 'react-bootstrap/Modal';
@@ -15,8 +15,7 @@ import GenerateAnswerButton from "./generateAnswerButton";
 function StudentApplication() {
   const [postID, setPostID] = useState(-1);
   const [studentID, setStudentID] = useState(-1);
-  const [application, setApplication] = useState({submitted: false, evidences: [], post: {}, cv: null});
-  const [extractedCV, setExtractedCV] = useState("")
+  const [application, setApplication] = useState({submitted: false, evidences: [], post: {}, cv: null, extractedCV: ""});
   const [showUploader, setShowUploader] = useState(false);
   const [showJobListing, setJobListing] = useState(false);
 
@@ -48,7 +47,15 @@ function StudentApplication() {
   return (
     <main className="studentApplication">
       <StudentNavbar></StudentNavbar>
+      
       <Container style={{ height: "80vh" }}>
+        <Nav className="mt-2">
+            <Pagination>
+              <PageItem href="/studentDashboard">
+                Back to Dashboard
+              </PageItem>
+            </Pagination>
+          </Nav>
         <Card className="mt-4 h-100">
           <Card.Header className="d-flex justify-content-between">
             
@@ -87,18 +94,13 @@ function StudentApplication() {
                 <Modal.Title>Your CV</Modal.Title>
               </Modal.Header>
               <Modal.Body>
-                {!application.submitted && (
-                  <div>
-                    <p>CV must be in (.doc, .docx)</p>
-                    <DocxExtractor
-                      setExtractedCV={setExtractedCV}
-                      setApplication={setApplication}
-                      application={application}
-                      postID={postID}
-                      studentID={studentID}
-                    />
-                  </div>
-                )}
+                <p>CV must be in (.doc, .docx)</p>
+                <DocxExtractor
+                  setApplication={setApplication}
+                  application={application}
+                  postID={postID}
+                  studentID={studentID}
+                />
                 <p>
                   {application.cv && (
                     <embed
@@ -119,7 +121,7 @@ function StudentApplication() {
           </Card.Header>
 
           <Form>
-            <EvidenceEntryList extractedCV={extractedCV} application={application} postID={postID} studentID={studentID}/>
+            <EvidenceEntryList extractedCV={application.extractedCV} application={application} postID={postID} studentID={studentID}/>
           </Form>
         </Card>
       </Container>
@@ -132,7 +134,6 @@ export default StudentApplication;
 class EvidenceEntryList extends Component {
   constructor(props) {
     super(props);
-    this.changeEntryValues.bind(this);
     this.state = {
       extractedCV: props.extractedCV,
       evidences: props.application.evidences,
@@ -175,16 +176,16 @@ class EvidenceEntryList extends Component {
   }
 
   // Change by text input
-  updateEntryValue(i, value) {
-    const updatedEntryValues = [...this.state.entryValues];
-    updatedEntryValues[i] = value;
-    this.setState({ entryValues: updatedEntryValues }, () => {this.handleAutoSave();});
+  updateEntryValue = (i, value) => {
+    this.setState((prev) => {
+      const updatedEntryValues = prev.entryValues;
+      updatedEntryValues[i] = value;
+      return {
+        ...prev,
+        entryValues: updatedEntryValues
+      }
+    }, () => { this.handleAutoSave(); });
   }
-
-  // Change by generateAnswerButton component
-  changeEntryValues = (newValue) => {
-    this.setState({ entryValues: newValue }, () => {this.handleAutoSave();});
-  };
 
   render() {
     return (
@@ -214,8 +215,7 @@ class EvidenceEntryList extends Component {
                     extractedCV={this.state.extractedCV}
                     requirement = {evidence.requirement.requirementText}
                     evidence={i}
-                    entryValues={this.state.entryValues} 
-                    changeEntryValues={this.changeEntryValues} />
+                    updateEntryValue={this.updateEntryValue} />
                 </Accordion.Body>
               </Accordion.Item>
             );
