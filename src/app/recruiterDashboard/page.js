@@ -132,7 +132,7 @@ class ListingItem extends Component {
       id: this.props.post.id,
       title: this.props.post.name,
       status: this.props.post.status,
-      places_filled: this.props.post.applications,
+      applications: this.props.post.applications,
       total_places: this.props.post.totalPlaces
     };
   }
@@ -143,7 +143,7 @@ class ListingItem extends Component {
         id: this.props.post.id,
         title: this.props.post.name,
         status: this.props.post.status,
-        places_filled: this.props.post.applications,
+        applications: this.props.post.applications,
         total_places: this.props.post.totalPlaces
       });
     }
@@ -162,32 +162,17 @@ class ListingItem extends Component {
     }
   }
 
-  getRatioClass(ratio) {
-    if (ratio >= 0.8) {
-      return "text-success"
-    } else if (ratio >= 0.4) {
-      return "text-warning"
-    } else if (ratio > 0){
-      return "text-danger"
-    } else {
-      return ""
-    }
-  }
-
   render() {
     
     let status_class = this.getStatusClass(this.state.status)
 
     let places_filled = 0
-    if (this.state.places_filled) {
-      places_filled = this.state.places_filled.length
+    if (this.state.applications) {
+      places_filled = this.state.applications.length
     }
-    let total_places = this.state.total_places
-    let ratio = places_filled / total_places
     
-    let ratio_class = this.getRatioClass(ratio)
 
-    let rhs = <p className={ratio_class}>{places_filled}/{total_places} Applications</p>
+    let rhs = <p className={"text-muted"}>{places_filled} Applications</p>
     if (this.state.status == "Draft") {
       rhs = <Button onClick={(event) => {handleEdit(this.state.id, event)}}>Click to Edit</Button>
     }
