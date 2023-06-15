@@ -10,6 +10,7 @@ export async function GET(request, {params,}) {
     select: {
       id: true,
       name: true,
+      totalPlaces: true,
       description: true,
       requirements: {
         select: {

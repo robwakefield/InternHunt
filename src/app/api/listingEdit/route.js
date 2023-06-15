@@ -42,6 +42,7 @@ export async function PUT(request) {
     },
     data: {
       name: body.name,
+      totalPlaces: parseInt(body.totalPlaces),
       description: body.description
     }
   });

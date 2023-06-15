@@ -8,6 +8,7 @@ import RecruiterNavbar from "../../recruiterNavbar";
 import JobDescription from "../jobDescription";
 import JobRequirementsList from "../jobRequirements";
 import { useParams, notFound } from "next/navigation";
+import JobPlaces from '../jobPlaces';
 
 function AddListing() {
   const nameRef = useRef();
@@ -125,6 +126,7 @@ function AddListing() {
                 <Button variant="danger" onClick={handleShow}>Remove</Button>
               </ButtonGroup>
             </Card.Header>
+            <JobPlaces listing={listing} />
             <JobDescription listing={listing} />
             <JobRequirementsList id={listing.id} listing={listing} setListing={setListing} />
             <SavedBox/>
