@@ -155,13 +155,19 @@ class ApplicationListItem extends Component {
   render() {
     return (
       <ListGroupItem className={this.props.selected ? "selectedApplicationEntry" : "applicationEntry"} onClick={() => {this.props.setSelectedApplication(this.props.application)}} key={this.state.postID.toString() + "s" + this.state.studentID}>
-        <Container className="d-flex justify-content-end">
-          <p className="flex-fill text-left">{this.state.title}</p>
-          <p className={"mx-4 deadline text-" + (this.props.application.submitted ? "muted" : this.statusColor())}>{this.props.application.submitted ? "Submitted" : "Deadline " + this.state.deadline}</p>
-          <ProgressBar variant="primary" now={this.state.progress}/>
-          <Button onClick={this.editPost}>
-            {this.props.application.submitted ? <AiOutlineEye style={{ color: 'white'}} /> : <BsPen/>}
-          </Button>
+        <Container className="d-flex h-100">
+          <Container className="d-flex justify-content-end">
+            <p className="text-left flex-fill my-2">{this.state.title}</p>
+            <p className={"text-right mx-4 my-2 text-" + (this.props.application.submitted ? "muted" : this.statusColor())}>{this.props.application.submitted ? "Submitted" : "Deadline " + this.state.deadline}</p>
+          </Container>
+          <Container className="w-auto d-flex justify-content-end align-bottom h-100">
+            <ProgressBar className="w-auto my-3 mx-2" variant="primary" now={this.state.progress}/>
+            <div>
+              <Button onClick={this.editPost} className="my-2">
+                {this.props.application.submitted ? <AiOutlineEye style={{ color: 'white'}} /> : <BsPen/>}
+              </Button>
+            </div>
+          </Container>
         </Container>
       </ListGroupItem>
     )
