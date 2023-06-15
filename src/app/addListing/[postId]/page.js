@@ -76,10 +76,10 @@ function AddListing() {
 
   let modal = <Modal show={showRemove} onHide={handleClose}>
     <Modal.Header closeButton>
-      <Modal.Title>New Listing</Modal.Title>
+      <Modal.Title>Remove Listing?</Modal.Title>
     </Modal.Header>
-      <Modal.Body>
-        <strong>Title</strong>
+      <Modal.Body className="text-center">
+        <strong>This CANNOT be undone!</strong>
       </Modal.Body>
     <Modal.Footer>
       <Button variant="secondary" onClick={handleClose}>
