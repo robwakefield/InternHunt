@@ -11,11 +11,21 @@ const LinkedInLogin = (props) => {
       console.log(code);
       setCode(code);
       props.setToken(code)
+
+      fetch('https://www.linkedin.com/oauth/v2/accessToken', {
+        method: 'POST',
+        body: JSON.stringify({
+          postID: this.props.post.id,
+          studentID: this.props.selectedApplicant
+        })
+      });
+      
     },
     onError: (error) => {
       console.log(error);
       setCode("");
     },
+    scope: 'r_emailaddress r_liteprofile'
   });
 
   return (
