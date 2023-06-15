@@ -92,7 +92,17 @@ class ApplicationList extends Component {
     return (
       <ListGroup>
         {this.state.applications.map((application) => {
-          return <ApplicationListItem application={application} progress={80} selected={this.props.selectedApplication == application} setSelectedApplication={this.props.setSelectedApplication} key={application.postID}/>
+          return <ApplicationListItem 
+            application={application} 
+            progress={
+              application.stages.length == 0 ? 0 :
+                (application.stages.filter((stage) => {
+                  return stage.completed
+                }).length / application.stages.length) * 100
+            } 
+            selected={this.props.selectedApplication == application} 
+            setSelectedApplication={this.props.setSelectedApplication} 
+            key={application.postID}/>
         })}
       </ListGroup>
     )
@@ -147,7 +157,7 @@ class ApplicationListItem extends Component {
         <Container className="d-flex justify-content-end">
           <p className="flex-fill text-left">{this.state.title}</p>
           <p className={"mx-4 deadline text-" + (this.props.application.submitted ? "muted" : this.statusColor())}>{this.props.application.submitted ? "Submitted" : "Deadline " + this.state.deadline}</p>
-          <ProgressBar variant={this.statusColor()} now={this.state.progress}/>
+          <ProgressBar variant="primary" now={this.state.progress}/>
           <Button onClick={this.editPost}>
             {this.props.application.submitted ? <AiOutlineEye style={{ color: 'white'}} /> : <BsPen/>}
           </Button>
