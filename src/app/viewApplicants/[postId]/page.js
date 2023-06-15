@@ -14,7 +14,7 @@ import { useParams, notFound } from "next/navigation";
 
 function averageRating(application) {
   if (application.evidences.length == 0) return 0;
-  return application.evidences.map(ev => ev.rating).reduce((a, b) => a + b, 0) / application.evidences.length;
+  return (application.evidences.map(ev => ev.rating).reduce((a, b) => a + b, 0) / application.evidences.length).toFixed(1);
 }
 
 function ViewApplicants() {
