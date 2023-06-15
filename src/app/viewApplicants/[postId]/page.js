@@ -54,14 +54,15 @@ function ViewApplicants() {
             <Container>
               <Row>
                 <Col xs={10}>{post.name}</Col>
-                <Col xs={2}><Button style={{float: "right"}} variant="primary" onClick={handleShow}>
+                <Col xs={2}>
+                  <Button style={{float: "right"}} variant="primary" onClick={handleShow}>
                   View Job Listing
-                </Button>
+                  </Button>
 
-              <Modal show={showJobListing} onHide={handleClose}>
-                <Modal.Header closeButton>
-                  <Modal.Title>{post.name}</Modal.Title>
-                </Modal.Header>
+                  <Modal show={showJobListing} onHide={handleClose}>
+                    <Modal.Header closeButton>
+                      <Modal.Title>{post.name}</Modal.Title>
+                    </Modal.Header>
                     <Modal.Body>
                       <strong>Description:</strong><br></br>
                       {post.description}<br></br><br></br>
@@ -70,12 +71,13 @@ function ViewApplicants() {
                         <p key={index}>- {requirement.requirementText}</p>
                       ))}
                     </Modal.Body>
-                <Modal.Footer>
-                  <Button variant="secondary" onClick={handleClose}>
-                    Close
-                  </Button>
-                </Modal.Footer>
-              </Modal></Col>
+                    <Modal.Footer>
+                      <Button variant="secondary" onClick={handleClose}>
+                        Close
+                      </Button>
+                    </Modal.Footer>
+                  </Modal>
+                </Col>
               </Row>
             </Container>
           </Card.Header>
@@ -181,7 +183,17 @@ class ApplicantList extends Component {
 }
 
 class SkillList extends Component {
-  state = { skills: [], name: "", showDocs: false}
+  state = {
+    skills: [], 
+    name: "", 
+    showDocs: false, 
+    showInterview: false,
+    interview: {
+      date: "",
+      location: "",
+      description: ""
+    }
+  }
   getSelectedStudent = () => this.props.post.applications.filter(
     app => app.student.id == this.props.selectedApplicant)[0];
 
@@ -191,6 +203,23 @@ class SkillList extends Component {
 
   handleDocsClose = () => {
     this.setState({ showDocs: false });
+  }
+
+  handleInterviewShow = () => {
+    if (this.props.selectedApplicant != -1) {
+      this.setState({ showInterview: true });
+    }
+  }
+
+  handleInterviewClose = () => {
+    this.setState({ 
+      showInterview: false,
+      interview: {
+        date: "",
+        location: "",
+        description: ""
+      }
+    });
   }
 
   rejectApplicant = () => {
@@ -205,18 +234,41 @@ class SkillList extends Component {
     }
   }
 
+  defaultDate() {
+    const date = new Date(Date.now())
+    return date.getDate().toString().padStart(2, '0') + "-" + date.getMonth().toString().padStart(2, '0') + "-" + date.getFullYear().toString() + " " + date.getHours().toString().padStart(2, '0') + ":" + date.getMinutes().toString().padStart(2, '0')
+  }
+  
+  checkInterviewForm() {
+    const date = this.state.interview.date
+    if (date.split("-").length < 3 || date.split("-")[2].split(" ") < 2) {
+      return false
+    }
+    const day = date.split("-")[0]
+    const month = date.split("-")[1]
+    const year = date.split("-")[2].split(" ")[0]
+    const time = date.split("-")[2].split(" ")[1]
+    const dtString = year + "-" + month + "-" + day + "T" + time
+    if (new Date(dtString).toString() != "Invalid Date") {
+      this.state.interview.date = new Date(dtString)
+      return true
+    }
+    return false
+  }
+
   scheduleInterview = () => {
-    if (this.props.selectedApplicant != -1) {
+    if (this.checkInterviewForm() && this.props.selectedApplicant != -1) {
         fetch('/api/interview', {
         method: 'PUT',
         body: JSON.stringify({
           postID: this.props.post.id,
           studentID: this.props.selectedApplicant,
-          date: new Date(Date.now()),
-          location: "HXLY 311",
-          description: "Meet after lunch"
+          date: this.state.interview.date,
+          location: this.state.interview.location,
+          description: this.state.interview.description
         })
       });
+      this.handleInterviewClose()
     }
   }
 
@@ -255,20 +307,20 @@ class SkillList extends Component {
                 <Modal.Header closeButton>
                   <Modal.Title>Documents</Modal.Title>
                 </Modal.Header>
-              <Modal.Body >
-              <Nav variant="tabs" defaultActiveKey="/home">
-                <Nav.Item>
-                  <Nav.Link eventKey="doc-1">CV</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                  <Nav.Link eventKey="doc-2" >Cover Letter</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                  <Nav.Link eventKey="doc-3" >Transcript</Nav.Link>
-                </Nav.Item>
-              </Nav>
-                    <iframe src="http://docs.google.com/gview?url=http://infolab.stanford.edu/pub/papers/google.pdf&embedded=true" style={{width: "60vw", height:"30vw"}} frameborder="0"></iframe>
-                    </Modal.Body>
+                <Modal.Body >
+                  <Nav variant="tabs" defaultActiveKey="/home">
+                    <Nav.Item>
+                      <Nav.Link eventKey="doc-1">CV</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                      <Nav.Link eventKey="doc-2" >Cover Letter</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                      <Nav.Link eventKey="doc-3" >Transcript</Nav.Link>
+                    </Nav.Item>
+                  </Nav>
+                  <iframe src="http://docs.google.com/gview?url=http://infolab.stanford.edu/pub/papers/google.pdf&embedded=true" style={{width: "60vw", height:"30vw"}} frameborder="0"></iframe>
+                </Modal.Body>
                 <Modal.Footer>
                   <Button variant="secondary" onClick={this.handleDocsClose}>
                     Close
@@ -276,7 +328,58 @@ class SkillList extends Component {
                 </Modal.Footer>
               </Modal>
             <h4>{this.state.name}</h4>
-            <Button onClick={this.scheduleInterview}>Interview</Button>
+            <Button onClick={this.handleInterviewShow}>Interview</Button>
+
+            <Modal show={this.state.showInterview} onHide={this.handleInterviewClose}>
+              <Modal.Header closeButton>
+                <Modal.Title>Schedule Interview</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <Form>
+                  <Form.Text>Date</Form.Text>
+                  <Form.Control 
+                    as="textarea"
+                    rows={1}
+                    placeholder="DD-MM-YYYY HH:MM"
+                    defaultValue={this.defaultDate()}
+                    onChange={(event) => {this.setState({ interview: { 
+                      date: event.target.value,
+                      location: this.state.interview.location,
+                      description: this.state.interview.description
+                    } })}}
+                  />
+                  <Form.Text>Location</Form.Text>
+                  <Form.Control
+                    as="textarea"
+                    rows={1}
+                    onChange={(event) => {this.setState({ interview: { 
+                      date: this.state.interview.date,
+                      location: event.target.value,
+                      description: this.state.interview.description
+                    } })}}
+                  />
+                  <Form.Text>Additional Information</Form.Text>
+                  <Form.Control
+                    as="textarea"
+                    rows={2}
+                    onChange={(event) => {this.setState({ interview: { 
+                      date: this.state.interview.date,
+                      location: this.state.interview.location,
+                      description: event.target.value
+                    } })}}
+                  />
+                </Form>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={this.handleInterviewClose}>
+                  Close
+                </Button>
+                <Button variant="primary" type="submit" onClick={this.scheduleInterview}>
+                  Schedule
+                </Button>
+              </Modal.Footer>
+            </Modal>
+
             <Button onClick={this.rejectApplicant}>Reject</Button>
           </Card.Header>
           
@@ -412,7 +515,6 @@ class StarRating extends Component {
     newPost.rating3Text = this[`textarea_2`].value;
     newPost.rating4Text = this[`textarea_3`].value;
     newPost.rating5Text = this[`textarea_4`].value;
-    console.log(newPost);
     this.props.setPost(newPost);
   };
 
