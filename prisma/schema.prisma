@@ -78,7 +78,8 @@ model Evidence {
   requirement     Requirement @relation(fields: [postID, requirementID], references: [postID, id])
   requirementID   Int
   rating          Int? @default(0)
-  evidenceText    String?
+  evidenceText    String @default("")
+  notes           String @default("")
 
   @@id([postID, requirementID, studentID])
 }
