@@ -203,6 +203,18 @@ class SkillList extends Component {
     });
   }
 
+  handleNotesChange = (event, id) => {
+    fetch('/api/updateNotes', {
+      method: 'PUT',
+      body: JSON.stringify({
+        studentID: this.props.selectedApplicant,
+        postID: this.props.post.id,
+        requirementID: id,
+        notes: event.target.value
+      })
+    });
+  }
+
   componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
       this.setState({
@@ -256,15 +268,25 @@ class SkillList extends Component {
                 <Accordion.Header>{skill.requirement.requirementText}</Accordion.Header>
                 <Accordion.Body>
                   <Card><Card.Body>{skill.evidenceText}</Card.Body></Card>
-                  <Card className="ratingCard"><Card.Body style={{ alignSelf: "flex-end" }}>
-                    <StarRating 
-                      initialRating={skill.rating}
-                      post={this.props.post}
-                      setPost={this.props.setPost}
-                      studentID={this.getSelectedStudent().student.id}
-                      requirementID={skill.requirement.id}
-                    />
-                  </Card.Body></Card>
+                  <Card className="ratingCard">
+                    <Row>
+                      <Col xs={8} className="notesSkill">
+                        <Form.Control
+                          placeholder="Notes (Not shown to student)"
+                          defaultValue={skill.notes}
+                          onChange={(event) => this.handleNotesChange(event, skill.requirement.id)}></Form.Control></Col>
+                      <Col xs={4}>
+                        <Card.Body className="starRating" style={{ alignSelf: "flex-end" }}>
+                        <StarRating 
+                          initialRating={skill.rating}
+                          post={this.props.post}
+                          setPost={this.props.setPost}
+                          studentID={this.getSelectedStudent().student.id}
+                          requirementID={skill.requirement.id}
+                        />
+                  </Card.Body></Col>
+                    </Row>
+                    </Card>
                 </Accordion.Body>
               </Accordion.Item>
             ))}

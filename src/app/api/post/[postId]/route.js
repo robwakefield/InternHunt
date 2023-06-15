@@ -28,6 +28,7 @@ export async function GET(request, {params,}) {
             select: {
               evidenceText: true,
               rating: true,
+              notes: true,
               requirement: {
                 select: {
                   id: true,
