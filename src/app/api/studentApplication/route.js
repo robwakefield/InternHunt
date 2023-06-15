@@ -9,6 +9,7 @@ export async function POST(request) {
       studentID: studentID
     },
     select: {
+      cv: true,
       submitted: true,
       evidences: {
         select: {

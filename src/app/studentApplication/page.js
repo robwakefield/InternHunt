@@ -15,8 +15,7 @@ import GenerateAnswerButton from "./generateAnswerButton";
 function StudentApplication() {
   const [postID, setPostID] = useState(-1);
   const [studentID, setStudentID] = useState(-1);
-  const [application, setApplication] = useState({submitted: false, evidences: [], post: {}});
-  const [CV, setCV] = useState("")
+  const [application, setApplication] = useState({submitted: false, evidences: [], post: {}, cv: null});
   const [extractedCV, setExtractedCV] = useState("")
   const [showUploader, setShowUploader] = useState(false);
 
@@ -38,7 +37,7 @@ function StudentApplication() {
         postID: queryPostID
       })
     }).then((response) => response.json())
-      .then((data) => { setApplication(data);  console.log(data)});
+      .then((data) => { setApplication(data); });
   }, []);
 
   const handleSubmit = (event) => {
@@ -53,15 +52,31 @@ function StudentApplication() {
           <Card.Header className="d-flex justify-content-between">
             <h4>{application.submitted? "Submitted" : ""}</h4>
             <h4>{application.post.name}</h4>
-            <Button variant={(extractedCV != "") ? "success" : "danger"} disabled={application.submitted} onClick={handleUploaderShow}>Upload CV</Button>
+            <Button variant={application.cv ? "success" : "danger"} onClick={handleUploaderShow}>Your CV</Button>
             <Modal show={showUploader} onHide={handleUploaderClose}>
               <Modal.Header closeButton>
-                <Modal.Title>Upload CV</Modal.Title>
+                <Modal.Title>Your CV</Modal.Title>
               </Modal.Header>
               <Modal.Body>
                 <p>CV must be in (.doc, .docx)</p>
-                <p>Uploaded file: {CV.name}</p>
-                <DocxExtractor setExtractedCV={setExtractedCV} setCV={setCV}></DocxExtractor></Modal.Body>
+                <DocxExtractor
+                  setExtractedCV={setExtractedCV}
+                  setApplication={setApplication}
+                  application={application}
+                  postID={postID}
+                  studentID={studentID}
+                />
+                <p>
+                  {application.cv && (
+                    <embed
+                      src={`${application.cv}`}
+                      type="application/pdf"
+                      width="100%"
+                      height="600px"
+                    />
+                  )}
+                </p>
+              </Modal.Body>
               <Modal.Footer>
                 <Button variant="secondary" onClick={handleUploaderClose}>
                   Close
