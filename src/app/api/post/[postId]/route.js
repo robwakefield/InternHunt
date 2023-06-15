@@ -40,7 +40,9 @@ export async function GET(request, {params,}) {
           },
           accepted: true,
           rejected: true,
-          submitted: true
+          submitted: true,
+          postID: true,
+          studentID: true
         }
       },
       requirements: {

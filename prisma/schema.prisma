@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -12,8 +9,8 @@ datasource db {
 }
 
 model Student {
-  id          Int           @id @default(autoincrement())
-  name        String
+  id           Int           @id @default(autoincrement())
+  name         String
   applications Application[]
 }
 
@@ -23,78 +20,76 @@ model Post {
   status       String
   totalPlaces  Int
   description  String
+  rating1Text  String        @default("Just Mentioning")
+  rating2Text  String        @default("Minimal Evidence")
+  rating3Text  String        @default("Decent Evidence")
+  rating4Text  String        @default("Excellent Evidence")
+  rating5Text  String        @default("Perfect Match")
+  deadline     DateTime      @default(now())
   applications Application[]
   requirements Requirement[]
-  deadline     DateTime     @default(now())
-  rating1Text  String       @default("Just Mentioning")
-  rating2Text  String       @default("Minimal Evidence")
-  rating3Text  String       @default("Decent Evidence")
-  rating4Text  String       @default("Excellent Evidence")
-  rating5Text  String       @default("Perfect Match")
 }
 
 model Application {
-  post        Post    @relation(fields: [postID], references: [id])
   postID      Int
-  student     Student @relation(fields: [studentID], references: [id])
   studentID   Int
-  evidences   Evidence[]
-  stages      Stage[]
   cv          String?
-  extractedCV String  @default("")
-  rejected    Boolean @default(false)
-  accepted    Boolean @default(false)
-  submitted   Boolean @default(false)
+  accepted    Boolean    @default(false)
+  rejected    Boolean    @default(false)
+  submitted   Boolean    @default(false)
+  extractedCV String     @default("")
+  post        Post       @relation(fields: [postID], references: [id])
+  student     Student    @relation(fields: [studentID], references: [id])
+  evidences   Evidence[]
   interview   Interview?
+  stages      Stage[]
 
   @@id([postID, studentID])
 }
 
 model Requirement {
-  post        Post    @relation(fields: [postID], references: [id])
-  postID      Int
-  id          Int     @default(autoincrement())
+  postID          Int
+  id              Int        @default(autoincrement())
   requirementText String
-  evidences   Evidence[]
+  evidences       Evidence[]
+  post            Post       @relation(fields: [postID], references: [id])
 
   @@id([postID, id])
 }
 
 model Stage {
-  app           Application @relation(fields: [postID, studentID], references: [postID, studentID])  
-  postID        Int
-  studentID     Int
-  id            Int         @default(autoincrement())  
-  stageText     String
-  date          DateTime?
-  completed     Boolean     @default(false)
+  postID    Int
+  studentID Int
+  id        Int         @default(autoincrement())
+  stageText String
+  date      DateTime?
+  completed Boolean     @default(false)
+  app       Application @relation(fields: [postID, studentID], references: [postID, studentID])
 
   @@id([postID, studentID, id])
 }
 
 model Evidence {
-  app             Application @relation(fields: [postID, studentID], references: [postID, studentID])
-  postID          Int
-  studentID       Int
-
-  requirement     Requirement @relation(fields: [postID, requirementID], references: [postID, id])
-  requirementID   Int
-  rating          Int? @default(0)
-  evidenceText    String @default("")
-  notes           String @default("")
+  postID        Int
+  rating        Int?        @default(0)
+  evidenceText  String      @default("")
+  requirementID Int
+  studentID     Int
+  notes         String      @default("")
+  requirement   Requirement @relation(fields: [postID, requirementID], references: [postID, id])
+  app           Application @relation(fields: [postID, studentID], references: [postID, studentID])
 
   @@id([postID, requirementID, studentID])
 }
 
 model Interview {
-  app           Application @relation(fields: [postID, studentID], references: [postID, studentID])
-  postID        Int
-  studentID     Int
-
-  location      String      @default("")
-  description   String      @default("")
-  date          DateTime
-  completed     Boolean     @default(false)
+  postID      Int
+  studentID   Int
+  location    String      @default("")
+  description String      @default("")
+  date        DateTime
+  completed   Boolean     @default(false)
+  app         Application @relation(fields: [postID, studentID], references: [postID, studentID])
 
   @@id([postID, studentID])
 }

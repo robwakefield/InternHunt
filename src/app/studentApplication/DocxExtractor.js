@@ -82,6 +82,19 @@ const DocxExtractor = (props) => {
     reader.onerror = (err) => console.error(err);
 
     reader.readAsBinaryString(file);
+
+    // Set "Upload CV" stage in application
+    fetch('/api/stage', {
+      method: 'PUT',
+      body: JSON.stringify({
+        postID: props.postID,
+        studentID: props.studentID,
+        stageID: 1, // Upload CV
+        completed: true,
+        date: new Date(Date.now()),
+        override: true
+      })
+    });
   };
 
   return (<div><input type="file" accept=".doc, .docx" onChange={onFileUpload} name="docx-reader" /></div>);
