@@ -126,7 +126,6 @@ export default StudentApplication;
 class EvidenceEntryList extends Component {
   constructor(props) {
     super(props);
-    this.changeEntryValues.bind(this);
     this.state = {
       extractedCV: props.extractedCV,
       evidences: props.application.evidences,
@@ -169,16 +168,16 @@ class EvidenceEntryList extends Component {
   }
 
   // Change by text input
-  updateEntryValue(i, value) {
-    const updatedEntryValues = [...this.state.entryValues];
-    updatedEntryValues[i] = value;
-    this.setState({ entryValues: updatedEntryValues }, () => {this.handleAutoSave();});
+  updateEntryValue = (i, value) => {
+    this.setState((prev) => {
+      const updatedEntryValues = prev.entryValues;
+      updatedEntryValues[i] = value;
+      return {
+        ...prev,
+        entryValues: updatedEntryValues
+      }
+    }, () => { this.handleAutoSave(); });
   }
-
-  // Change by generateAnswerButton component
-  changeEntryValues = (newValue) => {
-    this.setState({ entryValues: newValue }, () => {this.handleAutoSave();});
-  };
 
   render() {
     return (
@@ -208,8 +207,7 @@ class EvidenceEntryList extends Component {
                     extractedCV={this.state.extractedCV}
                     requirement = {evidence.requirement.requirementText}
                     evidence={i}
-                    entryValues={this.state.entryValues} 
-                    changeEntryValues={this.changeEntryValues} />
+                    updateEntryValue={this.updateEntryValue} />
                 </Accordion.Body>
               </Accordion.Item>
             );

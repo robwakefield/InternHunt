@@ -15,9 +15,7 @@ function GenerateAnswerButton(props) {
     ])
 
     function updateEntryValue(value) {
-        const updatedEntryValues = [...props.entryValues];
-        updatedEntryValues[props.evidence] = value;
-        props.changeEntryValues(updatedEntryValues);
+        props.updateEntryValue(props.evidence, value);
         setLoadingAnswer(false);
     }
 
@@ -85,7 +83,7 @@ function GenerateAnswerButton(props) {
         <div>
             <Row>
                 <Col xs={9}>
-                    <input
+                    <Form.Control
                         class="form-control input-sm"
                         id="inputsm"
                         type="text"
