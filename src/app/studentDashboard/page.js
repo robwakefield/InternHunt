@@ -66,7 +66,7 @@ function StudentDashboard() {
               </Card>
             </Container>
           </Col>
-          <Col xs={5}>
+          <Col xs={4}>
             <Timeline application={selectedApplication}/>
           </Col>
         </Row>
@@ -93,9 +93,10 @@ class ApplicationList extends Component {
     return (
       <ListGroup>
         {this.state.applications.map((application) => {
-          return <ApplicationListItem 
-            application={application} 
+          return <ApplicationListItem
+            application={application}
             progress={
+              (application.accepted || application.rejected) ? 100 :
               application.stages.length == 0 ? 0 :
                 (application.stages.filter((stage) => {
                   return stage.completed
@@ -152,16 +153,25 @@ class ApplicationListItem extends Component {
     }
   }
 
+  progressbarColor() {
+    const application = this.props.application;
+    const progress = this.state.progress 
+    return application.accepted ? "success" : 
+            application.rejected ? "danger" :
+            progress >= 50 ?  "primary":
+            "warning"
+  }
+
   render() {
     return (
       <ListGroupItem className={this.props.selected ? "selectedApplicationEntry" : "applicationEntry"} onClick={() => {this.props.setSelectedApplication(this.props.application)}} key={this.state.postID.toString() + "s" + this.state.studentID}>
-        <Container className="d-flex h-100">
+        <Container className="d-flex">
           <Container className="d-flex justify-content-end">
-            <p className="text-left flex-fill my-2">{this.state.title}</p>
-            <p className={"text-right mx-4 my-2 text-" + (this.props.application.submitted ? "muted" : this.statusColor())}>{this.props.application.submitted ? "Submitted" : "Deadline " + this.state.deadline}</p>
+            <p className="w-25 text-left flex-fill my-2">{this.state.title}</p>
+            <p className={"w-25 text-left mx-4 my-2 text-" + (this.props.application.submitted ? "muted" : this.statusColor())}>{this.props.application.submitted ? "Submitted" : "Deadline " + this.state.deadline}</p>
           </Container>
-          <Container className="w-auto d-flex justify-content-end align-bottom h-100">
-            <ProgressBar className="w-auto my-3 mx-2" variant="primary" now={this.state.progress}/>
+          <Container className="w-50 d-flex justify-content-end align-bottom">
+            <ProgressBar className="w-auto mx-2" variant={this.progressbarColor()} now={this.state.progress}/>
             <div>
               <Button onClick={this.editPost} className="my-2">
                 {this.props.application.submitted ? <AiOutlineEye style={{ color: 'white'}} /> : <BsPen/>}
