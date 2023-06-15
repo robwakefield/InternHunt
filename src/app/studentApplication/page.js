@@ -94,23 +94,25 @@ function StudentApplication() {
                 <Modal.Title>Your CV</Modal.Title>
               </Modal.Header>
               <Modal.Body>
-                <p>CV must be in (.doc, .docx)</p>
-                <DocxExtractor
-                  setApplication={setApplication}
-                  application={application}
-                  postID={postID}
-                  studentID={studentID}
-                />
-                <p>
-                  {application.cv && (
-                    <embed
-                      src={`${application.cv}`}
-                      type="application/pdf"
-                      width="100%"
-                      height="600px"
-                    />
-                  )}
-                </p>
+                {!application.submitted && (
+                  <div>
+                    <p>CV must be in (.doc, .docx)</p>
+                      <DocxExtractor
+                        setApplication={setApplication}
+                        application={application}
+                        postID={postID}
+                        studentID={studentID}
+                      />
+                  </div>
+                )}
+                {application.cv && (
+                  <embed
+                    src={`${application.cv}`}
+                    type="application/pdf"
+                    width="100%"
+                    height="600px"
+                  />
+                )}
               </Modal.Body>
               <Modal.Footer>
                 <Button variant="secondary" onClick={handleUploaderClose}>
