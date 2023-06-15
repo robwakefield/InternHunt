@@ -113,14 +113,14 @@ function AddListing() {
           <Card className="mt-4 h-100">
             <Card.Header className="d-flex justify-content-between">
               <Container className="d-flex justify-content-start">
-                <FormCheck className="align-middle">
+                {/* <FormCheck className="align-middle">
                   <FormCheck.Input/>
                   <FormCheck.Label>Ask for Cover Letter</FormCheck.Label>
                 </FormCheck>
                 <FormCheck className="mx-2">
                   <FormCheck.Input/>
                   <FormCheck.Label>Ask for Academic Results</FormCheck.Label>
-                </FormCheck>
+                </FormCheck> */}
               </Container>
               {modal}
               <ButtonGroup>
