@@ -46,7 +46,7 @@ function RecruiterDashboard() {
     <main className="recruiterDashboard">
       <RecruiterNavbar></RecruiterNavbar>
       
-      {/* Job Listings List */}
+      {/* Job Listings List */console.log(listings)}
       <Container  style={{height: "80vh"}}>
         <Card className="mt-4 h-100">
           <Form>
@@ -164,6 +164,18 @@ class ListingItem extends Component {
     }
   }
 
+  // getRatioClass(ratio) {
+  //   if (ratio >= 0.8) {
+  //     return "text-success"
+  //   } else if (ratio >= 0.4) {
+  //     return "text-warning"
+  //   } else if (ratio > 0){
+  //     return "text-danger"
+  //   } else {
+  //     return ""
+  //   }
+  // }
+
   render() {
     
     let status_class = this.getStatusClass(this.state.status)
@@ -172,15 +184,20 @@ class ListingItem extends Component {
     if (this.state.applications) {
       places_filled = this.state.applications.length
     }
+    // let total_places = this.state.total_places
+    // let ratio = places_filled / total_places
     
+    // let ratio_class = this.getRatioClass(ratio)
 
+    // let rhs = <p className={ratio_class}>{places_filled}/{total_places} Applications</p>
     let rhs = <p className="text-right">{places_filled} Applications</p>
-
     if (this.state.status == "Draft") {
-      rhs = <Button 
-              onClick={(event) => {handleEdit(this.state.id, event)}}
-            >Click to Edit</Button>
-              
+      rhs = <Container className="w-25 d-flex">
+              <p className="flex-fill"></p>
+              <Button 
+                onClick={(event) => {handleEdit(this.state.id, event)}}
+              >Click to Edit</Button>
+            </Container>
     }
     
     let tab = 
@@ -188,16 +205,17 @@ class ListingItem extends Component {
         <Row style={{width: "100%"}}>
             <Col xs={4}><p className={status_class}><strong>{this.state.status}</strong></p></Col>
             <Col xs={5}><p className="text-left"><strong>{this.state.title}</strong></p></Col>
-            <Col xs={3} style={{textAlignLast: "right"}}>{rhs}</Col>
+            <Col style={{textAlignLast: "right"}} xs={3}>{rhs}</Col>
         </Row>
-    </Container>
+      </Container>
+    
     if (this.state.status == "Draft") {
       tab =
         <Container className="d-flex justify-content-between">
           <Row style={{width: "100%"}}>
-            <Col xs={4}><p className={status_class}>{this.state.status}</p></Col>
-            <Col xs={5}><p className="text-left"><strong>{this.state.title}</strong></p></Col>
-            <Col xs={3} style={{textAlignLast: "end"}}>{rhs}</Col>
+            <Col><p className={status_class}>{this.state.status}</p></Col>
+            <Col><p className="text-left"><strong>{this.state.title}</strong></p></Col>
+            <Col style={{textAlignLast: "end"}}>{rhs}</Col>
           </Row>
         </Container>
     }
