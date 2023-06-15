@@ -57,9 +57,9 @@ function ApplyPage() {
         //     })
         // ))
 
-        window.location.replace("/studentDashboard")
+        window.location.replace("/studentDashboard?studentID=" + studentId)
     }
-
+ 
     return (
         <main className="applyPage">
             <StudentNavbar/>

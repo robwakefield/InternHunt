@@ -54,6 +54,7 @@ studentDashboard {
 
 .progress{
   width: 10rem !important;
+  margin: 10px !important;
 }
 .applicationEntry{
   border: 1px solid lightgrey !important;
