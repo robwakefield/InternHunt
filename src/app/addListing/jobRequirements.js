@@ -22,7 +22,8 @@ function JobRequirementsList({ id, listing, setListing }) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        postID: listing.id
+        postID: listing.id,
+        id: id
       }),
     })
       .then((response) => response.json())
