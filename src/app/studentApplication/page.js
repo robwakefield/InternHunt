@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 import Container from "react-bootstrap/Container";
 import { Component, useEffect, useState, useRef } from 'react';
 import StudentNavbar from "../studentNavbar";
-import { Card, Col, Row } from "react-bootstrap";
+import { Card, Col, Row ,Nav, Pagination, PageItem} from "react-bootstrap";
 import '../globals.css'
 import DocxExtractor from "./DocxExtractor";
 import Modal from 'react-bootstrap/Modal';
@@ -47,7 +47,15 @@ function StudentApplication() {
   return (
     <main className="studentApplication">
       <StudentNavbar></StudentNavbar>
+      
       <Container style={{ height: "80vh" }}>
+        <Nav className="mt-2">
+            <Pagination>
+              <PageItem href="/studentDashboard">
+                Back to Dashboard
+              </PageItem>
+            </Pagination>
+          </Nav>
         <Card className="mt-4 h-100">
           <Card.Header className="d-flex justify-content-between">
             
