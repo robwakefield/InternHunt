@@ -333,7 +333,7 @@ class SkillList extends Component {
       }
     }
     
-    return <Button className={className} onClick={this.acceptApplicant}>{btnText}</Button>
+    return <Button className={"mx-1 " + className} onClick={this.acceptApplicant}>{btnText}</Button>
   }
 
   renderRejectButton() {
@@ -348,7 +348,7 @@ class SkillList extends Component {
       }
     }
     
-    return <Button className={className} onClick={this.rejectApplicant}>{btnText}</Button>
+    return <Button className={"mx-1 " + className} onClick={this.rejectApplicant}>{btnText}</Button>
   }
 
   renderInterviewButton() {
@@ -359,7 +359,7 @@ class SkillList extends Component {
       }
     }
     
-    return <Button className={className} onClick={this.handleInterviewShow}>Interview</Button>
+    return <Button className={"mx-1 " + className} onClick={this.handleInterviewShow}>Interview</Button>
 
   }
 
@@ -407,7 +407,7 @@ class SkillList extends Component {
                   </Button>
                 </Modal.Footer>
               </Modal>
-            <h4>{this.state.name}</h4>
+            <h4 className="flex-fill mx-1 text-center">{this.state.name}</h4>
             {this.renderInterviewButton()}
 
             <Modal show={this.state.showInterview} onHide={this.handleInterviewClose}>
