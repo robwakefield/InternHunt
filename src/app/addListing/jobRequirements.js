@@ -6,13 +6,7 @@ import { Pagination, FormCheck, Nav, Button, PageItem, Container, Card, Form, Bu
 import { Component, useEffect, useRef, useState } from "react";
 import RecruiterNavbar from "../recruiterNavbar";
 
-function JobRequirementsList({ id, listing, setListing }) {
-
-  useEffect(() => {
-    fetch('/api/listingEdit' + id)
-      .then((response) => response.json())
-      .then((data) => setListing(data));
-  }, []);
+function JobRequirementsList({ listing }) {
 
   const handleAdd = (event) => {
     event.preventDefault();
@@ -22,8 +16,7 @@ function JobRequirementsList({ id, listing, setListing }) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        postID: listing.id,
-        id: id
+        postID: listing.id
       }),
     })
       .then((response) => response.json())
@@ -40,8 +33,8 @@ function JobRequirementsList({ id, listing, setListing }) {
         <Button onClick={handleAdd}>Add</Button>
         </Card.Header>
           {listing.requirements.sort((a, b) => a.id - b.id).map((requirement) =>
-            <JobRequirementsItem key={requirement.id} listingid={listing.id}
-            id={requirement.id} requirement={requirement} setListing={setListing} />)}
+            <JobRequirementsItem key={requirement.id} listingId={listing.id}
+            requirement={requirement} />)}
       </Card>
     </Form>
   )
@@ -49,7 +42,7 @@ function JobRequirementsList({ id, listing, setListing }) {
 
 export default JobRequirementsList;
 
-function JobRequirementsItem({ listingid, id, requirement, setListing }) {
+function JobRequirementsItem({ listingId, requirement }) {
   const reqRef = useRef();
 
   const handleSubmit = (event) => {
@@ -60,8 +53,8 @@ function JobRequirementsItem({ listingid, id, requirement, setListing }) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        postid: listingid,
-        id: id,
+        postid: listingId,
+        id: requirement.id,
         requirementText: reqRef.current.value
       }),
     });
@@ -75,16 +68,13 @@ function JobRequirementsItem({ listingid, id, requirement, setListing }) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        postid: listingid,
-        id: id
+        postid: listingId,
+        id: requirement.id
       }),
     })
-      .then((response) => response.clone())
+      .then((response) => response.json())
       .then(() => {
-        setListing((prevListing) => ({
-          ...prevListing,
-          requirements: prevListing.requirements.filter((requirement) => requirement.id !== id)
-        }));
+        window.location.reload();
       });
   }
 
