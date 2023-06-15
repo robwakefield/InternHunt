@@ -8,6 +8,7 @@ import 'react-vertical-timeline-component/style.min.css';
 import StudentNavbar from "../studentNavbar";
 import { BsPen } from "react-icons/bs";
 import { AiOutlineEye } from "react-icons/ai"
+import "../globals.css"
 
 function StudentDashboard() {
   const [applications, setApplications] = useState([]);
