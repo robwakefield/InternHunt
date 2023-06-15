@@ -1,6 +1,6 @@
 function Background(props) {
     return (
-            <ul class={"background " + props.user}>
+            <ul className={"background " + props.user}>
             </ul>
         );
 }
