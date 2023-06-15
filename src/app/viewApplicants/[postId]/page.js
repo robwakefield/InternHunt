@@ -234,6 +234,18 @@ class SkillList extends Component {
     }
   }
 
+  acceptApplicant = () => {
+    if (this.props.selectedApplicant != -1) {
+      fetch('/api/accept', {
+        method: 'PUT',
+        body: JSON.stringify({
+          postID: this.props.post.id,
+          studentID: this.props.selectedApplicant
+        })
+      });
+    }
+  }
+
   defaultDate() {
     const date = new Date(Date.now())
     return date.getDate().toString().padStart(2, '0') + "-" + (date.getMonth() + 1).toString().padStart(2, '0') + "-" + date.getFullYear().toString() + " " + date.getHours().toString().padStart(2, '0') + ":" + date.getMinutes().toString().padStart(2, '0')
@@ -404,6 +416,7 @@ class SkillList extends Component {
               </Modal.Footer>
             </Modal>
 
+            <Button onClick={this.acceptApplicant}>Accept</Button>
             <Button onClick={this.rejectApplicant}>Reject</Button>
           </Card.Header>
           
