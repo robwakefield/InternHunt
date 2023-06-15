@@ -192,8 +192,9 @@ class SkillList extends Component {
       date: "",
       location: "",
       description: ""
-    }
-  , cv: null }
+    },
+    cv: null 
+  }
   getSelectedStudent = () => this.props.post.applications.filter(
     app => app.student.id == this.props.selectedApplicant)[0];
 
@@ -320,6 +321,49 @@ class SkillList extends Component {
     }
   }
 
+  renderAcceptButton() {
+    let className = "btn-secondary"
+    let btnText = "Accept"
+    if (this.props.selectedApplicant != -1) {
+      if (this.getSelectedStudent().accepted) {
+        className = "btn-success"
+        btnText = "Accepted"
+      } else if(!this.getSelectedStudent().rejected) {
+        className = "btn-primary"
+      }
+    }
+    
+    return <Button className={className} onClick={this.acceptApplicant}>{btnText}</Button>
+  }
+
+  renderRejectButton() {
+    let className = "btn-secondary"
+    let btnText = "Reject"
+    if (this.props.selectedApplicant != -1) {
+      if (this.getSelectedStudent().rejected) {
+        className = "btn-danger"
+        btnText = "Rejected"
+      } else if(!this.getSelectedStudent().accepted) {
+        className = "btn-primary"
+      }
+    }
+    
+    return <Button className={className} onClick={this.rejectApplicant}>{btnText}</Button>
+  }
+
+  renderInterviewButton() {
+    let className = "btn-secondary"
+    if (this.props.selectedApplicant != -1) {
+      if (!this.getSelectedStudent().rejected && !this.getSelectedStudent().accepted) {
+        className = "btn-primary"
+      }
+    }
+    
+    return <Button className={className} onClick={this.handleInterviewShow}>Interview</Button>
+
+  }
+
+  
   render() {
     this.state.skills.sort((a, b) => a.requirement.requirementText >= b.requirement.requirementText ? 1 : -1)
     return (
@@ -364,7 +408,7 @@ class SkillList extends Component {
                 </Modal.Footer>
               </Modal>
             <h4>{this.state.name}</h4>
-            <Button onClick={this.handleInterviewShow}>Interview</Button>
+            {this.renderInterviewButton()}
 
             <Modal show={this.state.showInterview} onHide={this.handleInterviewClose}>
               <Modal.Header closeButton>
@@ -416,8 +460,8 @@ class SkillList extends Component {
               </Modal.Footer>
             </Modal>
 
-            <Button onClick={this.acceptApplicant}>Accept</Button>
-            <Button onClick={this.rejectApplicant}>Reject</Button>
+            {this.renderAcceptButton()}
+            {this.renderRejectButton()}
           </Card.Header>
           
           <Accordion>{
