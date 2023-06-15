@@ -163,13 +163,13 @@ class EvidenceEntryList extends Component {
           postID: this.props.postID,
         })
       });
-      // Set "Started Application" stage in application
+      // Set "Submit Application" stage in application
       fetch('/api/stage', {
         method: 'PUT',
         body: JSON.stringify({
           postID: this.props.postID,
           studentID: this.props.studentID,
-          stageID: 0, // Application Started
+          stageID: 2, // Submit Application
           completed: true,
           date: new Date(Date.now()),
           override: false
