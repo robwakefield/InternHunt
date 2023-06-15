@@ -6,16 +6,8 @@ import { Pagination, FormCheck, Nav, Button, PageItem, Container, Card, Form } f
 import { Component, useEffect, useRef, useState } from "react";
 import RecruiterNavbar from "../recruiterNavbar";
 
-function JobDescription() {
+function JobDescription({ listing }) {
   const descRef = useRef();
-
-  const [post, setPost] = useState({description: ""});
-  useEffect(() => {
-    fetch('/api/listingEdit')
-      .then((response) => response.json())
-      .then((data) => setPost(data));
-  }, []);
-
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -25,7 +17,7 @@ function JobDescription() {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        id: post.id,
+        id: listing.id,
         description: descRef.current.value
       }),
     });
@@ -40,7 +32,7 @@ function JobDescription() {
         </Card.Header>
           <Form.Group className="mb-3" controlId="formJobDesc">
             <Form.Control as="textarea" rows={3}
-              placeholder="Enter your Job Description" defaultValue={post.description}
+              placeholder="Enter your Job Description" defaultValue={listing.description}
               ref={descRef} />
           </Form.Group>
       </Card>
