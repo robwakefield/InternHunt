@@ -194,27 +194,30 @@ class SkillList extends Component {
   }
 
   rejectApplicant = () => {
-    fetch('/api/reject', {
-      method: 'PUT',
-      body: JSON.stringify({
-        postID: this.props.post.id,
-        studentID: this.props.selectedApplicant
-      })
-    });
+    if (this.props.selectedApplicant != -1) {
+      fetch('/api/reject', {
+        method: 'PUT',
+        body: JSON.stringify({
+          postID: this.props.post.id,
+          studentID: this.props.selectedApplicant
+        })
+      });
+    }
   }
 
   scheduleInterview = () => {
-    console.log("Schedule Interview")
-    fetch('/api/interview', {
-      method: 'PUT',
-      body: JSON.stringify({
-        postID: this.props.post.id,
-        studentID: this.props.selectedApplicant,
-        date: new Date(Date.now()),
-        location: "HXLY 311",
-        description: "Meet after lunch"
-      })
-    });
+    if (this.props.selectedApplicant != -1) {
+        fetch('/api/interview', {
+        method: 'PUT',
+        body: JSON.stringify({
+          postID: this.props.post.id,
+          studentID: this.props.selectedApplicant,
+          date: new Date(Date.now()),
+          location: "HXLY 311",
+          description: "Meet after lunch"
+        })
+      });
+    }
   }
 
   handleNotesChange = (event, id) => {
