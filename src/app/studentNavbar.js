@@ -4,7 +4,7 @@ import Background from './background';
 function StudentNavbar() { 
   return (
     <div>
-    <Background />
+    <Background user="student"/>
         <Navbar className="globalNavbar" bg="light" expand="lg">
       <Container>
         <Navbar.Brand href="/">

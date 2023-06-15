@@ -5,7 +5,7 @@ import Background from './background';
 function RecruiterNavbar() { 
   return (
     <div>
-        <Background />
+        <Background user="recruiter"/>
     <Navbar className="globalNavbar" bg="light" expand="lg">
   <Container>
     <Navbar.Brand href="/"><img
