@@ -104,7 +104,7 @@ class ApplicationList extends Component {
               application.stages.length == 0 ? 0 :
                 (application.stages.filter((stage) => {
                   return stage.completed
-                }).length / application.stages.length) * 100
+                }).length / (application.stages.length + 1)) * 100
             } 
             selected={this.props.selectedApplication == application} 
             setSelectedApplication={this.props.setSelectedApplication} 
@@ -234,16 +234,6 @@ class Timeline extends Component {
   }
 
   render() {
-    let feedback = this.state.rejected ? this.renderRejectedElement() : this.state.accepted ? this.renderAcceptedElement() : null
-    if (this.state.interview && Date.parse(this.state.interview.date) - Date.now() < 0) {
-      // Interview date has passed
-      this.setState({ interview: {
-        date: this.state.interview.date,
-        location: this.state.interview.location,
-        description: this.state.interview.description,
-        completed: true
-      } })
-    }
     return (
       <Container style={{ height: "80vh" }} >
         <Card className="mt-4 h-100 progressTimeline">
@@ -264,7 +254,7 @@ class Timeline extends Component {
                   <h6 className="vertical-timeline-element-title">{stage.stageText}</h6>
                 </VerticalTimelineElement>
             })}
-            {feedback}
+            {this.state.rejected ? this.renderRejectedElement() : this.state.accepted ? this.renderAcceptedElement() : null}
           </VerticalTimeline>
         </Card>
       </Container>
@@ -272,12 +262,25 @@ class Timeline extends Component {
   }
 
   renderInterview(stage) {
+    if (!stage.completed && this.state.interview && Date.parse(this.state.interview.date) - Date.now() < 0) {
+      // Set "Interview" stage in application
+      fetch('/api/stage', {
+        method: 'PUT',
+        body: JSON.stringify({
+          postID: this.state.postID,
+          studentID: this.state.studentID,
+          stageID: 4, // Interview
+          completed: true,
+          date: this.state.interview.date,
+        })
+      });
+    }
     return  <VerticalTimelineElement key={stage}
               className="vertical-timeline-element--work"
               contentStyle={this.isCurrentStage(stage) ? { background: 'rgb(33, 150, 243)', color: '#fff' } : {}}
               date={this.state.interview ? this.formatDate(this.state.interview.date) : ""}
-              iconStyle={{ background: (this.state.interview && this.state.interview.completed) || this.isCurrentStage(stage) ? 'rgb(33, 150, 243)' : 'grey', color: '#fff' }}
-            >
+              iconStyle={{ background: stage.completed || this.isCurrentStage(stage) ? 'rgb(33, 150, 243)' : 'grey', color: '#fff' }}
+              >
               <h6 className="vertical-timeline-element-title">{stage.stageText}</h6>
               <h6 className="feedback">{this.state.interview.location} <br/></h6>
               <h6 className="feedback">{this.state.interview.description}</h6>

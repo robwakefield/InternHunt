@@ -46,6 +46,20 @@ function ApplyPage() {
             })
         })
 
+        
+        // Set "Started Application" stage in application
+        fetch('/api/stage', {
+            method: 'PUT',
+            body: JSON.stringify({
+            postID: postId,
+            studentID: studentID,
+            stageID: 0, // Started Application
+            completed: true,
+            date: new Date(Date.now()),
+            override: false
+            })
+        });
+
         window.location.replace("/studentDashboard?studentID=" + studentId)
     }
  
