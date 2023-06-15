@@ -2,7 +2,7 @@
 
 import '../addListing.css'
 import "bootstrap/dist/css/bootstrap.min.css"
-import { Pagination, FormCheck, Nav, Button, PageItem, Container, Card, Form } from "react-bootstrap";
+import { Pagination, FormCheck, Nav, Button, PageItem, Container, Card, Form, Modal, ButtonGroup } from "react-bootstrap";
 import { Component, useEffect, useRef, useState } from "react";
 import RecruiterNavbar from "../../recruiterNavbar";
 import JobDescription from "../jobDescription";
@@ -13,6 +13,10 @@ function AddListing() {
   const nameRef = useRef();
 
   const [listing, setListing] = useState({requirements: []});
+  const [showRemove, setRemove] = useState(false);
+
+  const handleClose = () => setRemove(false);
+  const handleShow = () => setRemove(true);
 
   //the param is postId
   const params = useParams()
@@ -55,6 +59,37 @@ function AddListing() {
     })
   }
 
+  const handleRemove = (event) => {
+    event.preventDefault();
+    fetch('/api/listingRemoval', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: listing.id
+      }),
+    })
+      .then(() => {window.location.href = "/recruiterDashboard"})
+  }
+
+  let modal = <Modal show={showRemove} onHide={handleClose}>
+    <Modal.Header closeButton>
+      <Modal.Title>New Listing</Modal.Title>
+    </Modal.Header>
+      <Modal.Body>
+        <strong>Title</strong>
+      </Modal.Body>
+    <Modal.Footer>
+      <Button variant="secondary" onClick={handleClose}>
+        Cancel
+      </Button>
+      <Button variant="danger" onClick={handleRemove}>
+        Remove
+      </Button>
+    </Modal.Footer>
+  </Modal>
+
   return (
     <main className="addListing">
       <RecruiterNavbar/>
@@ -84,7 +119,11 @@ function AddListing() {
                   <FormCheck.Label>Ask for Academic Results</FormCheck.Label>
                 </FormCheck>
               </Container>
-              <Button type='submit'>Publish</Button>
+              {modal}
+              <ButtonGroup>
+                <Button type='submit'>Publish</Button>
+                <Button variant="danger" onClick={handleShow}>Remove</Button>
+              </ButtonGroup>
             </Card.Header>
             <JobDescription listing={listing} />
             <JobRequirementsList id={listing.id} listing={listing} setListing={setListing} />
