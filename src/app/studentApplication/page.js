@@ -30,7 +30,7 @@ function StudentApplication() {
     const queryStudentID = parseInt(urlParams.get('studentID'));
     const queryPostID = parseInt(urlParams.get('postID'));
     
-    if (isNaN(queryStudentID) || isNaN(queryPostID)) window.location.replace("/studentDashboard");
+    if (isNaN(queryStudentID) || isNaN(queryPostID)) window.location.replace("/");
     setStudentID(queryStudentID);
     setPostID(queryPostID);
     

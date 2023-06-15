@@ -31,6 +31,8 @@ function StudentDashboard() {
   const [selectedApplication, setSelectedApplication] = useState();
   const urlParams = new URLSearchParams(window.location.search);
   const queryStudentID = parseInt(urlParams.get('studentID'));
+
+  if (isNaN(queryStudentID)) window.location.replace("/");
   
   const studentId = queryStudentID;
 
