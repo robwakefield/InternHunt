@@ -238,6 +238,16 @@ class SkillList extends Component {
     const date = new Date(Date.now())
     return date.getDate().toString().padStart(2, '0') + "-" + (date.getMonth() + 1).toString().padStart(2, '0') + "-" + date.getFullYear().toString() + " " + date.getHours().toString().padStart(2, '0') + ":" + date.getMinutes().toString().padStart(2, '0')
   }
+
+  convertDate() {
+    const date = this.state.interview.date
+    const day = date.split("-")[0]
+    const month = date.split("-")[1]
+    const year = date.split("-")[2].split(" ")[0]
+    const time = date.split("-")[2].split(" ")[1]
+    const dtString = year + "-" + month + "-" + day + "T" + time
+    return new Date(dtString)
+  }
   
   checkInterviewForm() {
     const date = this.state.interview.date
@@ -250,7 +260,11 @@ class SkillList extends Component {
     const time = date.split("-")[2].split(" ")[1]
     const dtString = year + "-" + month + "-" + day + "T" + time
     if (new Date(dtString).toString() != "Invalid Date") {
-      this.state.interview.date = new Date(dtString)
+      this.setState({interview: {
+        date: new Date(dtString),
+        location: this.state.interview.location,
+        description: this.state.interview.description
+      }})
       return true
     }
     return false
@@ -263,7 +277,7 @@ class SkillList extends Component {
         body: JSON.stringify({
           postID: this.props.post.id,
           studentID: this.props.selectedApplicant,
-          date: this.state.interview.date,
+          date: this.convertDate(this.state.interview.date),
           location: this.state.interview.location,
           description: this.state.interview.description
         })

@@ -216,7 +216,12 @@ class Timeline extends Component {
     let feedback = this.state.rejected ? this.renderRejectedElement() : this.state.accepted ? this.renderAcceptedElement() : null
     if (this.state.interview && Date.parse(this.state.interview.date) - Date.now() < 0) {
       // Interview date has passed
-      this.state.interview.completed = true
+      this.setState({ interview: {
+        date: this.state.interview.date,
+        location: this.state.interview.location,
+        description: this.state.interview.description,
+        completed: true
+      } })
     }
     return (
       <Container style={{ height: "80vh" }} >
