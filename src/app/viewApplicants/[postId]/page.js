@@ -205,6 +205,16 @@ class SkillList extends Component {
 
   scheduleInterview = () => {
     console.log("Schedule Interview")
+    fetch('/api/interview', {
+      method: 'PUT',
+      body: JSON.stringify({
+        postID: this.props.post.id,
+        studentID: this.props.selectedApplicant,
+        date: new Date(Date.now()),
+        location: "HXLY 311",
+        description: "Meet after lunch"
+      })
+    });
   }
 
   handleNotesChange = (event, id) => {
