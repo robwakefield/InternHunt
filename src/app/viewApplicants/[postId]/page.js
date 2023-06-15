@@ -249,6 +249,7 @@ class SkillList extends Component {
         })
       });
     }
+    window.location.reload()
   }
 
   acceptApplicant = () => {
@@ -261,6 +262,7 @@ class SkillList extends Component {
         })
       });
     }
+    window.location.reload()
   }
 
   defaultDate() {
@@ -340,42 +342,52 @@ class SkillList extends Component {
   renderAcceptButton() {
     let className = "btn-secondary"
     let btnText = "Accept"
+    let disable = false
     if (this.props.selectedApplicant != -1) {
       if (this.getSelectedStudent().accepted) {
         className = "btn-success"
         btnText = "Accepted"
+        disable = true
       } else if(!this.getSelectedStudent().rejected) {
         className = "btn-primary"
+      } else {
+        disable = true
       }
     }
     
-    return <Button className={"mx-1 " + className} onClick={this.acceptApplicant}>{btnText}</Button>
+    return <Button className={"mx-1 " + className} disabled={disable} onClick={this.acceptApplicant}>{btnText}</Button>
   }
 
   renderRejectButton() {
     let className = "btn-secondary"
     let btnText = "Reject"
+    let disable = false
     if (this.props.selectedApplicant != -1) {
       if (this.getSelectedStudent().rejected) {
         className = "btn-danger"
         btnText = "Rejected"
+        disable = true
       } else if(!this.getSelectedStudent().accepted) {
         className = "btn-primary"
+      } else {
+        disable = true
       }
     }
     
-    return <Button className={"mx-1 " + className} onClick={this.rejectApplicant}>{btnText}</Button>
+    return <Button className={"mx-1 " + className} disabled={disable} onClick={this.rejectApplicant}>{btnText}</Button>
   }
 
   renderInterviewButton() {
     let className = "btn-secondary"
+    let disable = true
     if (this.props.selectedApplicant != -1) {
       if (!this.getSelectedStudent().rejected && !this.getSelectedStudent().accepted) {
         className = "btn-primary"
+        disable = false
       }
     }
     
-    return <Button className={"mx-1 " + className} onClick={this.handleInterviewShow}>Interview</Button>
+    return <Button className={"mx-1 " + className} disabled={disable} onClick={this.handleInterviewShow}>Interview</Button>
 
   }
 
