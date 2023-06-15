@@ -36,15 +36,21 @@ export async function POST(request) {
 
 export async function PUT(request) {
   const body = await request.json();
+  
+  const updateData = {
+    name: body.name,
+    description: body.description
+  };
+
+  if (body.totalPlaces) {
+    updateData.totalPlaces = parseInt(body.totalPlaces);
+  }
+  
   await prisma.post.update({
     where: {
       id: body.id
     },
-    data: {
-      name: body.name,
-      totalPlaces: parseInt(body.totalPlaces),
-      description: body.description
-    }
+    data: updateData
   });
   return NextResponse.json({});
 }
