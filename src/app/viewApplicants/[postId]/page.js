@@ -105,7 +105,6 @@ class ApplicantList extends Component {
   state = {
     applications:  this.props.post.applications.filter(function(application) {return !application.rejected && application.submitted}),
     rejections: this.props.post.applications.filter(function(application) {return application.rejected && application.submitted}),
-    // Only show the rejections at first load if everyone is rejected
     rejected: true
   };
 
@@ -246,9 +245,10 @@ class SkillList extends Component {
           postID: this.props.post.id,
           studentID: this.props.selectedApplicant
         })
-      });
+      }).then(() => {
+        window.location.reload()
+      })
     }
-    window.location.reload()
   }
 
   acceptApplicant = () => {
@@ -259,9 +259,10 @@ class SkillList extends Component {
           postID: this.props.post.id,
           studentID: this.props.selectedApplicant
         })
-      });
+      }).then(() => {
+        window.location.reload()
+      })
     }
-    window.location.reload()
   }
 
   defaultDate() {
@@ -322,7 +323,7 @@ class SkillList extends Component {
   renderAcceptButton() {
     let className = "btn-secondary"
     let btnText = "Accept"
-    let disable = false
+    let disable = true
     if (this.props.selectedApplicant != -1) {
       if (this.getSelectedStudent().accepted) {
         className = "btn-success"
@@ -330,8 +331,7 @@ class SkillList extends Component {
         disable = true
       } else if(!this.getSelectedStudent().rejected) {
         className = "btn-primary"
-      } else {
-        disable = true
+        disable = false
       }
     }
     
@@ -341,7 +341,7 @@ class SkillList extends Component {
   renderRejectButton() {
     let className = "btn-secondary"
     let btnText = "Reject"
-    let disable = false
+    let disable = true
     if (this.props.selectedApplicant != -1) {
       if (this.getSelectedStudent().rejected) {
         className = "btn-danger"
@@ -349,8 +349,7 @@ class SkillList extends Component {
         disable = true
       } else if(!this.getSelectedStudent().accepted) {
         className = "btn-primary"
-      } else {
-        disable = true
+        disable = false
       }
     }
     
