@@ -36,11 +36,12 @@ export async function POST(request) {
 
 export async function PUT(request) {
   const body = await request.json();
+  const deadlineDateTime = new Date(body.deadline);
   
   const updateData = {
     name: body.name,
     description: body.description,
-    deadline: body.deadline
+    deadline: deadlineDateTime
   };
 
   if (body.totalPlaces) {
