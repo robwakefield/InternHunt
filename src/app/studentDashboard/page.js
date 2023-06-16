@@ -97,7 +97,6 @@ class ApplicationList extends Component {
   }
 
   render() {
-    console.log(this.state.applications);
     this.state.applications.forEach((application) => {
       application.stages.sort((a, b) => a.id - b.id);
     });
@@ -240,7 +239,7 @@ class Timeline extends Component {
   render() {
     return (
       <Container style={{ height: "80vh" }} >
-        <Card className="mt-4 h-100 progressTimeline overflow-auto" style={{ flexDirection: "column-reverse" }}>
+        <Card className="mt-4 h-100 progressTimeline overflow-auto">
           <VerticalTimeline style={{ height: "80vh" }} layout={{ default: '1-column-left' }}>
             {this.state.stages.filter(
               // filter out incomplete stages if the application is already finished

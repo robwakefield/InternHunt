@@ -22,7 +22,6 @@ studentDashboard {
 
 .vertical-timeline::before{
   top: 70px !important;
-  height: 75% !important;
   color: white;
   
 }
