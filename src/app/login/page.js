@@ -11,12 +11,16 @@ import {FcReadingEbook, FcBusinessman} from "react-icons/fc"
 import { cookies } from "next/dist/client/components/headers";
 import jwt from "jwt-decode"
 import Cookies from "universal-cookie"
+import { redirect } from "next/dist/server/api-utils";
 
 function Login() {
+    const blue = "#034687"
+    const red = "#E10032"
     const cookies = new Cookies();
     const [user, setUser] = useState("Student");
     const [token, setToken] = useState("");
-    const [bgColor, setbgColor] = useState("blue")
+    const [bgColor, setbgColor] = useState(blue)
+    
     
 
     const switchUser = () => {
@@ -29,10 +33,10 @@ function Login() {
     }
 
     const switchColor = () => {
-        if (bgColor === "#034687") {
-            return "#E10032";
+        if (bgColor === blue) {
+            return red;
         }
-        return "#034687";
+        return blue;
         
     }
 
