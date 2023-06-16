@@ -12,6 +12,7 @@ export async function GET(request, {params,}) {
       name: true,
       totalPlaces: true,
       description: true,
+      deadline: true,
       requirements: {
         select: {
           id: true,

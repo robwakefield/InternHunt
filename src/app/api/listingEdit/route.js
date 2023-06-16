@@ -39,7 +39,8 @@ export async function PUT(request) {
   
   const updateData = {
     name: body.name,
-    description: body.description
+    description: body.description,
+    deadline: body.deadline
   };
 
   if (body.totalPlaces) {

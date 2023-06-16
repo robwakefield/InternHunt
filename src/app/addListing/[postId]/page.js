@@ -9,6 +9,7 @@ import JobDescription from "../jobDescription";
 import JobRequirementsList from "../jobRequirements";
 import { useParams, notFound } from "next/navigation";
 import JobPlaces from '../jobPlaces';
+import JobDeadline from '../jobDeadline';
 
 function AddListing() {
   const nameRef = useRef();
@@ -119,14 +120,17 @@ function AddListing() {
           </Pagination>
         </Nav>
         <Card>
-        <Card.Header>
-          <Form style={{ display: 'flex', alignItems: 'center' }}>
-            <Form.Control as="textarea" rows={2} className="text-center" style={{ fontSize: '32px' }}
-              defaultValue={listing.name} ref={nameRef} />
-            <Button onClick={handleNameChange}>Save</Button>
-          </Form>
-        </Card.Header>
-          <JobPlaces listing={listing} />
+          <Card.Header>
+            <Form style={{ display: 'flex', alignItems: 'center' }}>
+              <Form.Control as="textarea" rows={2} className="text-center" style={{ fontSize: '32px' }}
+                defaultValue={listing.name} ref={nameRef} />
+              <Button onClick={handleNameChange}>Save</Button>
+            </Form>
+          </Card.Header>
+          <Nav className="mt-2" style={{ display: 'grid', gridAutoFlow: 'column', gap: '10px' }}>
+            <JobPlaces listing={listing} />
+            <JobDeadline listing={listing} />
+          </Nav>
           <JobDescription listing={listing} />
           <JobRequirementsList id={listing.id} listing={listing} setListing={setListing} />
           <SavedBox/>
