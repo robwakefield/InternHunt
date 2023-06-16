@@ -47,12 +47,14 @@ function StudentDashboard() {
   }, []);
 
   useInterval(() => {
-    fetch('/api/studentApplication/'+studentId)
-      .then((response) => response.json())
-      .then((data) => {
-        setApplications(data)
-        setSelectedApplication(data[applications.findIndex(app => app.postID == selectedApplication.postID)])
-      });
+    if (studentId > -1) {
+      fetch('/api/studentApplication/'+studentId)
+        .then((response) => response.json())
+        .then((data) => {
+          setApplications(data)
+          setSelectedApplication(data[applications.findIndex(app => app.postID == selectedApplication.postID)])
+        });
+    }
   }, 4000); // x second interval
 
   return (
