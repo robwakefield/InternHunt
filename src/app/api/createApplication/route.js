@@ -43,13 +43,22 @@ export async function POST(request) {
   });
 
   stages.forEach(async (stage, i) => {
+    const data = i == 0 ? {
+      postID: postID,
+      studentID: studentID,
+      id: i,
+      stageText: stage,
+      date: new Date(),
+      completed: true
+    } : {
+      postID: postID,
+      studentID: studentID,
+      id: i,
+      stageText: stage
+    };
+    
     await prisma.stage.create({
-      data: {
-        postID: postID,
-        studentID: studentID,
-        id: i,
-        stageText: stage
-      }
+      data: data
     });
   })
   return NextResponse.json(application);
