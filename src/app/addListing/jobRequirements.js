@@ -27,7 +27,7 @@ function JobRequirementsList({ listing }) {
 
   return (
     <Form>
-      <Card className="my-2 mx-3">
+      <Card className="mt-4 mb-2 mx-3">
         <Card.Header className="d-flex justify-content-between">
         <p>Requirements</p>
         <Button onClick={handleAdd}>Add</Button>

@@ -44,9 +44,9 @@ export async function PUT(request) {
     deadline: deadlineDateTime
   };
 
-  if (body.totalPlaces) {
-    updateData.totalPlaces = parseInt(body.totalPlaces);
-  }
+  // if (body.totalPlaces) {
+  //   updateData.totalPlaces = parseInt(body.totalPlaces);
+  // }
   
   await prisma.post.update({
     where: {

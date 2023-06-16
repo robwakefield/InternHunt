@@ -108,13 +108,12 @@ function AddListing() {
           <Card.Header>
             <JobName listing={listing} />
           </Card.Header>
-          <Nav className="mt-2" style={{ display: 'grid', gridAutoFlow: 'column', gap: '10px' }}>
-            <JobPlaces listing={listing} />
+          <div style={{ display: 'flex' }}>
             <JobDeadline listing={listing} />
-          </Nav>
+          </div>
           <JobDescription listing={listing} />
           <JobRequirementsList listing={listing} />
-          <SavedBox/>
+          <SavedBox />
         </Card>
       </Container>
     </main>
