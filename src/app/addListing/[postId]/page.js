@@ -2,7 +2,7 @@
 
 import '../addListing.css'
 import "bootstrap/dist/css/bootstrap.min.css"
-import { Pagination, FormCheck, Nav, Button, PageItem, Container, Card, Form, Modal, ButtonGroup } from "react-bootstrap";
+import { Pagination, FormCheck, Nav, Button, PageItem, Container, Card, Form, Modal, ButtonGroup, InputGroup } from "react-bootstrap";
 import { Component, useEffect, useRef, useState } from "react";
 import RecruiterNavbar from "../../recruiterNavbar";
 import JobDescription from "../jobDescription";
@@ -106,8 +106,15 @@ function AddListing() {
           {modal}
           <Pagination>
             <ButtonGroup>
-              <Button type='submit' onClick={handleSubmit}>Publish</Button>
-              <Button variant="danger" onClick={handleShow}>Remove</Button>
+            <InputGroup className="mb-3">
+              <Form.Control
+                  disabled={true}
+                  defaultValue={window.location.hostname + ":3000/applyPage?postID?=" + listingId}
+              />
+                <Button type='submit' onClick={handleSubmit}>Publish</Button>
+                <Button variant="danger" onClick={handleShow}>Remove</Button>
+            </InputGroup>
+              
             </ButtonGroup>
           </Pagination>
         </Nav>

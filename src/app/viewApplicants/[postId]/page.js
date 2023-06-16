@@ -10,11 +10,12 @@ import { AiFillStar } from 'react-icons/ai'
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
 import '../../globals.css'
-import { useParams, notFound } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 function averageRating(application) {
   if (application.evidences.length == 0) return 0;
-  return application.evidences.map(ev => ev.rating).reduce((a, b) => a + b, 0) / application.evidences.length;
+  return (application.evidences.map(ev => ev.rating).reduce((a, b) => a + b, 0) / application.evidences.length).toFixed(1);
 }
 
 function ViewApplicants() {
@@ -32,7 +33,7 @@ function ViewApplicants() {
     fetch('/api/post/' + postId)
       .then((response) => response.json())
       .then((data) => { setPost(data); });
-  }, []);
+    }, []);
 
   if (post == undefined) {
     notFound();
@@ -64,8 +65,10 @@ function ViewApplicants() {
                       <Modal.Title>{post.name}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                      <strong>Description:</strong><br></br>
-                      {post.description}<br></br><br></br>
+                      <strong>Link to Apply:</strong>
+                      <br></br>{window.location.hostname}:3000/applyPage?postID?={postId}<br></br><br></br>
+                      <strong>Description:</strong>
+                      <br></br>{post.description}<br></br><br></br>
                       <strong>Requirements:</strong>
                       {post.requirements.map((requirement, index) => (
                         <p key={index}>- {requirement.requirementText}</p>
@@ -105,9 +108,7 @@ class ApplicantList extends Component {
   state = {
     applications:  this.props.post.applications.filter(function(application) {return !application.rejected && application.submitted}),
     rejections: this.props.post.applications.filter(function(application) {return application.rejected && application.submitted}),
-    // Only show the rejections at first load if everyone is rejected
-    rejected: this.props.post.applications.filter(function(application) {return !application.rejected}).length == 0 
-      && this.props.post.applications.filter(function(application) {return application.rejected}).length != 0
+    rejected: true
   };
 
   componentDidUpdate(prevProps) {
@@ -169,12 +170,14 @@ class ApplicantList extends Component {
         <Card className="mt-4 h-100">
           <Card.Header className="d-flex justify-content-between">
             <OverlayTrigger placement="top" overlay={viewTooltip}>
-              <Button className="sortButton" onClick={this.toggleRejected}>
-                  {icon}
-              </Button>
+              <Container className="w-25 d-flex justify-content-start">
+                <Button className="sortButton" onClick={this.toggleRejected}>
+                    {icon}
+                </Button>
+              </Container>
             </OverlayTrigger>
-            <h4>Applicants</h4>
-            <Button className="searchButton"><BsSearch color="black" size={30}/></Button>
+            <h4 className="w-50 text-center">Applicants</h4>
+            <p className="w-25"></p>
           </Card.Header>
         
           <ListGroup>
@@ -247,7 +250,9 @@ class SkillList extends Component {
           postID: this.props.post.id,
           studentID: this.props.selectedApplicant
         })
-      });
+      }).then(() => {
+        window.location.reload()
+      })
     }
   }
 
@@ -259,7 +264,9 @@ class SkillList extends Component {
           postID: this.props.post.id,
           studentID: this.props.selectedApplicant
         })
-      });
+      }).then(() => {
+        window.location.reload()
+      })
     }
   }
 
@@ -267,30 +274,11 @@ class SkillList extends Component {
     const date = new Date(Date.now())
     return date.getDate().toString().padStart(2, '0') + "-" + (date.getMonth() + 1).toString().padStart(2, '0') + "-" + date.getFullYear().toString() + " " + date.getHours().toString().padStart(2, '0') + ":" + date.getMinutes().toString().padStart(2, '0')
   }
-
-  convertDate() {
-    const date = this.state.interview.date
-    const day = date.split("-")[0]
-    const month = date.split("-")[1]
-    const year = date.split("-")[2].split(" ")[0]
-    const time = date.split("-")[2].split(" ")[1]
-    const dtString = year + "-" + month + "-" + day + "T" + time
-    return new Date(dtString)
-  }
   
   checkInterviewForm() {
-    const date = this.state.interview.date
-    if (date.split("-").length < 3 || date.split("-")[2].split(" ") < 2) {
-      return false
-    }
-    const day = date.split("-")[0]
-    const month = date.split("-")[1]
-    const year = date.split("-")[2].split(" ")[0]
-    const time = date.split("-")[2].split(" ")[1]
-    const dtString = year + "-" + month + "-" + day + "T" + time
-    if (new Date(dtString).toString() != "Invalid Date") {
+    if (new Date(this.state.interview.date).toString() != "Invalid Date") {
       this.setState({interview: {
-        date: new Date(dtString),
+        date: new Date(this.state.interview.date),
         location: this.state.interview.location,
         description: this.state.interview.description
       }})
@@ -306,7 +294,7 @@ class SkillList extends Component {
         body: JSON.stringify({
           postID: this.props.post.id,
           studentID: this.props.selectedApplicant,
-          date: this.convertDate(this.state.interview.date),
+          date: new Date(this.state.interview.date),
           location: this.state.interview.location,
           description: this.state.interview.description
         })
@@ -340,42 +328,50 @@ class SkillList extends Component {
   renderAcceptButton() {
     let className = "btn-secondary"
     let btnText = "Accept"
+    let disable = true
     if (this.props.selectedApplicant != -1) {
       if (this.getSelectedStudent().accepted) {
         className = "btn-success"
         btnText = "Accepted"
+        disable = true
       } else if(!this.getSelectedStudent().rejected) {
         className = "btn-primary"
+        disable = false
       }
     }
     
-    return <Button className={"mx-1 " + className} onClick={this.acceptApplicant}>{btnText}</Button>
+    return <Button className={"mx-1 " + className} disabled={disable} onClick={this.acceptApplicant}>{btnText}</Button>
   }
 
   renderRejectButton() {
     let className = "btn-secondary"
     let btnText = "Reject"
+    let disable = true
     if (this.props.selectedApplicant != -1) {
       if (this.getSelectedStudent().rejected) {
         className = "btn-danger"
         btnText = "Rejected"
+        disable = true
       } else if(!this.getSelectedStudent().accepted) {
         className = "btn-primary"
+        disable = false
       }
     }
     
-    return <Button className={"mx-1 " + className} onClick={this.rejectApplicant}>{btnText}</Button>
+    return <Button className={"mx-1 " + className} disabled={disable} onClick={this.rejectApplicant}>{btnText}</Button>
   }
 
   renderInterviewButton() {
     let className = "btn-secondary"
+    let disable = true
     if (this.props.selectedApplicant != -1) {
       if (!this.getSelectedStudent().rejected && !this.getSelectedStudent().accepted) {
         className = "btn-primary"
+        disable = false
       }
     }
     
-    return <Button className={"mx-1 " + className} onClick={this.handleInterviewShow}>Interview</Button>
+    return <Button className={"mx-1 " + className} disabled={disable} onClick={this.handleInterviewShow}>Interview</Button>
 
   }
 
@@ -432,18 +428,17 @@ class SkillList extends Component {
               </Modal.Header>
               <Modal.Body>
                 <Form>
-                  <Form.Text>Date</Form.Text>
-                  <Form.Control 
-                    as="textarea"
-                    rows={1}
-                    placeholder="DD-MM-YYYY HH:MM"
-                    defaultValue={this.defaultDate()}
+                  <Form.Text>Date / Time</Form.Text>
+                  <br/>
+                  <input type="datetime-local"
                     onChange={(event) => {this.setState({ interview: { 
                       date: event.target.value,
                       location: this.state.interview.location,
                       description: this.state.interview.description
-                    } })}}
+                    } })
+                  }}
                   />
+                  <br/>
                   <Form.Text>Location</Form.Text>
                   <Form.Control
                     as="textarea"

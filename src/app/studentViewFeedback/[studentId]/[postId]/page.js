@@ -47,7 +47,7 @@ function StudentViewFeedback() {
       <Container>
         <Nav className="mt-2">
           <Pagination>
-            <PageItem href="/studentDashboard">
+            <PageItem href={"/studentDashboard?studentID=" + studentId}>
               Back to Dashboard{console.log(post)}
             </PageItem>
           </Pagination>
@@ -94,7 +94,7 @@ function StudentViewFeedback() {
 export default StudentViewFeedback;
 
 class SkillList extends Component {
-  state = { skills: [], name: "", showDocs: false}
+  state = { skills: [], name: "", showDocs: false, cv: null }
   getSelectedStudent = () => this.props.post.applications.filter(app => app.student.id == this.props.studentId)[0];
 
   handleDocsShow = () => {
@@ -109,7 +109,8 @@ class SkillList extends Component {
     if (prevProps !== this.props) {
       this.setState({
         skills: (this.props.studentId != -1 ? this.getSelectedStudent().evidences : []),
-        name: (this.props.studentId != -1 ? this.getSelectedStudent().student.name + "'s Application" : "")
+        name: (this.props.studentId != -1 ? this.getSelectedStudent().student.name + "'s Application" : ""),
+        cv: (this.props.selectedApplicant != -1 ? this.getSelectedStudent().cv : null)
       });
     }
   }
@@ -123,20 +124,27 @@ class SkillList extends Component {
                 <Modal.Header closeButton>
                   <Modal.Title>Documents</Modal.Title>
                 </Modal.Header>
-              <Modal.Body >
-              <Nav variant="tabs" defaultActiveKey="/home">
-                <Nav.Item>
-                  <Nav.Link eventKey="doc-1">CV</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                  <Nav.Link eventKey="doc-2" >Cover Letter</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
-                  <Nav.Link eventKey="doc-3" >Transcript</Nav.Link>
-                </Nav.Item>
-              </Nav>
-                    <iframe src="http://docs.google.com/gview?url=http://infolab.stanford.edu/pub/papers/google.pdf&embedded=true" style={{width: "60vw", height:"30vw"}} frameborder="0"></iframe>
-                    </Modal.Body>
+                <Modal.Body >
+                  <Nav variant="tabs" defaultActiveKey="/home">
+                    <Nav.Item>
+                      <Nav.Link eventKey="doc-1">CV</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                      <Nav.Link eventKey="doc-2" >Cover Letter</Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                      <Nav.Link eventKey="doc-3" >Transcript</Nav.Link>
+                    </Nav.Item>
+                  </Nav>
+                  {this.state.cv && (
+                    <embed
+                      src={`${this.state.cv}`}
+                      type="application/pdf"
+                      width="100%"
+                      height="600px"
+                    />
+                  )}
+                </Modal.Body>
                 <Modal.Footer>
                   <Button variant="secondary" onClick={this.handleDocsClose}>
                     Close

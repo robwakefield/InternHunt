@@ -30,7 +30,7 @@ function StudentApplication() {
     const queryStudentID = parseInt(urlParams.get('studentID'));
     const queryPostID = parseInt(urlParams.get('postID'));
     
-    if (isNaN(queryStudentID) || isNaN(queryPostID)) window.location.replace("/studentDashboard");
+    if (isNaN(queryStudentID) || isNaN(queryPostID)) window.location.replace("/");
     setStudentID(queryStudentID);
     setPostID(queryPostID);
     
@@ -51,7 +51,7 @@ function StudentApplication() {
       <Container style={{ height: "80vh" }}>
         <Nav className="mt-2">
             <Pagination>
-              <PageItem href="/studentDashboard">
+              <PageItem href={"/studentDashboard?studentID=" + studentID}>
                 Back to Dashboard
               </PageItem>
             </Pagination>
@@ -94,23 +94,25 @@ function StudentApplication() {
                 <Modal.Title>Your CV</Modal.Title>
               </Modal.Header>
               <Modal.Body>
-                <p>CV must be in (.doc, .docx)</p>
-                <DocxExtractor
-                  setApplication={setApplication}
-                  application={application}
-                  postID={postID}
-                  studentID={studentID}
-                />
-                <p>
-                  {application.cv && (
-                    <embed
-                      src={`${application.cv}`}
-                      type="application/pdf"
-                      width="100%"
-                      height="600px"
-                    />
-                  )}
-                </p>
+                {!application.submitted && (
+                  <div>
+                    <p>CV must be in (.doc, .docx)</p>
+                      <DocxExtractor
+                        setApplication={setApplication}
+                        application={application}
+                        postID={postID}
+                        studentID={studentID}
+                      />
+                  </div>
+                )}
+                {application.cv && (
+                  <embed
+                    src={`${application.cv}`}
+                    type="application/pdf"
+                    width="100%"
+                    height="600px"
+                  />
+                )}
               </Modal.Body>
               <Modal.Footer>
                 <Button variant="secondary" onClick={handleUploaderClose}>
@@ -155,14 +157,14 @@ class EvidenceEntryList extends Component {
   }
 
   handleSubmitApplication = () => {
-      // submit application (this should create stages)
-      fetch("/api/submitApplication", {
-        method: "PUT",
-        body: JSON.stringify({
-          studentID: this.props.studentID,
-          postID: this.props.postID,
-        })
-      });
+    // submit application (this should create stages)
+    fetch("/api/submitApplication", {
+      method: "PUT",
+      body: JSON.stringify({
+        studentID: this.props.studentID,
+        postID: this.props.postID,
+      })
+    }).then(() => {
       // Set "Submit Application" stage in application
       fetch('/api/stage', {
         method: 'PUT',
@@ -174,8 +176,10 @@ class EvidenceEntryList extends Component {
           date: new Date(Date.now()),
           override: false
         })
-      });
-      window.location.reload(false);
+      }).then(() => {
+        window.location.reload(false);
+      })
+    })
   }
 
   componentDidUpdate(prevProps) {

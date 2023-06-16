@@ -12,7 +12,8 @@ export async function GET() {
       applications: {
         select: {
           postID: true,
-          studentID: true
+          studentID: true,
+          submitted: true
         }
       }
     }

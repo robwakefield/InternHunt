@@ -9,6 +9,7 @@ import StudentNavbar from "../studentNavbar";
 import { BsPen } from "react-icons/bs";
 import { AiOutlineEye } from "react-icons/ai"
 import "../globals.css"
+import { useSearchParams } from "next/navigation";
 
 function useInterval(callback, delay) {
   const intervalRef = useRef(null);
@@ -29,8 +30,12 @@ function useInterval(callback, delay) {
 function StudentDashboard() {
   const [applications, setApplications] = useState([]);
   const [selectedApplication, setSelectedApplication] = useState();
+  const urlParams = useSearchParams()
+  const queryStudentID = parseInt(urlParams.get('studentID'));
 
-  const studentId = 1;
+  if (isNaN(queryStudentID)) window.location.replace("/");
+  
+  const studentId = queryStudentID;
 
   useEffect(() => {
     fetch('/api/studentApplication/' + studentId)
@@ -42,12 +47,14 @@ function StudentDashboard() {
   }, []);
 
   useInterval(() => {
-    fetch('/api/studentApplication/'+studentId)
-      .then((response) => response.json())
-      .then((data) => {
-        setApplications(data)
-        setSelectedApplication(data[applications.findIndex(app => app.postID == selectedApplication.postID)])
-      });
+    if (studentId > -1) {
+      fetch('/api/studentApplication/'+studentId)
+        .then((response) => response.json())
+        .then((data) => {
+          setApplications(data)
+          setSelectedApplication(data[applications.findIndex(app => app.postID == selectedApplication.postID)])
+        });
+    }
   }, 4000); // x second interval
 
   return (
@@ -90,7 +97,6 @@ class ApplicationList extends Component {
   }
 
   render() {
-    console.log(this.state.applications);
     this.state.applications.forEach((application) => {
       application.stages.sort((a, b) => a.id - b.id);
     });
@@ -170,18 +176,15 @@ class ApplicationListItem extends Component {
     return (
       <ListGroupItem className={this.props.selected ? "selectedApplicationEntry" : "applicationEntry"} onClick={() => {this.props.setSelectedApplication(this.props.application)}} key={this.state.postID.toString() + "s" + this.state.studentID}>
         <Container className="d-flex">
-          <Container className="d-flex justify-content-end">
-            <p className="w-25 text-left flex-fill my-2">{this.state.title}</p>
-            <p className={"w-25 text-left mx-4 my-2 text-" + (this.props.application.submitted ? "muted" : this.statusColor())}>{this.props.application.submitted ? "Submitted" : "Deadline " + this.state.deadline}</p>
-          </Container>
-          <Container className="w-50 d-flex justify-content-end align-bottom">
-            <ProgressBar className="w-auto mx-2" variant={this.progressbarColor()} now={this.state.progress}/>
-            <div>
-              <Button onClick={this.editPost} className="my-2">
+          <Row style={{width: "100%"}}>
+            <Col xs={5}><p className="text-left ">{this.state.title}</p></Col>
+            <Col xs={3}><p className={"text-left text-" + (this.props.application.submitted ? "muted" : this.statusColor())}>{this.props.application.submitted ? "Submitted" : "Deadline " + this.state.deadline}</p></Col>
+            <Col xs={3}><ProgressBar variant={this.progressbarColor()} now={this.state.progress} /></Col>
+            <Col xs={1}><Button onClick={this.editPost} className="my-2">
                 {this.props.application.submitted ? <AiOutlineEye style={{ color: 'white'}} /> : <BsPen/>}
-              </Button>
-            </div>
-          </Container>
+            </Button>
+            </Col>
+          </Row>
         </Container>
       </ListGroupItem>
     )
@@ -236,7 +239,7 @@ class Timeline extends Component {
   render() {
     return (
       <Container style={{ height: "80vh" }} >
-        <Card className="mt-4 h-100 progressTimeline">
+        <Card className="mt-4 h-100 progressTimeline overflow-auto">
           <VerticalTimeline style={{ height: "80vh" }} layout={{ default: '1-column-left' }}>
             {this.state.stages.filter(
               // filter out incomplete stages if the application is already finished

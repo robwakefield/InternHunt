@@ -17,9 +17,24 @@
     left: 0;
     margin: 0;
     padding: 0;
-    background: #DBE8E1;
+    background: linear-gradient(45deg,#034587,#e10031);
+    background-size: 120% 120%;
+    animation: gradient-animation 8s ease infinite;
     overflow: hidden;
 }
+
+@keyframes gradient-animation {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  
 .loginBackground li {
     position: absolute;
     top: 80vh;
