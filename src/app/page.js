@@ -2,6 +2,7 @@
 
 import "bootstrap/dist/css/bootstrap.min.css"
 import {Nav, Navbar, Container, Button} from 'react-bootstrap/'
+import LinkedInLogin from "./linkedInLogin"
 
 
 export default function Home() {
@@ -10,8 +11,7 @@ export default function Home() {
       {/* Navigation Title Bar */}
       <Navbar bg="light" expand="lg">
         <Container className="d-flex justify-content-end">
-          <Button className="mx-1">Sign up</Button>
-          <Button className="mx-1">Log in</Button>
+          <Button className="mx-1" href="./login">Log in</Button>
         </Container>
       </Navbar>
 

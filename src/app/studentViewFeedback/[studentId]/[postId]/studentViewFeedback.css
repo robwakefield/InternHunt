@@ -1,0 +1,30 @@
+.applicantListItem {
+    margin: 20px;
+    margin-bottom: 0px;
+    border: 1px solid lightgrey !important;
+    padding: 5px;
+  }
+  
+  .applicantListRow {
+    width: 100%;
+    margin: 0px;
+  }
+  
+  .studentName{
+    width: 100%;
+    margin: 0px;
+  }
+  
+  .avgRating{
+    margin: 0px;
+  }
+  
+  .avgRatingCol{
+    padding: 0px;
+    align-items: center;
+    display: flex;
+  }
+
+ .avgRating {
+    display: contents !important;
+}

@@ -21,25 +21,36 @@ export async function GET() {
   return NextResponse.json(listings)
 }
 
-export async function PUT(request) {
-  const { description, requirements } = await request.json();
+export async function POST(request) {
+  const body = await request.json();
   await prisma.post.update({
     where: {
-      id: 1
+      id: body.id
     },
     data: {
-      description: description,
-      requirements: {
-        updateMany: requirements.map((requirement) => ({
-          where: {
-            id: requirement.id
-          },
-          data: {
-            requirementText: requirement.requirementText
-          }
-        }))
-      }
+      status: "Applications Open"
     }
+  });
+  return NextResponse.json({});
+}
+
+export async function PUT(request) {
+  const body = await request.json();
+  
+  const updateData = {
+    name: body.name,
+    description: body.description
+  };
+
+  if (body.totalPlaces) {
+    updateData.totalPlaces = parseInt(body.totalPlaces);
+  }
+  
+  await prisma.post.update({
+    where: {
+      id: body.id
+    },
+    data: updateData
   });
   return NextResponse.json({});
 }

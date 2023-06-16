@@ -6,28 +6,23 @@ import { Pagination, FormCheck, Nav, Button, PageItem, Container, Card, Form, Bu
 import { Component, useEffect, useRef, useState } from "react";
 import RecruiterNavbar from "../recruiterNavbar";
 
-function JobRequirementsList() {
-  const reqRef = useRef();
+function JobRequirementsList({ listing }) {
 
-  const [post, setPost] = useState({description: "", requirements: []});
-  useEffect(() => {
-    fetch('/api/listingEdit')
-      .then((response) => response.json())
-      .then((data) => setPost(data));
-  }, []);
-
-  const handleSubmit = (event) => {
+  const handleAdd = (event) => {
     event.preventDefault();
-    fetch('/api/listingEdit', {
-      method: 'PUT',
+    fetch('/api/requirements', {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        description: post.description,
-        requirements: post.requirements
+        postID: listing.id
       }),
-    });
+    })
+      .then((response) => response.json())
+      .then(() => {
+        window.location.reload();
+      });
   }
 
   return (
@@ -35,14 +30,11 @@ function JobRequirementsList() {
       <Card className="my-2 mx-3">
         <Card.Header className="d-flex justify-content-between">
         <p>Requirements</p>
-        <ButtonGroup>
-          {/* <Button>Add</Button> */}
-          <Button onClick={handleSubmit}>Save</Button>
-          {/* <Button>Remove</Button> */}
-        </ButtonGroup>
+        <Button onClick={handleAdd}>Add</Button>
         </Card.Header>
-          {post.requirements.map((requirement) =>
-            <JobRequirementsItem key={requirement.id} requirement={requirement} reqRef={reqRef} />)}
+          {listing.requirements.sort((a, b) => a.id - b.id).map((requirement) =>
+            <JobRequirementsItem key={requirement.id} listingId={listing.id}
+            requirement={requirement} />)}
       </Card>
     </Form>
   )
@@ -50,12 +42,53 @@ function JobRequirementsList() {
 
 export default JobRequirementsList;
 
-function JobRequirementsItem({ requirement, reqRef }) {
+function JobRequirementsItem({ listingId, requirement }) {
+  const reqRef = useRef();
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    fetch('/api/requirements', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        postid: listingId,
+        id: requirement.id,
+        requirementText: reqRef.current.value
+      }),
+    });
+  }
+
+  const handleRemove = (event) => {
+    event.preventDefault();
+    fetch('/api/requirementRemoval', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        postid: listingId,
+        id: requirement.id
+      }),
+    })
+      .then((response) => response.json())
+      .then(() => {
+        window.location.reload();
+      });
+  }
+
   return (
     <Form.Group className="mb-3" controlId="formJobReq">
-      <Form.Control as="textarea" rows={1}
-        placeholder="Enter your Requirements" defaultValue={requirement.requirementText}
-        ref={reqRef} />
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <Form.Control as="textarea" rows={1}
+          placeholder="Enter your Requirements" defaultValue={requirement.requirementText}
+          ref={reqRef} />
+          <ButtonGroup>
+            <Button onClick={handleSubmit}>Save</Button>
+            <Button variant="danger" onClick={handleRemove}>Remove</Button>
+          </ButtonGroup>
+      </div>
     </Form.Group>
   )
 }

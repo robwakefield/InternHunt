@@ -19,6 +19,22 @@ p {
   padding: 5px;
 }
 
+.selectedRejectedListItem {
+  margin: 20px;
+  margin-bottom: 0px;
+  border: 1px solid grey !important;
+  background-color: rosybrown;
+  padding: 5px;
+}
+
+.rejectedApplicantListItem {
+  margin: 20px;
+  margin-bottom: 0px;
+  border: 1px solid lightgrey !important;
+  background-color: lightcoral;
+  padding: 5px;
+}
+
 .applicantListItem {
   margin: 20px;
   margin-bottom: 0px;
@@ -54,4 +70,13 @@ p {
 
 .docModal {
   --bs-modal-width: 1500px !important;
+}
+
+.notesSkill{
+  align-self: center !important;
+}
+
+.starRating{
+  display: flex !important;
+  justify-content: flex-end !important;
 }
