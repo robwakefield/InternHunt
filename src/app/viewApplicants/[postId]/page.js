@@ -10,7 +10,8 @@ import { AiFillStar } from 'react-icons/ai'
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
 import '../../globals.css'
-import { useParams, notFound } from "next/navigation";
+import { notFound } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 function averageRating(application) {
   if (application.evidences.length == 0) return 0;
@@ -25,7 +26,7 @@ function ViewApplicants() {
   const handleClose = () => setJobListing(false);
   const handleShow = () => setJobListing(true);
 
-  const params = useParams()
+  const params = useSearchParams()
   const postId = params.postId
 
   useEffect(() => {
@@ -64,8 +65,10 @@ function ViewApplicants() {
                       <Modal.Title>{post.name}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                      <strong>Description:</strong><br></br>
-                      {post.description}<br></br><br></br>
+                      <strong>Link to Apply:</strong>
+                      <br></br>{window.location.hostname}:3000/applyPage?postID?={postId}<br></br><br></br>
+                      <strong>Description:</strong>
+                      <br></br>{post.description}<br></br><br></br>
                       <strong>Requirements:</strong>
                       {post.requirements.map((requirement, index) => (
                         <p key={index}>- {requirement.requirementText}</p>

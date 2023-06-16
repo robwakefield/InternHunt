@@ -8,15 +8,15 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import "./login.css"
 import "./background.css"
 import {FcReadingEbook, FcBusinessman} from "react-icons/fc"
-import { cookies } from "next/dist/client/components/headers";
-import jwt from "jwt-decode"
 import Cookies from "universal-cookie"
-import { redirect } from "next/dist/server/api-utils";
+import { useSearchParams } from "next/navigation";
 
 function Login() {
     const blue = "#034687"
     const red = "#E10032"
     const cookies = new Cookies();
+    const urlParams = useSearchParams();
+    const queryPostID = parseInt(urlParams.get('postID'));
     const [user, setUser] = useState("Student");
     const [token, setToken] = useState("");
     const [bgColor, setbgColor] = useState(blue)
@@ -44,8 +44,13 @@ function Login() {
         cookies.set("loggedIn", true)
         cookies.set("token", token)
         cookies.set("userType", user)
+        cookies.set("studentID", 1)
 
-        window.location.href = "./" + cookies.get("userType").toLowerCase() + "Dashboard";
+        if (isNaN(queryPostID)) {
+            window.history.back(1);
+        }
+        window.location.replace("/applyPage?postID=" + queryPostID);
+        
     }
 
     useEffect(() => {
@@ -79,7 +84,7 @@ function Login() {
                 {(user === "Student")? <FcReadingEbook size={30} /> : <FcBusinessman size = {30} />}
                 {user} Login
             </strong>
-                    <a className="alignright" href={"#" + user} onClick={() => { setUser(switchUser());  setbgColor(switchColor())}}>I am a {switchUser(user)}</a>
+                    <a className="alignright" onClick={() => { setUser(switchUser());  setbgColor(switchColor())}}>I am a {switchUser(user)}</a>
         </Card.Header>
         <ListGroup variant="flush">
         <ListGroup.Item>
