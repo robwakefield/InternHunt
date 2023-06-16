@@ -167,12 +167,14 @@ class ApplicantList extends Component {
         <Card className="mt-4 h-100">
           <Card.Header className="d-flex justify-content-between">
             <OverlayTrigger placement="top" overlay={viewTooltip}>
-              <Button className="sortButton" onClick={this.toggleRejected}>
-                  {icon}
-              </Button>
+              <Container className="w-25 d-flex justify-content-start">
+                <Button className="sortButton" onClick={this.toggleRejected}>
+                    {icon}
+                </Button>
+              </Container>
             </OverlayTrigger>
-            <h4>Applicants</h4>
-            <Button className="searchButton"><BsSearch color="black" size={30}/></Button>
+            <h4 className="w-50 text-center">Applicants</h4>
+            <p className="w-25"></p>
           </Card.Header>
         
           <ListGroup>
