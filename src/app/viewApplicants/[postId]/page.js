@@ -268,30 +268,11 @@ class SkillList extends Component {
     const date = new Date(Date.now())
     return date.getDate().toString().padStart(2, '0') + "-" + (date.getMonth() + 1).toString().padStart(2, '0') + "-" + date.getFullYear().toString() + " " + date.getHours().toString().padStart(2, '0') + ":" + date.getMinutes().toString().padStart(2, '0')
   }
-
-  convertDate() {
-    const date = this.state.interview.date
-    const day = date.split("-")[0]
-    const month = date.split("-")[1]
-    const year = date.split("-")[2].split(" ")[0]
-    const time = date.split("-")[2].split(" ")[1]
-    const dtString = year + "-" + month + "-" + day + "T" + time
-    return new Date(dtString)
-  }
   
   checkInterviewForm() {
-    const date = this.state.interview.date
-    if (date.split("-").length < 3 || date.split("-")[2].split(" ") < 2) {
-      return false
-    }
-    const day = date.split("-")[0]
-    const month = date.split("-")[1]
-    const year = date.split("-")[2].split(" ")[0]
-    const time = date.split("-")[2].split(" ")[1]
-    const dtString = year + "-" + month + "-" + day + "T" + time
-    if (new Date(dtString).toString() != "Invalid Date") {
+    if (new Date(this.state.interview.date).toString() != "Invalid Date") {
       this.setState({interview: {
-        date: new Date(dtString),
+        date: new Date(this.state.interview.date),
         location: this.state.interview.location,
         description: this.state.interview.description
       }})
@@ -307,7 +288,7 @@ class SkillList extends Component {
         body: JSON.stringify({
           postID: this.props.post.id,
           studentID: this.props.selectedApplicant,
-          date: this.convertDate(this.state.interview.date),
+          date: new Date(this.state.interview.date),
           location: this.state.interview.location,
           description: this.state.interview.description
         })
@@ -443,18 +424,17 @@ class SkillList extends Component {
               </Modal.Header>
               <Modal.Body>
                 <Form>
-                  <Form.Text>Date</Form.Text>
-                  <Form.Control 
-                    as="textarea"
-                    rows={1}
-                    placeholder="DD-MM-YYYY HH:MM"
-                    defaultValue={this.defaultDate()}
+                  <Form.Text>Date / Time</Form.Text>
+                  <br/>
+                  <input type="datetime-local"
                     onChange={(event) => {this.setState({ interview: { 
                       date: event.target.value,
                       location: this.state.interview.location,
                       description: this.state.interview.description
-                    } })}}
+                    } })
+                  }}
                   />
+                  <br/>
                   <Form.Text>Location</Form.Text>
                   <Form.Control
                     as="textarea"
