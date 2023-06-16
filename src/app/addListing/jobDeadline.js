@@ -6,8 +6,8 @@ import { Pagination, FormCheck, Nav, Button, PageItem, Container, Card, Form } f
 import { Component, useEffect, useRef, useState } from "react";
 import RecruiterNavbar from "../recruiterNavbar";
 
-function JobPlaces({ listing }) {
-  const placeRef = useRef();
+function JobDeadline({ listing }) {
+  const dateTimeRef = useRef();
 
   const handleSubmit = () => {
     fetch('/api/listingEdit', {
@@ -17,7 +17,7 @@ function JobPlaces({ listing }) {
       },
       body: JSON.stringify({
         id: listing.id,
-        totalPlaces: placeRef.current.value
+        deadline: dateTimeRef.current.value
       }),
     });
   }
@@ -26,16 +26,14 @@ function JobPlaces({ listing }) {
     <Form>
       <Card className="mt-4 mb-2 mx-3">
         <Card.Header className="d-flex justify-content-between">
-        <p>Job Places</p>
+          <p>Deadline Date / Time</p>
+          {/* <Button onClick={handleSubmit}>Save</Button> */}
         </Card.Header>
-          <Form.Group className="mb-3" controlId="formJobPlaces">
-            <Form.Control as="textarea" rows={1}
-              placeholder="Change Job Places" defaultValue={listing.totalPlaces}
-              ref={placeRef} onChange={handleSubmit} />
-          </Form.Group>
+          <input type="datetime-local" defaultValue={listing.deadline}
+            ref={dateTimeRef} onChange={handleSubmit} />
       </Card>
     </Form>
   )
 }
 
-export default JobPlaces;
+export default JobDeadline;
