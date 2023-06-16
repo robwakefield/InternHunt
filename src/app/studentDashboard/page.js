@@ -238,7 +238,7 @@ class Timeline extends Component {
   render() {
     return (
       <Container style={{ height: "80vh" }} >
-        <Card className="mt-4 h-100 progressTimeline">
+        <Card className="mt-4 h-100 progressTimeline overflow-auto" style={{ flexDirection: "column-reverse" }}>
           <VerticalTimeline style={{ height: "80vh" }} layout={{ default: '1-column-left' }}>
             {this.state.stages.filter(
               // filter out incomplete stages if the application is already finished
