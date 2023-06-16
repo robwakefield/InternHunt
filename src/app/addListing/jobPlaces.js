@@ -9,8 +9,7 @@ import RecruiterNavbar from "../recruiterNavbar";
 function JobPlaces({ listing }) {
   const placeRef = useRef();
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmit = () => {
     fetch('/api/listingEdit', {
       method: 'PUT',
       headers: {
@@ -28,12 +27,11 @@ function JobPlaces({ listing }) {
       <Card className="mt-4 mb-2 mx-3">
         <Card.Header className="d-flex justify-content-between">
         <p>Job Places</p>
-        <Button onClick={handleSubmit}>Save</Button>
         </Card.Header>
           <Form.Group className="mb-3" controlId="formJobPlaces">
             <Form.Control as="textarea" rows={1}
               placeholder="Change Job Places" defaultValue={listing.totalPlaces}
-              ref={placeRef} />
+              ref={placeRef} onChange={handleSubmit} />
           </Form.Group>
       </Card>
     </Form>

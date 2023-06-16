@@ -12,7 +12,6 @@ import JobPlaces from '../jobPlaces';
 import JobDeadline from '../jobDeadline';
 
 function AddListing() {
-  const nameRef = useRef();
 
   const [listing, setListing] = useState({requirements: []});
   const [showRemove, setRemove] = useState(false);
@@ -47,20 +46,6 @@ function AddListing() {
       }),
     })
       .then(handleExit)
-  }
-
-  const handleNameChange = (event) => {
-    event.preventDefault();
-    fetch('/api/listingEdit', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        id: listing.id,
-        name: nameRef.current.value
-      }),
-    })
   }
 
   const handleRemove = (event) => {
@@ -121,11 +106,7 @@ function AddListing() {
         </Nav>
         <Card>
           <Card.Header>
-            <Form style={{ display: 'flex', alignItems: 'center' }}>
-              <Form.Control as="textarea" rows={2} className="text-center" style={{ fontSize: '32px' }}
-                defaultValue={listing.name} ref={nameRef} />
-              <Button onClick={handleNameChange}>Save</Button>
-            </Form>
+            <JobName listing={listing} />
           </Card.Header>
           <Nav className="mt-2" style={{ display: 'grid', gridAutoFlow: 'column', gap: '10px' }}>
             <JobPlaces listing={listing} />
@@ -142,6 +123,30 @@ function AddListing() {
 }
 
 export default AddListing;
+
+function JobName({ listing }) {
+  const nameRef = useRef();
+
+  const handleNameChange = () => {
+    fetch('/api/listingEdit', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: listing.id,
+        name: nameRef.current.value
+      }),
+    })
+  }
+
+  return (
+    <Form style={{ display: 'flex', alignItems: 'center' }}>
+      <Form.Control as="textarea" rows={1} className="text-center" style={{ fontSize: '32px' }}
+        defaultValue={listing.name} ref={nameRef} onChange={handleNameChange} />
+    </Form>
+  )
+}
 
 class SavedBox extends Component {
   constructor(props) {

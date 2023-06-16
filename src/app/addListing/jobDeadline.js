@@ -7,10 +7,9 @@ import { Component, useEffect, useRef, useState } from "react";
 import RecruiterNavbar from "../recruiterNavbar";
 
 function JobDeadline({ listing }) {
-  const placeRef = useRef();
+  const dateTimeRef = useRef();
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmit = () => {
     fetch('/api/listingEdit', {
       method: 'PUT',
       headers: {
@@ -18,7 +17,7 @@ function JobDeadline({ listing }) {
       },
       body: JSON.stringify({
         id: listing.id,
-        deadline: event.target.value
+        deadline: dateTimeRef.current.value
       }),
     });
   }
@@ -28,11 +27,10 @@ function JobDeadline({ listing }) {
       <Card className="mt-4 mb-2 mx-3">
         <Card.Header className="d-flex justify-content-between">
           <p>Deadline Date / Time</p>
-          <Button onClick={handleSubmit}>Save</Button>
+          {/* <Button onClick={handleSubmit}>Save</Button> */}
         </Card.Header>
           <input type="datetime-local" defaultValue={listing.deadline}
-            onChange={handleSubmit}
-          />
+            ref={dateTimeRef} onChange={handleSubmit} />
       </Card>
     </Form>
   )
