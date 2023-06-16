@@ -157,14 +157,14 @@ class EvidenceEntryList extends Component {
   }
 
   handleSubmitApplication = () => {
-      // submit application (this should create stages)
-      fetch("/api/submitApplication", {
-        method: "PUT",
-        body: JSON.stringify({
-          studentID: this.props.studentID,
-          postID: this.props.postID,
-        })
-      });
+    // submit application (this should create stages)
+    fetch("/api/submitApplication", {
+      method: "PUT",
+      body: JSON.stringify({
+        studentID: this.props.studentID,
+        postID: this.props.postID,
+      })
+    }).then(() => {
       // Set "Submit Application" stage in application
       fetch('/api/stage', {
         method: 'PUT',
@@ -176,8 +176,10 @@ class EvidenceEntryList extends Component {
           date: new Date(Date.now()),
           override: false
         })
-      });
-      window.location.reload(false);
+      }).then(() => {
+        window.location.reload(false);
+      })
+    })
   }
 
   componentDidUpdate(prevProps) {

@@ -17,7 +17,9 @@ function ApplyPage() {
         const queryPostID = parseInt(urlParams.get('postID'));
         const queryStudentID = parseInt(urlParams.get('studentID'));
     
-        if (isNaN(queryStudentID) || isNaN(queryPostID)) window.location.replace("/login");
+        if (isNaN(queryStudentID) || isNaN(queryPostID)) {
+            window.location.replace("/login");
+        }
         setPostId(queryPostID);
         setStudentId(queryStudentID);
 
@@ -45,23 +47,9 @@ function ApplyPage() {
               studentID: studentId,
               postID: postId
             })
+        }).then(() => {
+            window.location.replace("/studentDashboard?studentID=" + studentId)
         })
-
-        
-        // Set "Started Application" stage in application
-        fetch('/api/stage', {
-            method: 'PUT',
-            body: JSON.stringify({
-            postID: postId,
-            studentID: studentId,
-            stageID: 0, // Started Application
-            completed: true,
-            date: new Date(Date.now()),
-            override: false
-            })
-        });
-
-        window.location.replace("/studentDashboard?studentID=" + studentId)
     }
  
     return (
