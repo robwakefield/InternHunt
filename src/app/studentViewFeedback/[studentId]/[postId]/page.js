@@ -47,7 +47,7 @@ function StudentViewFeedback() {
       <Container>
         <Nav className="mt-2">
           <Pagination>
-            <PageItem href="/studentDashboard">
+            <PageItem href={"/studentDashboard?studentID=" + studentId}>
               Back to Dashboard{console.log(post)}
             </PageItem>
           </Pagination>
