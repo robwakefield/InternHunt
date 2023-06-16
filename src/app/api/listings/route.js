@@ -39,7 +39,7 @@ export async function POST(request) {
       id: newId,
       name: body.name,
       status: "Draft",
-      totalPlaces: body.totalPlaces,
+      // totalPlaces: body.totalPlaces,
       description: ""
     }
   });
