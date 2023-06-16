@@ -170,7 +170,9 @@ class ListingItem extends Component {
 
     let places_filled = 0
     if (this.state.applications) {
-      places_filled = this.state.applications.length
+      places_filled = this.state.applications.filter((app) => {
+        return app.submitted
+      }).length
     }
     
 
