@@ -181,7 +181,7 @@ class ApplicationListItem extends Component {
             <Col xs={3}><p className={"text-left text-" + (this.props.application.submitted ? "muted" : this.statusColor())}>{this.props.application.submitted ? "Submitted" : "Deadline " + this.state.deadline}</p></Col>
             <Col xs={3}><ProgressBar variant={this.progressbarColor()} now={this.state.progress} /></Col>
             <Col xs={1}><Button onClick={this.editPost} className="my-2">
-                {this.props.application.submitted ? <AiOutlineEye style={{ color: 'white'}} /> : <BsPen/>}
+                {this.props.application.submitted ? <p>View</p> : <p>Edit</p>}
             </Button>
             </Col>
           </Row>
