@@ -47,9 +47,9 @@ function Login() {
         cookies.set("studentID", 1)
 
         if (isNaN(queryPostID)) {
-            window.history.back(1);
+            // window.location.replace("/");
         }
-        window.location.replace("/applyPage?postID=" + queryPostID);
+        // window.location.replace("/applyPage?postID=" + queryPostID);
         
     }
 
