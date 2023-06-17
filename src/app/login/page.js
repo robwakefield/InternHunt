@@ -10,6 +10,7 @@ import "./background.css"
 import {FcReadingEbook, FcBusinessman} from "react-icons/fc"
 import Cookies from "universal-cookie"
 import { useSearchParams } from "next/navigation";
+import { useRef } from "react";
 
 function Login() {
     const blue = "#034687"
@@ -18,10 +19,10 @@ function Login() {
     const urlParams = useSearchParams();
     const queryPostID = parseInt(urlParams.get('postID'));
     const [user, setUser] = useState("Student");
-    const [token, setToken] = useState("");
     const [bgColor, setbgColor] = useState(blue)
-    
-    
+    const inputName = useRef();
+    const email = useRef();
+    const password = useRef();
 
     const switchUser = () => {
         if (user === "Student") {
@@ -40,11 +41,9 @@ function Login() {
         
     }
 
-    const login = () => {
-        cookies.set("loggedIn", true)
-        cookies.set("token", token)
-        cookies.set("userType", user)
-        cookies.set("studentID", 1)
+    const login = (id, userType) => {
+        cookies.set("userType", userType)
+        cookies.set("studentID", id)
 
         if (isNaN(queryPostID)) {
             window.history.back(1);
@@ -53,14 +52,36 @@ function Login() {
         
     }
 
-    useEffect(() => {
-        if (token === "") {
-            return
-        }
-        login();
-    }, [token]);
+    const handleError = () => { }
 
-    
+    const signin = () => {
+        fetch('/api/' + user.toLowerCase() + 'Signin', {
+            method: "POST",
+            body: JSON.stringify({
+                email: email.current.value,
+                password: password.current.value
+            })
+          }).then((response) => response.json())
+            .then((data) => {
+                if (data.error) {
+                    handleError()
+                } else {
+                    login(data.id, user);
+                }
+            });
+    }
+
+    const signup = () => {
+        fetch('/api/' + user.toLowerCase() + 'SignUp', {
+            method: "POST",
+            body: JSON.stringify({
+                name: inputName.current.value,
+                email: email.current.value,
+                password: password.current.value
+            })
+          }).then((response) => response.json())
+            .then((data) => { login(data.id, data.user) });
+    }
 
     return (
         <div>
@@ -99,44 +120,38 @@ function Login() {
         </Nav>
         <Tab.Content>
                 <Tab.Pane eventKey="signIn">
-                <div className="text-center mb-3">
-                    <LinkedInLogin setToken={setToken}/>
-                </div>
                 <FloatingLabel
                     controlId="floatingInput"
                     label="Email address"
                     className="mb-3"
                 >
-                    <Form.Control type="email" placeholder="name@example.com" />
+                    <Form.Control type="email" placeholder="name@example.com" ref={email}/>
                 </FloatingLabel>
                 <FloatingLabel controlId="floatingPassword" label="Password">
-                    <Form.Control type="password" placeholder="Password" />
+                    <Form.Control type="password" placeholder="Password" ref={password}/>
                 </FloatingLabel>                        
 
-                <Button className="mb-4 w-100">Sign in</Button>
+                <Button onClick={signin} className="mb-4 w-100">Sign in</Button>
             </Tab.Pane>
             <Tab.Pane eventKey="signUp">
-                <div className="text-center mb-3">
-                    <LinkedInLogin setToken={setToken}></LinkedInLogin>
-                </div>
 
-                <FloatingLabel controlId="floatingName" label="Name">
-                    <Form.Control type="text" placeholder="Name" />
+                <FloatingLabel controlId="floatingName" label="Full Name">
+                    <Form.Control type="text" placeholder="Full Name" ref={inputName}/>
                 </FloatingLabel>
                 <FloatingLabel
                     controlId="floatingInput"
                     label="Email address"
                     className="mb-3"
                 >
-                <Form.Control type="email" placeholder="name@example.com" />
+                <Form.Control type="email" placeholder="name@example.com" ref={email}/>
                 </FloatingLabel>
                 <FloatingLabel controlId="floatingPassword" label="Password">
-                    <Form.Control type="password" placeholder="Password" />
+                    <Form.Control type="password" placeholder="Password" ref={password}/>
                 </FloatingLabel>
                         
                 
 
-                <Button className="mb-4 w-100">Sign up</Button>
+                <Button onClick={signup} className="mb-4 w-100">Sign up</Button>
                 </Tab.Pane>
                 </Tab.Content>
                 </Tab.Container>

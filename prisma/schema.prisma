@@ -10,15 +10,18 @@ datasource db {
 
 model Student {
   id           Int           @id @default(autoincrement())
-  name         String
+  name         String        @default("")
+  email        String        @default("")
+  password     String        @default("")
   applications Application[]
 }
 
 model Post {
-  id           Int           @id @default(autoincrement())
+  id           Int          @id @default(autoincrement())
+  recruiterID  Int         
+  recruiter    Recruiter    @relation(fields: [recruiterID], references: [id])        
   name         String
   status       String
-  totalPlaces  Int
   description  String
   rating1Text  String        @default("Just Mentioning")
   rating2Text  String        @default("Minimal Evidence")
@@ -92,4 +95,12 @@ model Interview {
   app         Application @relation(fields: [postID, studentID], references: [postID, studentID])
 
   @@id([postID, studentID])
+}
+
+model Recruiter {
+  id           Int           @id @default(autoincrement())
+  name         String        @default("")
+  email        String        @default("")
+  password     String        @default("")
+  posts Post[]
 }
