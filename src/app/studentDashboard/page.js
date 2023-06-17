@@ -201,7 +201,7 @@ class ApplicationListItem extends Component {
               {this.renderProgressInfoText()}
             </Col>
             <Col xs={1}><Button onClick={this.editPost} className="my-2">
-                {this.props.application.submitted ? <AiOutlineEye style={{ color: 'white'}} /> : <BsPen/>}
+                {this.props.application.submitted ? <p>View</p> : <p>Edit</p>}
             </Button>
             </Col>
           </Row>
