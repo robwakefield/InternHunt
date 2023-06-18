@@ -5,7 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import { Pagination, FormCheck, Nav, Button, PageItem, Container, Card, Form, ButtonGroup } from "react-bootstrap";
 import { Component, useEffect, useRef, useState } from "react";
 
-function JobRequirementsList({ listing }) {
+function JobRequirementsList({ listing, setListing }) {
 
   const handleAdd = (event) => {
     event.preventDefault();
@@ -19,8 +19,11 @@ function JobRequirementsList({ listing }) {
       }),
     })
       .then((response) => response.json())
-      .then(() => {
-        window.location.reload();
+      .then((newRequirement) => {
+        setListing((prevPost) => ({
+          ...prevPost,
+          requirements: [...prevPost.requirements, newRequirement]
+        }));
       });
   }
 
