@@ -6,7 +6,7 @@ import { Card, ListGroup, Nav, Container, Tab, FloatingLabel, Form, Button, Inpu
 import LinkedInLogin from '../linkedInLogin';
 import "bootstrap/dist/css/bootstrap.min.css"
 import "./login.css"
-import "./background.css"
+import "../loginBackground.css"
 import {FcReadingEbook, FcBusinessman} from "react-icons/fc"
 import Cookies from "universal-cookie"
 import { useSearchParams } from "next/navigation";
@@ -159,6 +159,15 @@ function Login() {
         <ListGroup variant="flush">
         <ListGroup.Item>
         <Tab.Container className="p-3 my-5 d-flex flex-column w-50" defaultActiveKey="signIn">
+        <div className="logo">
+            <img
+                alt=""
+                src="/favicon.ico"
+                width="30"
+                height="30" />
+            <strong>InternHunt</strong>
+        </div>
+        
         <Nav fill variant="tabs" defaultActiveKey="/home">
             <Nav.Item>
             <Nav.Link onClick={() => setErrorMessage("")} eventKey="signIn">Sign in</Nav.Link>
@@ -166,9 +175,10 @@ function Login() {
             <Nav.Item>
                 <Nav.Link onClick={() => setErrorMessage("")} eventKey="signUp">Sign up</Nav.Link>
             </Nav.Item>
-        </Nav>
+            </Nav>
         <Tab.Content>
                 <Tab.Pane eventKey="signIn">
+                    
                 <FloatingLabel
                     controlId="floatingInput"
                     label="Email address"

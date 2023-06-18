@@ -9,3 +9,8 @@
 .alignright {
 	float: right;
 }
+
+.logo {
+    margin: 10px;
+    text-align: center;
+}
