@@ -6,6 +6,7 @@ export async function GET() {
     select: {
       id: true,
       name: true,
+      recruiterID: true,
       description: true,
       rating1Text: true,
       rating2Text: true,

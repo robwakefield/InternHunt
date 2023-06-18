@@ -10,6 +10,7 @@ export async function GET(request, {params,}) {
     select: {
       id: true,
       name: true,
+      recruiterID: true,
       description: true,
       rating1Text: true,
       rating2Text: true,

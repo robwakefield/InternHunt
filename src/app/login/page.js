@@ -10,6 +10,7 @@ import "./background.css"
 import {FcReadingEbook, FcBusinessman} from "react-icons/fc"
 import Cookies from "universal-cookie"
 import { useSearchParams } from "next/navigation";
+import { useRef } from "react";
 
 function Login() {
     const blue = "#034687"
@@ -18,10 +19,13 @@ function Login() {
     const urlParams = useSearchParams();
     const queryPostID = parseInt(urlParams.get('postID'));
     const [user, setUser] = useState("Student");
-    const [token, setToken] = useState("");
     const [bgColor, setbgColor] = useState(blue)
-    
-    
+    const [errorMessage, setErrorMessage] = useState("")
+    const inputName = useRef();
+    const emailSignIn = useRef();
+    const passwordSignIn = useRef();
+    const emailSignUp = useRef();
+    const passwordSignUp = useRef();
 
     const switchUser = () => {
         if (user === "Student") {
@@ -39,28 +43,94 @@ function Login() {
         return blue;
         
     }
+    
+    const handleWrongPassword = () => {
+        setErrorMessage("Wrong password");
+    }
 
-    const login = () => {
-        cookies.set("loggedIn", true)
-        cookies.set("token", token)
-        cookies.set("userType", user)
-        cookies.set("studentID", 1)
+    const login = (id, userType) => {
+        cookies.set("userType", userType)
+        cookies.set("studentID", -1)
+        cookies.set("recruiterID", -1)
 
-        if (isNaN(queryPostID)) {
-            window.history.back(1);
+        if (userType === "Student") {
+            cookies.set("studentID", id)
+            console.log(queryPostID)
+            if (isNaN(queryPostID)) {
+                window.location.replace("/studentDashboard"); 
+                return;
+            }
+            window.location.replace("/applyPage?postID=" + queryPostID);
+
+        } else if (userType === "Recruiter") {
+            cookies.set("recruiterID", id)
+            window.location.replace("/recruiterDashboard");
+            return;
+        } else {
+            return;
         }
-        window.location.replace("/applyPage?postID=" + queryPostID);
         
     }
 
-    useEffect(() => {
-        if (token === "") {
-            return
-        }
-        login();
-    }, [token]);
+    const handleNoAccount = () => {
+        setErrorMessage("Account not found");
+    }
 
-    
+    const handleDuplicatedAccount = () => {
+        setErrorMessage("An Account has been signed up using this email");
+    }
+
+    const signin = () => {
+        fetch('/api/' + user.toLowerCase() + 'SignIn', {
+            method: "POST",
+            body: JSON.stringify({
+                email: emailSignIn.current.value.toLowerCase(),
+            })
+        }).then((response) => {
+            if (response) {
+                return response.json();
+            } else {
+                return response;
+            }
+        })
+        .then((data) => {
+            if (data) {
+                setErrorMessage("");
+                if (data.password !== passwordSignIn.current.value) {
+                    handleWrongPassword()
+                    return;
+                }
+                login(data.id, user);
+            } else {
+                handleNoAccount()
+            }
+        });
+    }
+
+    const signup = () => {
+        fetch('/api/' + user.toLowerCase() + 'SignUp', {
+            method: "POST",
+            body: JSON.stringify({
+                name: inputName.current.value,
+                email: emailSignUp.current.value.toLowerCase(),
+                password: passwordSignUp.current.value
+            })
+          }).then((response) => {
+            if (response) {
+                return response.json();
+            } else {
+                return response;
+            }
+            })
+            .then((data) => {
+                if (data) {
+                    setErrorMessage("");
+                    login(data.id, user);
+                } else {
+                    handleDuplicatedAccount()
+                }
+            });
+    }
 
     return (
         <div>
@@ -91,52 +161,48 @@ function Login() {
         <Tab.Container className="p-3 my-5 d-flex flex-column w-50" defaultActiveKey="signIn">
         <Nav fill variant="tabs" defaultActiveKey="/home">
             <Nav.Item>
-                <Nav.Link eventKey="signIn">Sign in</Nav.Link>
+            <Nav.Link onClick={() => setErrorMessage("")} eventKey="signIn">Sign in</Nav.Link>
             </Nav.Item>
             <Nav.Item>
-                <Nav.Link eventKey="signUp">Sign up</Nav.Link>
+                <Nav.Link onClick={() => setErrorMessage("")} eventKey="signUp">Sign up</Nav.Link>
             </Nav.Item>
         </Nav>
         <Tab.Content>
                 <Tab.Pane eventKey="signIn">
-                <div className="text-center mb-3">
-                    <LinkedInLogin setToken={setToken}/>
-                </div>
                 <FloatingLabel
                     controlId="floatingInput"
                     label="Email address"
                     className="mb-3"
                 >
-                    <Form.Control type="email" placeholder="name@example.com" />
+                    <Form.Control type="email" placeholder="name@example.com" ref={emailSignIn}/>
                 </FloatingLabel>
                 <FloatingLabel controlId="floatingPassword" label="Password">
-                    <Form.Control type="password" placeholder="Password" />
+                    <Form.Control type="password" placeholder="Password" ref={passwordSignIn}/>
                 </FloatingLabel>                        
+                <p color="red">{errorMessage}</p>
+                                    
 
-                <Button className="mb-4 w-100">Sign in</Button>
+                <Button onClick={signin} className="mb-4 w-100">Sign in</Button>
             </Tab.Pane>
             <Tab.Pane eventKey="signUp">
-                <div className="text-center mb-3">
-                    <LinkedInLogin setToken={setToken}></LinkedInLogin>
-                </div>
 
-                <FloatingLabel controlId="floatingName" label="Name">
-                    <Form.Control type="text" placeholder="Name" />
+                <FloatingLabel controlId="floatingName" label="Full Name">
+                    <Form.Control type="text" placeholder="Full Name" ref={inputName}/>
                 </FloatingLabel>
                 <FloatingLabel
                     controlId="floatingInput"
                     label="Email address"
                     className="mb-3"
                 >
-                <Form.Control type="email" placeholder="name@example.com" />
+                <Form.Control type="email" placeholder="name@example.com" ref={emailSignUp}/>
                 </FloatingLabel>
                 <FloatingLabel controlId="floatingPassword" label="Password">
-                    <Form.Control type="password" placeholder="Password" />
+                    <Form.Control type="password" placeholder="Password" ref={passwordSignUp}/>
                 </FloatingLabel>
-                        
+                <p color="red">{errorMessage}</p>
                 
 
-                <Button className="mb-4 w-100">Sign up</Button>
+                <Button onClick={signup} className="mb-4 w-100">Sign up</Button>
                 </Tab.Pane>
                 </Tab.Content>
                 </Tab.Container>

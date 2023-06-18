@@ -8,11 +8,17 @@ import RecruiterNavbar from "../../recruiterNavbar";
 import JobDescription from "../jobDescription";
 import JobRequirementsList from "../jobRequirements";
 import { useParams, notFound } from "next/navigation";
-import JobPlaces from '../jobPlaces';
 import JobDeadline from '../jobDeadline';
+import Cookies from 'universal-cookie';
 
 function AddListing() {
+  const cookies = new Cookies();
+  const recruiterId = Number(cookies.get("recruiterID"));
 
+  if (!recruiterId || isNaN(recruiterId) || recruiterId == -1) {
+      window.location.replace("/login");
+  }
+  
   const [listing, setListing] = useState({requirements: []});
   const [showRemove, setRemove] = useState(false);
 
@@ -27,7 +33,13 @@ function AddListing() {
   useEffect(() => {
     fetch('/api/listingEdit/' + listingId)
       .then((response) => response.json())
-      .then((data) => setListing(data));
+      .then((data) => {
+        if (data.recruiterID != recruiterId) {
+          window.location.replace("/recruiterDashboard")
+        } else {
+          setListing(data)
+        }
+      });
   }, []);
 
   if (listing == undefined) {
@@ -81,7 +93,7 @@ function AddListing() {
 
   return (
     <main className="addListing">
-      <RecruiterNavbar/>
+      <RecruiterNavbar id={recruiterId} />
       <Container  style={{height: "80vh"}}>
         <Nav className="mt-2" style={{ display: 'flex', justifyContent: 'space-between' }}>
           <Pagination>
@@ -95,7 +107,7 @@ function AddListing() {
             <InputGroup className="mb-3">
               <Form.Control
                   disabled={true}
-                  defaultValue={window.location.hostname + ":3000/applyPage?postID?=" + listingId}
+                  defaultValue={window.location.origin + "/applyPage?postID?=" + listingId}
               />
                 <Button type='submit' onClick={handleSubmit}>Publish</Button>
                 <Button variant="danger" onClick={handleShow}>Remove</Button>

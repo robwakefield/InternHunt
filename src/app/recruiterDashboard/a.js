@@ -44,7 +44,7 @@ function RecruiterDashboard() {
 
   return (
     <main className="recruiterDashboard">
-      <RecruiterNavbar></RecruiterNavbar>
+      <RecruiterNavbar id={recruiterId}/>
       
       {/* Job Listings List */console.log(listings)}
       <Container  style={{height: "80vh"}}>
