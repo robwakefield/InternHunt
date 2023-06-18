@@ -13,7 +13,7 @@ import Cookies from 'universal-cookie';
 
 function AddListing() {
   const cookies = new Cookies();
-  const recruiterId = cookies.get("recruiterID");
+  const recruiterId = Number(cookies.get("recruiterID"));
 
   if (!recruiterId || isNaN(recruiterId) || recruiterId == -1) {
       window.location.replace("/login");
@@ -123,7 +123,7 @@ function AddListing() {
             <InputGroup className="mb-3">
               <Form.Control
                   disabled={true}
-                  defaultValue={window.location.hostname + ":3000/applyPage?postID?=" + listingId}
+                  defaultValue={window.location.origin + "/applyPage?postID?=" + listingId}
               />
                 <Button type='submit' onClick={handleSubmit}>Publish</Button>
                 <Button variant="danger" onClick={handleShow}>Remove</Button>
