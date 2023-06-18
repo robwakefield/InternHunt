@@ -1,12 +1,14 @@
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
 import Background from './background';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 import { cookies } from 'next/dist/client/components/headers';
 
 function RecruiterNavbar(props) { 
   const [username, setUsername] = useState("");
+
+  useEffect(() => { 
   fetch('/api/getUser', {
     method: "POST",
     body: JSON.stringify({
@@ -27,6 +29,7 @@ function RecruiterNavbar(props) {
       setUsername("___")
     }
 })
+}, []);
 
   return (
     <div>

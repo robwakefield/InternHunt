@@ -15,7 +15,7 @@ function AddListing() {
   const cookies = new Cookies();
   const recruiterId = Number(cookies.get("recruiterID"));
 
-  if (!recruiterId || isNaN(recruiterId) || recruiterId == -1) {
+  if (typeof window !== "undefined" && (!recruiterId || isNaN(recruiterId) || recruiterId == -1)) {
       window.location.replace("/login");
   }
   
@@ -24,7 +24,11 @@ function AddListing() {
 
   const handleClose = () => setRemove(false);
   const handleShow = () => setRemove(true);
-  const handleExit = () => {window.location.href = "/recruiterDashboard"};
+  const handleExit = () => {
+    if (typeof window !== "undefined") {
+      window.location.href = "/recruiterDashboard"
+    }
+  }
 
   //the param is postId
   const params = useParams()
@@ -107,7 +111,8 @@ function AddListing() {
             <InputGroup className="mb-3">
               <Form.Control
                   disabled={true}
-                  defaultValue={window.location.origin + "/applyPage?postID?=" + listingId}
+                  defaultValue={
+                    (typeof window !== "undefined") ? window.location.origin + "/applyPage?postID?=" + listingId : ""}
               />
                 <Button type='submit' onClick={handleSubmit}>Publish</Button>
                 <Button variant="danger" onClick={handleShow}>Remove</Button>

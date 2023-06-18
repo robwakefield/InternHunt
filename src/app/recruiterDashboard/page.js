@@ -13,7 +13,7 @@ function RecruiterDashboard() {
   const cookies = new Cookies();
   const recruiterId = Number(cookies.get("recruiterID"));
 
-  if (!recruiterId || isNaN(recruiterId) || recruiterId == -1) {
+  if (typeof window !== "undefined" && (!recruiterId || isNaN(recruiterId) || recruiterId == -1)) {
     window.location.replace("/login");
   }
 

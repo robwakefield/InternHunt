@@ -20,8 +20,9 @@ function JobRequirementsList({ listing }) {
     })
       .then((response) => response.json())
       .then(() => {
-        window.location.reload();
-      });
+        {(typeof window !== "undefined") ? window.location.reload() : function () { }}
+      }
+    );
   }
 
   return (
@@ -72,7 +73,7 @@ function JobRequirementsItem({ listingId, requirement }) {
     })
       .then((response) => response.json())
       .then(() => {
-        window.location.reload();
+        {(typeof window !== "undefined") ? window.location.reload() : function () { }}
       });
   }
 
