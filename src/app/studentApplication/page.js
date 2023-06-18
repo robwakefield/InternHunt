@@ -58,7 +58,7 @@ function StudentApplication() {
       <Container style={{ height: "80vh" }}>
         <Nav className="mt-2">
             <Pagination>
-              <PageItem href={"/studentDashboard?studentID=" + studentID}>
+              <PageItem href={"/studentDashboard"}>
                 Back to Dashboard
               </PageItem>
             </Pagination>

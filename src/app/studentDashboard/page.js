@@ -153,7 +153,7 @@ class ApplicationListItem extends Component {
   }
 
   editPost = () => {
-    window.location.href = "./studentApplication?studentID=" + this.state.studentID + "&postID=" + this.state.postID;
+    window.location.href = "./studentApplication?postID=" + this.state.postID;
   }
 
   statusColor() {
