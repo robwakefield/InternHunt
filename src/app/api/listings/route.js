@@ -24,7 +24,7 @@ export async function GET() {
 
 export async function POST(request) {
   const body = await request.json();
-  await prisma.post.create({
+  const newListing = await prisma.post.create({
     data: {
       name: body.name,
       status: "Draft",
@@ -32,5 +32,5 @@ export async function POST(request) {
       recruiterID: body.recruiterId
     }
   });
-  return NextResponse.json({});
+  return NextResponse.json(newListing);
 }

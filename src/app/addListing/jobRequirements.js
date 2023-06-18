@@ -5,7 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import { Pagination, FormCheck, Nav, Button, PageItem, Container, Card, Form, ButtonGroup } from "react-bootstrap";
 import { Component, useEffect, useRef, useState } from "react";
 
-function JobRequirementsList({ listing }) {
+function JobRequirementsList({ listing, setListing }) {
 
   const handleAdd = (event) => {
     event.preventDefault();
@@ -19,8 +19,11 @@ function JobRequirementsList({ listing }) {
       }),
     })
       .then((response) => response.json())
-      .then(() => {
-        window.location.reload();
+      .then((newRequirement) => {
+        setListing((prevListing) => ({
+          ...prevListing,
+          requirements: [...prevListing.requirements, newRequirement]
+        }));
       });
   }
 
@@ -33,7 +36,7 @@ function JobRequirementsList({ listing }) {
         </Card.Header>
           {listing.requirements.sort((a, b) => a.id - b.id).map((requirement) =>
             <JobRequirementsItem key={requirement.id} listingId={listing.id}
-            requirement={requirement} />)}
+            requirement={requirement} reqID={requirement.id} setListing={setListing} />)}
       </Card>
     </Form>
   )
@@ -41,7 +44,7 @@ function JobRequirementsList({ listing }) {
 
 export default JobRequirementsList;
 
-function JobRequirementsItem({ listingId, requirement }) {
+function JobRequirementsItem({ listingId, requirement, reqID, setListing }) {
   const reqRef = useRef();
 
   const handleSubmit = () => {
@@ -72,7 +75,10 @@ function JobRequirementsItem({ listingId, requirement }) {
     })
       .then((response) => response.json())
       .then(() => {
-        window.location.reload();
+        setListing((prevListing) => ({
+          ...prevListing,
+          requirements: prevListing.requirements.filter((requirement) => requirement.id !== reqID)
+        }));
       });
   }
 

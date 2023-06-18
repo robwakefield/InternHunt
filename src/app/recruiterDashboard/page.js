@@ -48,9 +48,10 @@ function RecruiterDashboard() {
       }),
     })
       .then((response) => response.json())
-      .then(() => {
-        window.location.reload();
+      .then((newListing) => {
+        setListings((prevListings) => [...prevListings, newListing]);
       });
+    handleClose();
   }
 
   return (
