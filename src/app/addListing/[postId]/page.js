@@ -9,8 +9,16 @@ import JobDescription from "../jobDescription";
 import JobRequirementsList from "../jobRequirements";
 import { useParams, notFound } from "next/navigation";
 import JobPlaces from '../jobPlaces';
+import Cookies from 'universal-cookie';
 
 function AddListing() {
+  const cookies = new Cookies();
+  const recruiterId = cookies.get("recruiterID");
+
+  if (!recruiterId || isNaN(recruiterId) || recruiterId == -1) {
+      window.location.replace("/login");
+  }
+  
   const nameRef = useRef();
 
   const [listing, setListing] = useState({requirements: []});
@@ -27,7 +35,13 @@ function AddListing() {
   useEffect(() => {
     fetch('/api/listingEdit/' + listingId)
       .then((response) => response.json())
-      .then((data) => setListing(data));
+      .then((data) => {
+        if (data.recruiterID != recruiterId) {
+          window.location.replace("/recruiterDashboard")
+        } else {
+          setListing(data)
+        }
+      });
   }, []);
 
   if (listing == undefined) {
@@ -95,7 +109,7 @@ function AddListing() {
 
   return (
     <main className="addListing">
-      <RecruiterNavbar/>
+      <RecruiterNavbar id={recruiterId} />
       <Container  style={{height: "80vh"}}>
         <Nav className="mt-2" style={{ display: 'flex', justifyContent: 'space-between' }}>
           <Pagination>

@@ -6,9 +6,17 @@ import { Button, ListGroup, Container, Card, ListGroupItem, Modal, Form, Row, Co
 import { Component, useEffect, useRef, useState } from "react";
 import RecruiterNavbar from '../recruiterNavbar';
 import '../globals.css'
-import {BsSortDown} from 'react-icons/bs'
+import { BsSortDown } from 'react-icons/bs'
+import Cookies from 'universal-cookie';
 
 function RecruiterDashboard() {
+  const cookies = new Cookies();
+  const recruiterId = cookies.get("recruiterID");
+
+  if (!recruiterId || isNaN(recruiterId) || recruiterId == -1) {
+    window.location.replace("/login");
+  }
+
   const titleRef = useRef();
   const placesRef = useRef();
 
@@ -19,9 +27,12 @@ function RecruiterDashboard() {
   const handleShow = () => setJobListing(true);
 
   useEffect(() => {
+    console.log("hi")
     fetch('/api/listings')
       .then((response) => response.json())
-      .then((data) => setListings(data));
+      .then((data) => {
+        setListings(data.filter((listing) => listing.recruiterID == recruiterId));
+      })
   }, []);
 
   const handleAdd = (event) => {
@@ -33,7 +44,7 @@ function RecruiterDashboard() {
       },
       body: JSON.stringify({
         name: titleRef.current.value,
-        totalPlaces: parseInt(placesRef.current.value)
+        recruiterId: Number(recruiterId)
       }),
     })
       .then((response) => response.json())
@@ -44,7 +55,7 @@ function RecruiterDashboard() {
 
   return (
     <main className="recruiterDashboard">
-      <RecruiterNavbar></RecruiterNavbar>
+      <RecruiterNavbar id={recruiterId}></RecruiterNavbar>
       
       {/* Job Listings List */}
       <Container  style={{height: "80vh"}}>

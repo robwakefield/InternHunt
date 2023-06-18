@@ -29,14 +29,16 @@ function useInterval(callback, delay) {
 
 function StudentDashboard() {
   const cookies = new Cookies();
+  const studentId = cookies.get("studentID");
+
+  if (!studentId || isNaN(studentId) || studentId == -1) {
+    window.location.replace("/login");
+  }
+
   const [applications, setApplications] = useState([]);
   const [selectedApplication, setSelectedApplication] = useState();
 
-  const studentId = cookies.get("studentID");
 
-  if (isNaN(studentId) || studentId == -1) {
-    window.location.replace("/login");
-  }
   
 
   useEffect(() => {
@@ -61,7 +63,7 @@ function StudentDashboard() {
 
   return (
     <main className="studentDashboard">
-      <StudentNavbar></StudentNavbar>
+      <StudentNavbar id={studentId}></StudentNavbar>
 
       <Container className="dashboardContainer">
         <Row>

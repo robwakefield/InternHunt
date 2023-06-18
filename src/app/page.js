@@ -6,6 +6,7 @@ import LinkedInLogin from "./linkedInLogin"
 
 
 export default function Home() {
+  window.location.replace("/login")
   return (
     <main>
       {/* Navigation Title Bar */}

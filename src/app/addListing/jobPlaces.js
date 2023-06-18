@@ -4,7 +4,6 @@ import './addListing.css'
 import "bootstrap/dist/css/bootstrap.min.css"
 import { Pagination, FormCheck, Nav, Button, PageItem, Container, Card, Form } from "react-bootstrap";
 import { Component, useEffect, useRef, useState } from "react";
-import RecruiterNavbar from "../recruiterNavbar";
 
 function JobPlaces({ listing }) {
   const placeRef = useRef();

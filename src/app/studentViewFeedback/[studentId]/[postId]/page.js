@@ -11,6 +11,7 @@ import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
 import '../../../globals.css';
 import { useParams, useRouter, notFound } from "next/navigation";
+import Cookies from "universal-cookie";
 
 function averageRating(application) {
   if (!application) return 0;
@@ -19,6 +20,16 @@ function averageRating(application) {
 }
 
 function StudentViewFeedback() {
+  const cookies = new Cookies();
+  const studentId = cookies.get("studentID");
+
+  if (!studentId || isNaN(studentId) || studentId == -1) {
+    window.location.replace("/login");
+  }
+
+  window.location.replace(window.location.href + "#" + studentId);
+
+
   const [post, setPost] = useState({name: "", applications: [], description: "", requirements: []});
   const [showJobListing, setJobListing] = useState(false);
 
@@ -27,7 +38,6 @@ function StudentViewFeedback() {
 
   const router = useRouter()
   const params = useParams()
-  const studentId = params.studentId
   const postId = params.postId
 
   useEffect(() => {
@@ -43,7 +53,7 @@ function StudentViewFeedback() {
 
   return (
     <main className="StudentViewFeedback">
-      <StudentNavbar></StudentNavbar>
+      <StudentNavbar id={studentId}/>
       <Container>
         <Nav className="mt-2">
           <Pagination>

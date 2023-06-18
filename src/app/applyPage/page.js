@@ -8,42 +8,42 @@ import { useSearchParams } from "next/navigation";
 import Cookies from "universal-cookie"
 
 function ApplyPage() {
+    const cookies = new Cookies();
+    const cookieStudentId = cookies.get("studentID");
+
+    if (!cookieStudentId || isNaN(cookieStudentId) || cookieStudentId == -1) {
+        window.location.replace("/login");
+    }
+    
     const [post, setPost] = useState({ name: "", description: "", requirements: [] });
     const [postId, setPostId] = useState(-1)
-    const [studentId, setStudentId] = useState(-1);
-    const [userID, setUserID] = useState(-1)
+    const [studentId, setStudentId] = useState(cookieStudentId);
     const urlParams = useSearchParams();
-    const cookies = new Cookies();
     
     useEffect(() => {
         const queryPostID = parseInt(urlParams.get('postID'));
-        let queryStudentID = -1
-        queryStudentID = parseInt(urlParams.get('studentID'));
-        console.log(queryStudentID)
         if (isNaN(queryPostID)) {
-            window.location.replace("/");
-        }
-        if (isNaN(queryStudentID)) {
-            queryStudentID = Number(cookies.get("studentID"));
-            window.location.replace("/applyPage?postID=" + queryPostID + "#" + queryStudentID);
-        }
-        if (isNaN(queryStudentID) || isNaN(queryPostID)) {
-            window.location.replace("/login?postID=" + queryPostID);
+            if (cookies.get("usedType") === "Student" && studentId != -1) {
+                window.location.replace("/studentDashboard");
+            } else {
+                window.location.replace("/login");
+            }
         }
         setPostId(queryPostID);
-        setStudentId(queryStudentID);
+        setStudentId(studentId);
 
         fetch('/api/post/' + queryPostID)
             .then((response) => response.json())
-            .then((data) => setPost(data));
+            .then((data) => {
+                if (data) {
+                    setPost(data)
+                } else {
+                    window.location.replace("/login");
+                }
+            });
     }, []);
 
     const handleApply = () => {
-        //Redirect to LoginPage
-        // if (userID == -1) {
-        //     window.location.replace("/login")
-        //     return
-        // }
         fetch("/api/createApplication", {
             method: "POST",
             body: JSON.stringify({
@@ -57,7 +57,7 @@ function ApplyPage() {
  
     return (
         <main className="applyPage">
-            <StudentNavbar/>
+            <StudentNavbar id={studentId} />
             <Card className="applyCard" style={{ margin: '3rem', width: '30rem' }}>
         
                 <Card.Header>
