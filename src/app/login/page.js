@@ -20,9 +20,12 @@ function Login() {
     const queryPostID = parseInt(urlParams.get('postID'));
     const [user, setUser] = useState("Student");
     const [bgColor, setbgColor] = useState(blue)
+    const [errorMessage, setErrorMessage] = useState("")
     const inputName = useRef();
-    const email = useRef();
-    const password = useRef();
+    const emailSignIn = useRef();
+    const passwordSignIn = useRef();
+    const emailSignUp = useRef();
+    const passwordSignUp = useRef();
 
     const switchUser = () => {
         if (user === "Student") {
@@ -40,35 +43,68 @@ function Login() {
         return blue;
         
     }
+    
+    const handleWrongPassword = () => {
+        setErrorMessage("Wrong password");
+    }
 
     const login = (id, userType) => {
         cookies.set("userType", userType)
-        cookies.set("studentID", id)
+        cookies.set("studentID", -1)
+        cookies.set("recruiterID", -1)
 
-        if (isNaN(queryPostID)) {
-            window.history.back(1);
+        if (userType === "Student") {
+            cookies.set("studentID", id)
+            console.log(queryPostID)
+            if (isNaN(queryPostID)) {
+                window.location.replace("/studentDashboard"); 
+                return;
+            }
+            window.location.replace("/applyPage?postID=" + queryPostID);
+
+        } else if (userType === "Recruiter") {
+            cookies.set("recruiterID", id)
+            window.location.replace("/recruiterDashboard");
+            return;
+        } else {
+            return;
         }
-        window.location.replace("/applyPage?postID=" + queryPostID);
         
     }
 
-    const handleError = () => { }
+    const handleNoAccount = () => {
+        setErrorMessage("Account not found");
+    }
+
+    const handleDuplicatedAccount = () => {
+        setErrorMessage("An Account has been signed up using this email");
+    }
 
     const signin = () => {
-        fetch('/api/' + user.toLowerCase() + 'Signin', {
+        fetch('/api/' + user.toLowerCase() + 'SignIn', {
             method: "POST",
             body: JSON.stringify({
-                email: email.current.value,
-                password: password.current.value
+                email: emailSignIn.current.value.toLowerCase(),
             })
-          }).then((response) => response.json())
-            .then((data) => {
-                if (data.error) {
-                    handleError()
-                } else {
-                    login(data.id, user);
+        }).then((response) => {
+            if (response) {
+                return response.json();
+            } else {
+                return response;
+            }
+        })
+        .then((data) => {
+            if (data) {
+                setErrorMessage("");
+                if (data.password !== passwordSignIn.current.value) {
+                    handleWrongPassword()
+                    return;
                 }
-            });
+                login(data.id, user);
+            } else {
+                handleNoAccount()
+            }
+        });
     }
 
     const signup = () => {
@@ -76,11 +112,24 @@ function Login() {
             method: "POST",
             body: JSON.stringify({
                 name: inputName.current.value,
-                email: email.current.value,
-                password: password.current.value
+                email: emailSignUp.current.value.toLowerCase(),
+                password: passwordSignUp.current.value
             })
-          }).then((response) => response.json())
-            .then((data) => { login(data.id, data.user) });
+          }).then((response) => {
+            if (response) {
+                return response.json();
+            } else {
+                return response;
+            }
+            })
+            .then((data) => {
+                if (data) {
+                    setErrorMessage("");
+                    login(data.id, user);
+                } else {
+                    handleDuplicatedAccount()
+                }
+            });
     }
 
     return (
@@ -112,10 +161,10 @@ function Login() {
         <Tab.Container className="p-3 my-5 d-flex flex-column w-50" defaultActiveKey="signIn">
         <Nav fill variant="tabs" defaultActiveKey="/home">
             <Nav.Item>
-                <Nav.Link eventKey="signIn">Sign in</Nav.Link>
+            <Nav.Link onClick={() => setErrorMessage("")} eventKey="signIn">Sign in</Nav.Link>
             </Nav.Item>
             <Nav.Item>
-                <Nav.Link eventKey="signUp">Sign up</Nav.Link>
+                <Nav.Link onClick={() => setErrorMessage("")} eventKey="signUp">Sign up</Nav.Link>
             </Nav.Item>
         </Nav>
         <Tab.Content>
@@ -125,11 +174,13 @@ function Login() {
                     label="Email address"
                     className="mb-3"
                 >
-                    <Form.Control type="email" placeholder="name@example.com" ref={email}/>
+                    <Form.Control type="email" placeholder="name@example.com" ref={emailSignIn}/>
                 </FloatingLabel>
                 <FloatingLabel controlId="floatingPassword" label="Password">
-                    <Form.Control type="password" placeholder="Password" ref={password}/>
+                    <Form.Control type="password" placeholder="Password" ref={passwordSignIn}/>
                 </FloatingLabel>                        
+                <p color="red">{errorMessage}</p>
+                                    
 
                 <Button onClick={signin} className="mb-4 w-100">Sign in</Button>
             </Tab.Pane>
@@ -143,12 +194,12 @@ function Login() {
                     label="Email address"
                     className="mb-3"
                 >
-                <Form.Control type="email" placeholder="name@example.com" ref={email}/>
+                <Form.Control type="email" placeholder="name@example.com" ref={emailSignUp}/>
                 </FloatingLabel>
                 <FloatingLabel controlId="floatingPassword" label="Password">
-                    <Form.Control type="password" placeholder="Password" ref={password}/>
+                    <Form.Control type="password" placeholder="Password" ref={passwordSignUp}/>
                 </FloatingLabel>
-                        
+                <p color="red">{errorMessage}</p>
                 
 
                 <Button onClick={signup} className="mb-4 w-100">Sign up</Button>

@@ -9,7 +9,7 @@ import StudentNavbar from "../studentNavbar";
 import { BsPen } from "react-icons/bs";
 import { AiOutlineEye } from "react-icons/ai"
 import "../globals.css"
-import { useSearchParams } from "next/navigation";
+import Cookies from "universal-cookie";
 
 function useInterval(callback, delay) {
   const intervalRef = useRef(null);
@@ -28,14 +28,16 @@ function useInterval(callback, delay) {
 }
 
 function StudentDashboard() {
+  const cookies = new Cookies();
   const [applications, setApplications] = useState([]);
   const [selectedApplication, setSelectedApplication] = useState();
-  const urlParams = useSearchParams()
-  const queryStudentID = parseInt(urlParams.get('studentID'));
 
-  if (isNaN(queryStudentID)) window.location.replace("/");
+  const studentId = cookies.get("studentID");
+
+  if (isNaN(studentId) || studentId == -1) {
+    window.location.replace("/login");
+  }
   
-  const studentId = queryStudentID;
 
   useEffect(() => {
     fetch('/api/studentApplication/' + studentId)
