@@ -9,7 +9,7 @@ import Cookies from "universal-cookie"
 
 function ApplyPage() {
     const cookies = new Cookies();
-    const cookieStudentId = cookies.get("studentID");
+    const cookieStudentId = Number(cookies.get("studentID"));
 
     if (!cookieStudentId || isNaN(cookieStudentId) || cookieStudentId == -1) {
         window.location.replace("/login");
@@ -51,7 +51,7 @@ function ApplyPage() {
               postID: postId
             })
         }).then(() => {
-            window.location.replace("/studentDashboard?studentID=" + studentId)
+            window.location.replace("/studentDashboard")
         })
     }
  

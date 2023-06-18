@@ -15,7 +15,7 @@ import Cookies from "universal-cookie";
 
 function StudentApplication() {
   const cookies = new Cookies();
-    const studentId = cookies.get("studentID");
+    const studentId = Number(cookies.get("studentID"));
   
     if (!studentId || isNaN(studentId) || studentId == -1) {
       window.location.replace("/login");
@@ -44,7 +44,7 @@ function StudentApplication() {
     fetch('/api/studentApplication', {
       method: "POST",
       body: JSON.stringify({
-        studentID: queryStudentID,
+        studentID: studentID,
         postID: queryPostID
       })
     }).then((response) => response.json())

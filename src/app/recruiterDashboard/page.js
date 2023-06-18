@@ -11,7 +11,7 @@ import Cookies from 'universal-cookie';
 
 function RecruiterDashboard() {
   const cookies = new Cookies();
-  const recruiterId = cookies.get("recruiterID");
+  const recruiterId = Number(cookies.get("recruiterID"));
 
   if (!recruiterId || isNaN(recruiterId) || recruiterId == -1) {
     window.location.replace("/login");
