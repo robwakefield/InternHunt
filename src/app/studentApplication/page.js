@@ -11,10 +11,18 @@ import '../globals.css'
 import DocxExtractor from "./DocxExtractor";
 import Modal from 'react-bootstrap/Modal';
 import GenerateAnswerButton from "./generateAnswerButton";
+import Cookies from "universal-cookie";
 
 function StudentApplication() {
+  const cookies = new Cookies();
+    const studentId = Number(cookies.get("studentID"));
+  
+    if (!studentId || isNaN(studentId) || studentId == -1) {
+      window.location.replace("/login");
+    }
+  
   const [postID, setPostID] = useState(-1);
-  const [studentID, setStudentID] = useState(-1);
+  const [studentID, setStudentID] = useState(studentId);
   const [application, setApplication] = useState({submitted: false, evidences: [], post: {}, cv: null, extractedCV: ""});
   const [showUploader, setShowUploader] = useState(false);
   const [showJobListing, setJobListing] = useState(false);
@@ -27,17 +35,16 @@ function StudentApplication() {
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const queryStudentID = parseInt(urlParams.get('studentID'));
     const queryPostID = parseInt(urlParams.get('postID'));
     
-    if (isNaN(queryStudentID) || isNaN(queryPostID)) window.location.replace("/");
-    setStudentID(queryStudentID);
+    if (isNaN(queryPostID)) window.location.replace("/studentDashboard");
+    
     setPostID(queryPostID);
     
     fetch('/api/studentApplication', {
       method: "POST",
       body: JSON.stringify({
-        studentID: queryStudentID,
+        studentID: studentID,
         postID: queryPostID
       })
     }).then((response) => response.json())
@@ -46,12 +53,12 @@ function StudentApplication() {
 
   return (
     <main className="studentApplication">
-      <StudentNavbar></StudentNavbar>
+      <StudentNavbar id={studentId}></StudentNavbar>
       
       <Container style={{ height: "80vh" }}>
         <Nav className="mt-2">
             <Pagination>
-              <PageItem href={"/studentDashboard?studentID=" + studentID}>
+              <PageItem href={"/studentDashboard"}>
                 Back to Dashboard
               </PageItem>
             </Pagination>

@@ -10,8 +10,9 @@ export async function GET(request, {params,}) {
     select: {
       id: true,
       name: true,
-      totalPlaces: true,
+      recruiterID: true,
       description: true,
+      deadline: true,
       requirements: {
         select: {
           id: true,

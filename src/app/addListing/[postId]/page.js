@@ -2,17 +2,23 @@
 
 import '../addListing.css'
 import "bootstrap/dist/css/bootstrap.min.css"
-import { Pagination, FormCheck, Nav, Button, PageItem, Container, Card, Form, Modal, ButtonGroup } from "react-bootstrap";
+import { Pagination, FormCheck, Nav, Button, PageItem, Container, Card, Form, Modal, ButtonGroup, InputGroup } from "react-bootstrap";
 import { Component, useEffect, useRef, useState } from "react";
 import RecruiterNavbar from "../../recruiterNavbar";
 import JobDescription from "../jobDescription";
 import JobRequirementsList from "../jobRequirements";
 import { useParams, notFound } from "next/navigation";
-import JobPlaces from '../jobPlaces';
+import JobDeadline from '../jobDeadline';
+import Cookies from 'universal-cookie';
 
 function AddListing() {
-  const nameRef = useRef();
+  const cookies = new Cookies();
+  const recruiterId = Number(cookies.get("recruiterID"));
 
+  if (!recruiterId || isNaN(recruiterId) || recruiterId == -1) {
+      window.location.replace("/login");
+  }
+  
   const [listing, setListing] = useState({requirements: []});
   const [showRemove, setRemove] = useState(false);
 
@@ -27,7 +33,13 @@ function AddListing() {
   useEffect(() => {
     fetch('/api/listingEdit/' + listingId)
       .then((response) => response.json())
-      .then((data) => setListing(data));
+      .then((data) => {
+        if (data.recruiterID != recruiterId) {
+          window.location.replace("/recruiterDashboard")
+        } else {
+          setListing(data)
+        }
+      });
   }, []);
 
   if (listing == undefined) {
@@ -46,20 +58,6 @@ function AddListing() {
       }),
     })
       .then(handleExit)
-  }
-
-  const handleNameChange = (event) => {
-    event.preventDefault();
-    fetch('/api/listingEdit', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        id: listing.id,
-        name: nameRef.current.value
-      }),
-    })
   }
 
   const handleRemove = (event) => {
@@ -95,7 +93,7 @@ function AddListing() {
 
   return (
     <main className="addListing">
-      <RecruiterNavbar/>
+      <RecruiterNavbar id={recruiterId} />
       <Container  style={{height: "80vh"}}>
         <Nav className="mt-2" style={{ display: 'flex', justifyContent: 'space-between' }}>
           <Pagination>
@@ -106,23 +104,28 @@ function AddListing() {
           {modal}
           <Pagination>
             <ButtonGroup>
-              <Button type='submit' onClick={handleSubmit}>Publish</Button>
-              <Button variant="danger" onClick={handleShow}>Remove</Button>
+            <InputGroup className="mb-3">
+              <Form.Control
+                  disabled={true}
+                  defaultValue={window.location.origin + "/applyPage?postID?=" + listingId}
+              />
+                <Button type='submit' onClick={handleSubmit}>Publish</Button>
+                <Button variant="danger" onClick={handleShow}>Remove</Button>
+            </InputGroup>
+              
             </ButtonGroup>
           </Pagination>
         </Nav>
         <Card>
-        <Card.Header>
-          <Form style={{ display: 'flex', alignItems: 'center' }}>
-            <Form.Control as="textarea" rows={2} className="text-center" style={{ fontSize: '32px' }}
-              defaultValue={listing.name} ref={nameRef} />
-            <Button onClick={handleNameChange}>Save</Button>
-          </Form>
-        </Card.Header>
-          <JobPlaces listing={listing} />
+          <Card.Header>
+            <JobName listing={listing} />
+          </Card.Header>
+          <div style={{ display: 'flex' }}>
+            <JobDeadline listing={listing} />
+          </div>
           <JobDescription listing={listing} />
-          <JobRequirementsList id={listing.id} listing={listing} setListing={setListing} />
-          <SavedBox/>
+          <JobRequirementsList listing={listing} />
+          <SavedBox />
         </Card>
       </Container>
     </main>
@@ -131,6 +134,30 @@ function AddListing() {
 }
 
 export default AddListing;
+
+function JobName({ listing }) {
+  const nameRef = useRef();
+
+  const handleNameChange = () => {
+    fetch('/api/listingEdit', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: listing.id,
+        name: nameRef.current.value
+      }),
+    })
+  }
+
+  return (
+    <Form style={{ display: 'flex', alignItems: 'center' }}>
+      <Form.Control as="textarea" rows={1} className="text-center" style={{ fontSize: '32px' }}
+        defaultValue={listing.name} ref={nameRef} onChange={handleNameChange} />
+    </Form>
+  )
+}
 
 class SavedBox extends Component {
   constructor(props) {

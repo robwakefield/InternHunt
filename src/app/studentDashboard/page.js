@@ -9,7 +9,7 @@ import StudentNavbar from "../studentNavbar";
 import { BsPen } from "react-icons/bs";
 import { AiOutlineEye } from "react-icons/ai"
 import "../globals.css"
-import { useSearchParams } from "next/navigation";
+import Cookies from "universal-cookie";
 
 function useInterval(callback, delay) {
   const intervalRef = useRef(null);
@@ -28,14 +28,18 @@ function useInterval(callback, delay) {
 }
 
 function StudentDashboard() {
+  const cookies = new Cookies();
+  const studentId = Number(cookies.get("studentID"));
+
+  if (!studentId || isNaN(studentId) || studentId == -1) {
+    window.location.replace("/login");
+  }
+
   const [applications, setApplications] = useState([]);
   const [selectedApplication, setSelectedApplication] = useState();
-  const urlParams = useSearchParams()
-  const queryStudentID = parseInt(urlParams.get('studentID'));
 
-  if (isNaN(queryStudentID)) window.location.replace("/");
+
   
-  const studentId = queryStudentID;
 
   useEffect(() => {
     fetch('/api/studentApplication/' + studentId)
@@ -59,7 +63,7 @@ function StudentDashboard() {
 
   return (
     <main className="studentDashboard">
-      <StudentNavbar></StudentNavbar>
+      <StudentNavbar id={studentId}></StudentNavbar>
 
       <Container className="dashboardContainer">
         <Row>
@@ -97,7 +101,6 @@ class ApplicationList extends Component {
   }
 
   render() {
-    console.log(this.state.applications);
     this.state.applications.forEach((application) => {
       application.stages.sort((a, b) => a.id - b.id);
     });
@@ -150,7 +153,7 @@ class ApplicationListItem extends Component {
   }
 
   editPost = () => {
-    window.location.href = "./studentApplication?studentID=" + this.state.studentID + "&postID=" + this.state.postID;
+    window.location.href = "./studentApplication?postID=" + this.state.postID;
   }
 
   statusColor() {
@@ -173,16 +176,36 @@ class ApplicationListItem extends Component {
             "warning"
   }
 
+  renderProgressInfoText() {
+    const stages = this.props.application.stages
+    const completed = stages.filter((app) => {
+      return app.completed
+    })
+    const completedStages = completed.length
+    const totalStages = stages.length
+
+    let text = completedStages + " / " + totalStages + "  Stages Completed"
+    if (this.props.application.rejected) {
+      text = "Rejected"
+    } else if (this.props.application.accepted) {
+      text = "Accepted"
+    }
+    return <p className="text-center my-0 py-0"><small>{text}<small/></small></p>
+  }
+
   render() {
     return (
       <ListGroupItem className={this.props.selected ? "selectedApplicationEntry" : "applicationEntry"} onClick={() => {this.props.setSelectedApplication(this.props.application)}} key={this.state.postID.toString() + "s" + this.state.studentID}>
         <Container className="d-flex">
           <Row style={{width: "100%"}}>
-            <Col xs={5}><p className="text-left ">{this.state.title}</p></Col>
-            <Col xs={3}><p className={"text-left text-" + (this.props.application.submitted ? "muted" : this.statusColor())}>{this.props.application.submitted ? "Submitted" : "Deadline " + this.state.deadline}</p></Col>
-            <Col xs={3}><ProgressBar variant={this.progressbarColor()} now={this.state.progress} /></Col>
+            <Col xs={5}><p className="applicationTitle text-left ">{this.state.title}</p></Col>
+            <Col xs={3}><p className={"deadline text-left text-" + (this.props.application.submitted ? "muted" : this.statusColor())}>{this.props.application.submitted ? "Submitted" : "Deadline " + this.state.deadline}</p></Col>
+            <Col xs={3}>
+              <ProgressBar className="my-0" variant={this.progressbarColor()} now={this.state.progress} />
+              {this.renderProgressInfoText()}
+            </Col>
             <Col xs={1}><Button onClick={this.editPost} className="my-2">
-                {this.props.application.submitted ? <AiOutlineEye style={{ color: 'white'}} /> : <BsPen/>}
+                {this.props.application.submitted ? "View" : "Edit"}
             </Button>
             </Col>
           </Row>
@@ -240,7 +263,7 @@ class Timeline extends Component {
   render() {
     return (
       <Container style={{ height: "80vh" }} >
-        <Card className="mt-4 h-100 progressTimeline overflow-auto" style={{ flexDirection: "column-reverse" }}>
+        <Card className="mt-4 h-100 progressTimeline overflow-auto">
           <VerticalTimeline style={{ height: "80vh" }} layout={{ default: '1-column-left' }}>
             {this.state.stages.filter(
               // filter out incomplete stages if the application is already finished

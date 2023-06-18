@@ -34,7 +34,7 @@ function GenerateAnswerButton(props) {
         await processMessageToChatGPT(newMessages);
     }
 
-    const ChatGPT_API_KEY = "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"
+    const ChatGPT_API_KEY = "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"
 
     async function processMessageToChatGPT(messages) {
         let apiMessages = messages.map((messageObject) => {

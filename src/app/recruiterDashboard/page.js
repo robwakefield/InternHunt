@@ -6,9 +6,17 @@ import { Button, ListGroup, Container, Card, ListGroupItem, Modal, Form, Row, Co
 import { Component, useEffect, useRef, useState } from "react";
 import RecruiterNavbar from '../recruiterNavbar';
 import '../globals.css'
-import {BsSortDown} from 'react-icons/bs'
+import { BsSortDown } from 'react-icons/bs'
+import Cookies from 'universal-cookie';
 
 function RecruiterDashboard() {
+  const cookies = new Cookies();
+  const recruiterId = Number(cookies.get("recruiterID"));
+
+  if (!recruiterId || isNaN(recruiterId) || recruiterId == -1) {
+    window.location.replace("/login");
+  }
+
   const titleRef = useRef();
   const placesRef = useRef();
 
@@ -19,9 +27,12 @@ function RecruiterDashboard() {
   const handleShow = () => setJobListing(true);
 
   useEffect(() => {
+    console.log("hi")
     fetch('/api/listings')
       .then((response) => response.json())
-      .then((data) => setListings(data));
+      .then((data) => {
+        setListings(data.filter((listing) => listing.recruiterID == recruiterId));
+      })
   }, []);
 
   const handleAdd = (event) => {
@@ -33,7 +44,7 @@ function RecruiterDashboard() {
       },
       body: JSON.stringify({
         name: titleRef.current.value,
-        totalPlaces: parseInt(placesRef.current.value)
+        recruiterId: Number(recruiterId)
       }),
     })
       .then((response) => response.json())
@@ -44,7 +55,7 @@ function RecruiterDashboard() {
 
   return (
     <main className="recruiterDashboard">
-      <RecruiterNavbar></RecruiterNavbar>
+      <RecruiterNavbar id={recruiterId}></RecruiterNavbar>
       
       {/* Job Listings List */}
       <Container  style={{height: "80vh"}}>
@@ -63,9 +74,9 @@ function RecruiterDashboard() {
                     <Form.Group className="mb-3" controlId="formJob">
                       <Form.Control as="textarea" rows={1} type="text"
                         placeholder="Enter your Job Title" ref={titleRef} />
-                      <strong>Places</strong>
+                      {/* <strong>Places</strong>
                       <Form.Control as="textarea" rows={1} type="number"
-                        placeholder="Enter your Job Places" ref={placesRef} />
+                        placeholder="Enter your Job Places" ref={placesRef} /> */}
                     </Form.Group>
                   </Modal.Body>
                 <Modal.Footer>
@@ -135,7 +146,7 @@ class ListingItem extends Component {
       title: this.props.post.name,
       status: this.props.post.status,
       applications: this.props.post.applications,
-      total_places: this.props.post.totalPlaces
+      // total_places: this.props.post.totalPlaces
     };
   }
 
@@ -146,7 +157,7 @@ class ListingItem extends Component {
         title: this.props.post.name,
         status: this.props.post.status,
         applications: this.props.post.applications,
-        total_places: this.props.post.totalPlaces
+        // total_places: this.props.post.totalPlaces
       });
     }
   }
@@ -170,7 +181,9 @@ class ListingItem extends Component {
 
     let places_filled = 0
     if (this.state.applications) {
-      places_filled = this.state.applications.length
+      places_filled = this.state.applications.filter((app) => {
+        return app.submitted
+      }).length
     }
     
 

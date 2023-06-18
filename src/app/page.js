@@ -1,36 +1,36 @@
 'use client'
 
 import "bootstrap/dist/css/bootstrap.min.css"
-import {Nav, Navbar, Container, Button} from 'react-bootstrap/'
+import {Nav, Navbar, Container, Button, Card, ListGroup,} from 'react-bootstrap/'
 import LinkedInLogin from "./linkedInLogin"
+import "./loginBackground.css"
+import Cookies from "universal-cookie"
 
 
 export default function Home() {
+  const cookies = new Cookies();
+  if (cookies.get("userType") === "Student" && cookies.get("studentID") != -1) {
+    window.location.replace("/studentDashboard")
+  } else if (cookies.get("userType") === "Recruiter" && cookies.get("recruiterID") != -1) {
+    window.location.replace("/recruiterDashboard")
+  } else {
+    window.location.replace("/login")
+  }
   return (
     <main>
-      {/* Navigation Title Bar */}
-      <Navbar bg="light" expand="lg">
-        <Container className="d-flex justify-content-end">
-          <Button className="mx-1" href="./login">Log in</Button>
-        </Container>
-      </Navbar>
-
-      <Container className="mt-4">
-        <h1 className="text-center display-1">Intern Hunting</h1>
-        <Container className="my-2 w-50">
-          <p className="text-center">
-            Enabling students and companies to communicate more effectively when
-             offering internships, making it a less time-consuming process while
-             offering clearer details on available positions and providing
-             feedback to applicants.
-          </p>
-        </Container>
-
-        <Container className="my-5 d-flex justify-content-center">
-          <Button className="mx-4" href="./studentDashboard">Student Dashboard</Button>
-          <Button className="mx-4" href="./recruiterDashboard">Recruiter Dashboard</Button>
-        </Container>
-      </Container>
+      <ul className="loginBackground">
+                <li style={{borderColor: "blue"}}></li>
+                <li style={{borderColor: "red"}}></li>
+                <li style={{borderColor: "blue"}}></li>
+                <li style={{borderColor: "blue"}}></li>
+                <li style={{borderColor: "red"}}></li>
+                <li style={{borderColor: "blue"}}></li>
+                <li style={{borderColor: "blue"}}></li>
+                <li style={{borderColor: "red"}}></li>
+                <li style={{borderColor: "blue"}}></li>
+                <li style={{borderColor: "red"}}></li>
+                <li style={{borderColor: "red"}}></li>
+            </ul>
     </main>
   )
 }

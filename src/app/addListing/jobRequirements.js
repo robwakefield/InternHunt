@@ -4,7 +4,6 @@ import './addListing.css'
 import "bootstrap/dist/css/bootstrap.min.css"
 import { Pagination, FormCheck, Nav, Button, PageItem, Container, Card, Form, ButtonGroup } from "react-bootstrap";
 import { Component, useEffect, useRef, useState } from "react";
-import RecruiterNavbar from "../recruiterNavbar";
 
 function JobRequirementsList({ listing }) {
 
@@ -27,7 +26,7 @@ function JobRequirementsList({ listing }) {
 
   return (
     <Form>
-      <Card className="my-2 mx-3">
+      <Card className="mt-4 mb-2 mx-3">
         <Card.Header className="d-flex justify-content-between">
         <p>Requirements</p>
         <Button onClick={handleAdd}>Add</Button>
@@ -45,8 +44,7 @@ export default JobRequirementsList;
 function JobRequirementsItem({ listingId, requirement }) {
   const reqRef = useRef();
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmit = () => {
     fetch('/api/requirements', {
       method: 'PUT',
       headers: {
@@ -83,9 +81,8 @@ function JobRequirementsItem({ listingId, requirement }) {
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <Form.Control as="textarea" rows={1}
           placeholder="Enter your Requirements" defaultValue={requirement.requirementText}
-          ref={reqRef} />
+          ref={reqRef} onChange={handleSubmit} />
           <ButtonGroup>
-            <Button onClick={handleSubmit}>Save</Button>
             <Button variant="danger" onClick={handleRemove}>Remove</Button>
           </ButtonGroup>
       </div>

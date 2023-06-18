@@ -4,43 +4,46 @@ import { Card, ListGroup, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css"
 import "./applyPage.css"
 import StudentNavbar from "../studentNavbar";
+import { useSearchParams } from "next/navigation";
+import Cookies from "universal-cookie"
 
 function ApplyPage() {
+    const cookies = new Cookies();
+    const cookieStudentId = Number(cookies.get("studentID"));
+
+    if (!cookieStudentId || isNaN(cookieStudentId) || cookieStudentId == -1) {
+        window.location.replace("/login");
+    }
+    
     const [post, setPost] = useState({ name: "", description: "", requirements: [] });
     const [postId, setPostId] = useState(-1)
-    const [studentId, setStudentId] = useState(-1);
-    const [userID, setUserID] = useState(-1)
-  
+    const [studentId, setStudentId] = useState(cookieStudentId);
+    const urlParams = useSearchParams();
     
     useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
         const queryPostID = parseInt(urlParams.get('postID'));
-        const queryStudentID = parseInt(urlParams.get('studentID'));
-    
-        if (isNaN(queryStudentID) || isNaN(queryPostID)) {
-            window.location.replace("/login");
+        if (isNaN(queryPostID)) {
+            if (cookies.get("usedType") === "Student" && studentId != -1) {
+                window.location.replace("/studentDashboard");
+            } else {
+                window.location.replace("/login");
+            }
         }
         setPostId(queryPostID);
-        setStudentId(queryStudentID);
+        setStudentId(studentId);
 
         fetch('/api/post/' + queryPostID)
             .then((response) => response.json())
-            .then((data) => setPost(data));
-        
-        
-        
+            .then((data) => {
+                if (data) {
+                    setPost(data)
+                } else {
+                    window.location.replace("/login");
+                }
+            });
     }, []);
 
-    if (post == undefined) {
-        notFound();
-    }
-
     const handleApply = () => {
-        //Redirect to LoginPage
-        // if (userID == -1) {
-        //     window.location.replace("/login")
-        //     return
-        // }
         fetch("/api/createApplication", {
             method: "POST",
             body: JSON.stringify({
@@ -48,14 +51,14 @@ function ApplyPage() {
               postID: postId
             })
         }).then(() => {
-            window.location.replace("/studentDashboard?studentID=" + studentId)
+            window.location.replace("/studentDashboard")
         })
     }
  
     return (
         <main className="applyPage">
-            <StudentNavbar/>
-            <Card className="applyCard" style={{ margin: '12rem', width: '30rem' }}>
+            <StudentNavbar id={studentId} />
+            <Card className="applyCard" style={{ margin: '3rem', width: '30rem' }}>
         
                 <Card.Header>
                     Welcome to Intern Hunt

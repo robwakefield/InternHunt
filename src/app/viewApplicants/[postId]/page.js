@@ -10,7 +10,9 @@ import { AiFillStar } from 'react-icons/ai'
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Popover from "react-bootstrap/Popover";
 import '../../globals.css'
-import { useParams, notFound } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import Cookies from "universal-cookie";
 
 function averageRating(application) {
   if (application.evidences.length == 0) return 0;
@@ -18,6 +20,13 @@ function averageRating(application) {
 }
 
 function ViewApplicants() {
+  const cookies = new Cookies();
+  const recruiterId = Number(cookies.get("recruiterID"));
+
+  if (!recruiterId || isNaN(recruiterId) || recruiterId == -1) {
+    window.location.replace("/login");
+  }
+
   const [post, setPost] = useState({name: "", applications: [], description: "", requirements: []});
   const [selectedApplicant, setSelectedApplicant] = useState(-1);
   const [showJobListing, setJobListing] = useState(false);
@@ -31,8 +40,14 @@ function ViewApplicants() {
   useEffect(() => {
     fetch('/api/post/' + postId)
       .then((response) => response.json())
-      .then((data) => { setPost(data); });
-  }, []);
+      .then((data) => {
+        if (data.recruiterID != recruiterId) {
+          window.location.replace("/recruiterDashboard");
+          return;
+        }
+        setPost(data);
+      });
+    }, []);
 
   if (post == undefined) {
     notFound();
@@ -40,7 +55,7 @@ function ViewApplicants() {
 
   return (
     <main className="viewApplicants">
-      <RecruiterNavbar></RecruiterNavbar>
+      <RecruiterNavbar id={recruiterId}/>
       <Container>
         <Nav className="mt-2">
           <Pagination>
@@ -64,8 +79,10 @@ function ViewApplicants() {
                       <Modal.Title>{post.name}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                      <strong>Description:</strong><br></br>
-                      {post.description}<br></br><br></br>
+                      <strong>Link to Apply:</strong>
+                      <br></br>{window.location.origin}/applyPage?postID={postId}<br></br><br></br>
+                      <strong>Description:</strong>
+                      <br></br>{post.description}<br></br><br></br>
                       <strong>Requirements:</strong>
                       {post.requirements.map((requirement, index) => (
                         <p key={index}>- {requirement.requirementText}</p>
