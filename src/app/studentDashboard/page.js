@@ -184,7 +184,7 @@ class ApplicationListItem extends Component {
     const completedStages = completed.length
     const totalStages = stages.length
 
-    let text = completedStages + "/" + totalStages + "Stages Complete"
+    let text = completedStages + " / " + totalStages + "  Stages Completed"
     if (this.props.application.rejected) {
       text = "Rejected"
     } else if (this.props.application.accepted) {
@@ -198,14 +198,14 @@ class ApplicationListItem extends Component {
       <ListGroupItem className={this.props.selected ? "selectedApplicationEntry" : "applicationEntry"} onClick={() => {this.props.setSelectedApplication(this.props.application)}} key={this.state.postID.toString() + "s" + this.state.studentID}>
         <Container className="d-flex">
           <Row style={{width: "100%"}}>
-            <Col xs={5}><p className="text-left ">{this.state.title}</p></Col>
-            <Col xs={3}><p className={"text-left text-" + (this.props.application.submitted ? "muted" : this.statusColor())}>{this.props.application.submitted ? "Submitted" : "Deadline " + this.state.deadline}</p></Col>
+            <Col xs={5}><p className="applicationTitle text-left ">{this.state.title}</p></Col>
+            <Col xs={3}><p className={"deadline text-left text-" + (this.props.application.submitted ? "muted" : this.statusColor())}>{this.props.application.submitted ? "Submitted" : "Deadline " + this.state.deadline}</p></Col>
             <Col xs={3}>
               <ProgressBar className="my-0" variant={this.progressbarColor()} now={this.state.progress} />
               {this.renderProgressInfoText()}
             </Col>
             <Col xs={1}><Button onClick={this.editPost} className="my-2">
-                {this.props.application.submitted ? <p>View</p> : <p>Edit</p>}
+                {this.props.application.submitted ? "View" : "Edit"}
             </Button>
             </Col>
           </Row>

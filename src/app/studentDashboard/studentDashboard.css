@@ -68,3 +68,11 @@ studentDashboard {
   border: 1px solid grey;
   cursor: pointer;
 }
+
+.applicationTitle {
+  margin-top: 10px !important;
+}
+
+.deadline {
+  margin-top: 10px !important;
+}
