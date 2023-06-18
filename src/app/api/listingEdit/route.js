@@ -36,15 +36,17 @@ export async function POST(request) {
 
 export async function PUT(request) {
   const body = await request.json();
+  const deadlineDateTime = new Date(body.deadline);
   
   const updateData = {
     name: body.name,
-    description: body.description
+    description: body.description,
+    deadline: deadlineDateTime
   };
 
-  if (body.totalPlaces) {
-    updateData.totalPlaces = parseInt(body.totalPlaces);
-  }
+  // if (body.totalPlaces) {
+  //   updateData.totalPlaces = parseInt(body.totalPlaces);
+  // }
   
   await prisma.post.update({
     where: {

@@ -4,9 +4,10 @@ import './addListing.css'
 import "bootstrap/dist/css/bootstrap.min.css"
 import { Pagination, FormCheck, Nav, Button, PageItem, Container, Card, Form } from "react-bootstrap";
 import { Component, useEffect, useRef, useState } from "react";
+import RecruiterNavbar from "../recruiterNavbar";
 
-function JobDescription({ listing }) {
-  const descRef = useRef();
+function JobDeadline({ listing }) {
+  const dateTimeRef = useRef();
 
   const handleSubmit = () => {
     fetch('/api/listingEdit', {
@@ -16,7 +17,7 @@ function JobDescription({ listing }) {
       },
       body: JSON.stringify({
         id: listing.id,
-        description: descRef.current.value
+        deadline: dateTimeRef.current.value
       }),
     });
   }
@@ -25,16 +26,14 @@ function JobDescription({ listing }) {
     <Form>
       <Card className="mt-4 mb-2 mx-3">
         <Card.Header className="d-flex justify-content-between">
-        <p>Job Description</p>
+          <p>Deadline Date / Time</p>
+          {/* <Button onClick={handleSubmit}>Save</Button> */}
         </Card.Header>
-          <Form.Group className="mb-3" controlId="formJobDesc">
-            <Form.Control as="textarea" rows={3}
-              placeholder="Enter your Job Description" defaultValue={listing.description}
-              ref={descRef} onChange={handleSubmit} />
-          </Form.Group>
+          <input type="datetime-local" defaultValue={listing.deadline}
+            ref={dateTimeRef} onChange={handleSubmit} />
       </Card>
     </Form>
   )
 }
 
-export default JobDescription;
+export default JobDeadline;
