@@ -20,9 +20,9 @@ function JobRequirementsList({ listing, setListing }) {
     })
       .then((response) => response.json())
       .then((newRequirement) => {
-        setListing((prevPost) => ({
-          ...prevPost,
-          requirements: [...prevPost.requirements, newRequirement]
+        setListing((prevListing) => ({
+          ...prevListing,
+          requirements: [...prevListing.requirements, newRequirement]
         }));
       });
   }
@@ -36,7 +36,7 @@ function JobRequirementsList({ listing, setListing }) {
         </Card.Header>
           {listing.requirements.sort((a, b) => a.id - b.id).map((requirement) =>
             <JobRequirementsItem key={requirement.id} listingId={listing.id}
-            requirement={requirement} />)}
+            requirement={requirement} reqID={requirement.id} setListing={setListing} />)}
       </Card>
     </Form>
   )
@@ -44,7 +44,7 @@ function JobRequirementsList({ listing, setListing }) {
 
 export default JobRequirementsList;
 
-function JobRequirementsItem({ listingId, requirement }) {
+function JobRequirementsItem({ listingId, requirement, reqID, setListing }) {
   const reqRef = useRef();
 
   const handleSubmit = () => {
@@ -75,7 +75,10 @@ function JobRequirementsItem({ listingId, requirement }) {
     })
       .then((response) => response.json())
       .then(() => {
-        window.location.reload();
+        setListing((prevListing) => ({
+          ...prevListing,
+          requirements: prevListing.requirements.filter((requirement) => requirement.id !== reqID)
+        }));
       });
   }
 
