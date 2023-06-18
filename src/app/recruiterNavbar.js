@@ -3,6 +3,7 @@ import Container from 'react-bootstrap/Container';
 import Background from './background';
 import { useState } from 'react';
 import { Button } from 'react-bootstrap';
+import { cookies } from 'next/dist/client/components/headers';
 
 function RecruiterNavbar(props) { 
   const [username, setUsername] = useState("");
@@ -44,7 +45,9 @@ function RecruiterNavbar(props) {
           <Navbar.Text>
             Signed in as: {username}
           </Navbar.Text>
-          <Button href="/login" style={{marginLeft: "10px"}} size="sm">Logout</Button>
+            <Button href="/login"
+              onClick={() => { cookies.set("studentID", -1); cookies.set("recruiterID", -1); cookies.set("userType", "") }}
+              style={{ marginLeft: "10px" }} size="sm">Logout</Button>
         </Navbar.Collapse>
       </Container>
     </Navbar>
