@@ -22,7 +22,7 @@ describe('<RecruiterDashboard />', () => {
         "id":1,
         "name":"IT Intern",
         "status":"Applications Open",
-        "totalPlaces":50,
+        // "totalPlaces":50,
         "description":"We want an IT Intern!",
         "rating1Text":"Just Mentioning",
         "rating2Text":"Minimal Evidence",

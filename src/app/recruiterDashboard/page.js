@@ -74,9 +74,9 @@ function RecruiterDashboard() {
                     <Form.Group className="mb-3" controlId="formJob">
                       <Form.Control as="textarea" rows={1} type="text"
                         placeholder="Enter your Job Title" ref={titleRef} />
-                      <strong>Places</strong>
+                      {/* <strong>Places</strong>
                       <Form.Control as="textarea" rows={1} type="number"
-                        placeholder="Enter your Job Places" ref={placesRef} />
+                        placeholder="Enter your Job Places" ref={placesRef} /> */}
                     </Form.Group>
                   </Modal.Body>
                 <Modal.Footer>
@@ -146,7 +146,7 @@ class ListingItem extends Component {
       title: this.props.post.name,
       status: this.props.post.status,
       applications: this.props.post.applications,
-      total_places: this.props.post.totalPlaces
+      // total_places: this.props.post.totalPlaces
     };
   }
 
@@ -157,7 +157,7 @@ class ListingItem extends Component {
         title: this.props.post.name,
         status: this.props.post.status,
         applications: this.props.post.applications,
-        total_places: this.props.post.totalPlaces
+        // total_places: this.props.post.totalPlaces
       });
     }
   }

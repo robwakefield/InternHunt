@@ -33,7 +33,7 @@ function RecruiterDashboard() {
       },
       body: JSON.stringify({
         name: titleRef.current.value,
-        totalPlaces: parseInt(placesRef.current.value)
+        // totalPlaces: parseInt(placesRef.current.value)
       }),
     })
       .then((response) => response.json())
@@ -135,7 +135,7 @@ class ListingItem extends Component {
       title: this.props.post.name,
       status: this.props.post.status,
       applications: this.props.post.applications,
-      total_places: this.props.post.totalPlaces
+      // total_places: this.props.post.totalPlaces
     };
   }
 
@@ -146,7 +146,7 @@ class ListingItem extends Component {
         title: this.props.post.name,
         status: this.props.post.status,
         applications: this.props.post.applications,
-        total_places: this.props.post.totalPlaces
+        // total_places: this.props.post.totalPlaces
       });
     }
   }
