@@ -41,7 +41,7 @@ export async function POST(request) {
     newId++;
   }
 
-  await prisma.requirement.create({
+  const newListings = await prisma.requirement.create({
     data: {
       id: newId,
       requirementText: "",
@@ -52,5 +52,5 @@ export async function POST(request) {
       }
     }
   });
-  return NextResponse.json({});
+  return NextResponse.json(newListings);
 }

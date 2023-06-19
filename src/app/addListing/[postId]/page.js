@@ -129,7 +129,7 @@ function AddListing() {
             <JobDeadline listing={listing} />
           </div>
           <JobDescription listing={listing} />
-          <JobRequirementsList listing={listing} />
+          <JobRequirementsList listing={listing} setListing={setListing} />
           <SavedBox />
         </Card>
       </Container>
