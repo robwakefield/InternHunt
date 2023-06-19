@@ -16,19 +16,16 @@ import Cookies from "universal-cookie";
 function averageRating(application) {
   if (!application) return 0;
   if (application.evidences.length == 0) return 0;
-  return application.evidences.map(ev => ev.rating).reduce((a, b) => a + b, 0) / application.evidences.length;
+  return (application.evidences.map(ev => ev.rating).reduce((a, b) => a + b, 0) / application.evidences.length).toFixed(1);
 }
 
 function StudentViewFeedback() {
   const cookies = new Cookies();
   const studentId = Number(cookies.get("studentID"));
 
-  if (!studentId || isNaN(studentId) || studentId == -1) {
+  if (typeof window !== "undefined" && (!studentId || isNaN(studentId) || studentId == -1)) {
     window.location.replace("/login");
   }
-
-  window.location.replace(window.location.href + "#" + studentId);
-
 
   const [post, setPost] = useState({name: "", applications: [], description: "", requirements: []});
   const [showJobListing, setJobListing] = useState(false);
