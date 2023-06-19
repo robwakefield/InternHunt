@@ -8,58 +8,58 @@ p {
 }
 
 .ratingCard {
-  border: 0em;
+  border: 0em !important;
 }
 
 .selectedApplicantListItem {
-  margin: 20px;
-  margin-bottom: 0px;
+  margin: 20px !important;
+  margin-bottom: 0px !important;
   border: 1px solid grey !important;
   background-color: lightgrey !important;
-  padding: 5px;
+  padding: 5px !important;
 }
 
 .selectedRejectedListItem {
-  margin: 20px;
-  margin-bottom: 0px;
+  margin: 20px !important;
+  margin-bottom: 0px !important;
   border: 1px solid grey !important;
   background-color: rosybrown !important;
-  padding: 5px;
+  padding: 5px !important;
 }
 
 .rejectedApplicantListItem {
-  margin: 20px;
-  margin-bottom: 0px;
+  margin: 20px !important;
+  margin-bottom: 0px !important;
   border: 1px solid lightgrey !important;
   background-color: lightcoral !important;
-  padding: 5px;
+  padding: 5px !important;
 }
 
 .applicantListItem {
-  margin: 20px;
-  margin-bottom: 0px;
+  margin: 20px !important;
+  margin-bottom: 0px !important;
   border: 1px solid lightgrey !important;
-  padding: 5px;
+  padding: 5px !important;
 }
 
 .applicantListRow {
-  width: 100%;
-  margin: 0px;
+  width: 100% !important;
+  margin: 0px !important;
 }
 
 .studentName{
-  width: 100%;
-  margin: 0px;
+  width: 100% !important;
+  margin: 0px !important;
 }
 
 .avgRating{
-  margin: 0px;
+  margin: 0px !important;
 }
 
 .avgRatingCol{
-  padding: 0px;
-  align-items: center;
-  display: flex;
+  padding: 0px !important;
+  align-items: center !important;
+  display: flex !important;
 }
 
 .modal-backdrop{position:fixed;top:0;right:0;bottom:0;left:0;z-index:1040;background-color:#000}
