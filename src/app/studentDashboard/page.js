@@ -31,7 +31,7 @@ function StudentDashboard() {
   const cookies = new Cookies();
   const studentId = Number(cookies.get("studentID"));
 
-  if (!studentId || isNaN(studentId) || studentId == -1) {
+  if (typeof window !== "undefined" && (!studentId || isNaN(studentId) || studentId == -1)) {
     window.location.replace("/login");
   }
 

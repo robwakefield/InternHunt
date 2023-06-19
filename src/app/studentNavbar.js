@@ -1,29 +1,32 @@
 import { Nav, Navbar, Image, Container, Button } from 'react-bootstrap';
 import Background from './background';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function StudentNavbar(props) { 
   const [username, setUsername] = useState("");
-  fetch('/api/getUser', {
-    method: "POST",
-    body: JSON.stringify({
-      id: Number(props.id),
-      userType: "Student"
+  
+  useEffect(() => { 
+    fetch('/api/getUser', {
+      method: "POST",
+      body: JSON.stringify({
+        id: Number(props.id),
+        userType: "Student"
+      })
+    }).then((response) => {
+    console.log(response)
+      if (response) {
+          return response.json();
+      } else {
+          return response;
+      }
+    }).then((data) => {  
+      if (data) {
+        setUsername(data.name)
+      } else {
+        setUsername("___")
+      }
     })
-  }).then((response) => {
-  console.log(response)
-    if (response) {
-        return response.json();
-    } else {
-        return response;
-    }
-  }).then((data) => {  
-    if (data) {
-      setUsername(data.name)
-    } else {
-      setUsername("___")
-    }
-})
+  }, []);
   
   return (
     <div>

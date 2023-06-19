@@ -11,7 +11,7 @@ function ApplyPage() {
     const cookies = new Cookies();
     const cookieStudentId = Number(cookies.get("studentID"));
 
-    if (!cookieStudentId || isNaN(cookieStudentId) || cookieStudentId == -1) {
+    if (typeof window !== "undefined" && (!cookieStudentId || isNaN(cookieStudentId) || cookieStudentId == -1)) {
         window.location.replace("/login");
     }
     
@@ -51,7 +51,7 @@ function ApplyPage() {
               postID: postId
             })
         }).then(() => {
-            window.location.replace("/studentDashboard")
+            {typeof window !== "undefined" ? window.location.replace("/studentDashboard") : function () { }}
         })
     }
  
