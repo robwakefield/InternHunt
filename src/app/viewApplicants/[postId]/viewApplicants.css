@@ -15,7 +15,7 @@ p {
   margin: 20px;
   margin-bottom: 0px;
   border: 1px solid grey !important;
-  background-color: lightgrey;
+  background-color: lightgrey !important;
   padding: 5px;
 }
 
@@ -23,7 +23,7 @@ p {
   margin: 20px;
   margin-bottom: 0px;
   border: 1px solid grey !important;
-  background-color: rosybrown;
+  background-color: rosybrown !important;
   padding: 5px;
 }
 
@@ -31,7 +31,7 @@ p {
   margin: 20px;
   margin-bottom: 0px;
   border: 1px solid lightgrey !important;
-  background-color: lightcoral;
+  background-color: lightcoral !important;
   padding: 5px;
 }
 
