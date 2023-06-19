@@ -23,7 +23,7 @@ function ViewApplicants() {
   const cookies = new Cookies();
   const recruiterId = Number(cookies.get("recruiterID"));
 
-  if (!recruiterId || isNaN(recruiterId) || recruiterId == -1) {
+  if (typeof window !== "undefined" && (!recruiterId || isNaN(recruiterId) || recruiterId == -1)) {
     window.location.replace("/login");
   }
 
@@ -80,7 +80,7 @@ function ViewApplicants() {
                     </Modal.Header>
                     <Modal.Body>
                       <strong>Link to Apply:</strong>
-                      <br></br>{window.location.origin}/applyPage?postID={postId}<br></br><br></br>
+                      <br></br>{(typeof window !== "undefined") ? window.location.origin : ""}/applyPage?postID={postId}<br></br><br></br>
                       <strong>Description:</strong>
                       <br></br>{post.description}<br></br><br></br>
                       <strong>Requirements:</strong>
@@ -265,7 +265,7 @@ class SkillList extends Component {
           studentID: this.props.selectedApplicant
         })
       }).then(() => {
-        window.location.reload()
+        { typeof window !== "undefined" ? window.location.reload() : function () { } }
       })
     }
   }
