@@ -1,8 +1,8 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is a [Next.js](https://nextjs.org/) project providing students with better feedback on their internship applications. Developed as part of a group at Imperial College London 
 
 ## Getting Started
 
-First, run the development server:
+After cloning the repo, run `npm install` or `yarn install` or `pnpm install`. Then run the development server:
 
 ```bash
 npm run dev
